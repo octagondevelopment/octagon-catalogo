@@ -2,3 +2,4 @@ Libros/
 *.jpg
 *.jpeg
 *.dng
+__pycache__/
