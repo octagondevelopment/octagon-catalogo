@@ -1,4 +1,4 @@
-﻿sku,sku_8dig,nombre_en,nombre_es,modulo,subconjunto,precio_cad,cant_por_maquina,conteo,notas
+﻿sku,sku_8digit,name_en,name_es,module,subassembly,price_cad,qty_per_machine,on_hand,notes
 110.533,11133893,Water pump Mastrena CE assy,Bomba de agua Mastrena CE (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
 127.734,11086418,Hydraulic module Mastrena II assy.,Módulo hidráulico Mastrena II (conjunto),Hydraulic,1 Mastrena II - 230V (main assemblies),,1,,
 128.036,11086548,Chassis assy. Mastrena II,Chasis Mastrena II (conjunto),Chassis,1 Mastrena II - 230V (main assemblies),,1,,

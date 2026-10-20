@@ -21,8 +21,8 @@ if os.path.exists(_mv):
         if _line:
             _a, _, _note = _line.partition(" ")
             MANUAL[_a] = "Validated against the paper manual" + (f" ({_note.strip()})" if _note.strip() else "")
-COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
-        "imagen_origen", "posicion_en_diagrama", "confianza", "notas", "cant_por_maquina", "conteo", "validacion", "evidencia"]
+COLS = ["sku", "sku_8digit", "name_en", "name_es", "module", "subassembly", "price_cad",
+        "source_image", "diagram_position", "confidence", "notes", "qty_per_machine", "on_hand", "validation", "evidence"]
 # Quantity per machine, only where the manual states it for the whole machine: the main table on page 3 of the
 # catalogue ("1 Mastrena II - 230V"). Other quantities in the manual are per subassembly, so they stay blank.
 PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "127.950": "1", "128.036": "1",
@@ -31,8 +31,8 @@ PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "
                "133.690": "1"}
 # Columns people see in the published catalog and in the CSV they export. The rest (source image, diagram position,
 # confidence, validation status, evidence) is for development only and stays in data/internal/parts_all.csv.
-PUBLIC_COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
-               "cant_por_maquina", "conteo", "notas"]
+PUBLIC_COLS = ["sku", "sku_8digit", "name_en", "name_es", "module", "subassembly", "price_cad",
+               "qty_per_machine", "on_hand", "notes"]
 ART = re.compile(r"^\d{3}\.\d{3}$")
 SKU8 = re.compile(r"^11\d{6}$")
 # Page 3 lists the main assemblies: module depends on what each assembly is.
@@ -146,33 +146,33 @@ for art, lst in occ.items():
         verified, ev = True, f"Name matches chapter title {CHAPTER[norm_title(en)]}; SKU read once"
     if art in MANUAL:
         verified, ev, conf = True, MANUAL[art], "high"
-    rows.append(dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=tr_es(art, en), modulo=mod,
-                     subconjunto=sec, precio_cad="", imagen_origen=p["img"],
-                     posicion_en_diagrama=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
-                     confianza=conf, notas="; ".join(notes),
-                     cant_por_maquina=PER_MACHINE.get(art, ""), conteo="",
-                     validacion="validada" if verified else "pendiente", evidencia=ev))
+    rows.append(dict(sku=art, sku_8digit=sku8, name_en=en, name_es=tr_es(art, en), module=mod,
+                     subassembly=sec, price_cad="", source_image=p["img"],
+                     diagram_position=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
+                     confidence=conf, notes="; ".join(notes),
+                     qty_per_machine=PER_MACHINE.get(art, ""), on_hand="",
+                     validation="verified" if verified else "pending", evidence=ev))
 
 def write_csv(path, subset, cols):
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(subset)
-write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validacion"] == "validada"], PUBLIC_COLS)
+write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validation"] == "verified"], PUBLIC_COLS)
 write_csv(os.path.join(INTERNAL, "parts_all.csv"), rows, COLS)
 
 # ---- report ----
-by_mod = collections.Counter(r["modulo"] for r in rows)
-by_conf = collections.Counter(r["confianza"] for r in rows)
-rev = [r for r in rows if r["confianza"] in ("medium", "low")]
+by_mod = collections.Counter(r["module"] for r in rows)
+by_conf = collections.Counter(r["confidence"] for r in rows)
+rev = [r for r in rows if r["confidence"] in ("medium", "low")]
 L = ["# Extraction report: Mastrena II 230V catalog", "",
      f"Source: Thermoplan *Spare parts catalogue Mastrena II - 230V* (07.08.2023_EN), {len(pages)} pages with a parts table.", "",
      f"Unique parts: **{len(rows)}** (from {sum(len(v) for v in occ.values())} rows read; repeated rows were merged into one).", "",
-     f"Verified (shown in the catalog): **{sum(r['validacion'] == 'validada' for r in rows)}**. To validate: **{sum(r['validacion'] == 'pendiente' for r in rows)}**.", "",
+     f"Verified (shown in the catalog): **{sum(r['validation'] == 'verified' for r in rows)}**. To validate: **{sum(r['validation'] == 'pending' for r in rows)}**.", "",
      "## By module", ""] + [f"- {m}: {by_mod.get(m, 0)}" for m in ["Mechanical", "Steam", "Hydraulic", "Chassis", "Other"]] + [
      "", "## By confidence", ""] + [f"- {c}: {by_conf.get(c, 0)}" for c in ["high", "medium", "low", "illegible"]] + [
      "", f"## Rows to check against the paper manual ({len(rev)})", "",
      "| SKU (Article no.) | 8-digit SKU | Name | Image | Confidence | Reason |", "|---|---|---|---|---|---|"]
 for r in rev:
-    reason = "; ".join(x for x in r["notas"].split("; ") if not x.startswith("Also in"))
-    L.append(f"| {r['sku']} | {r['sku_8dig']} | {r['nombre_en']} | {r['imagen_origen']} | {r['confianza']} | {reason} |")
+    reason = "; ".join(x for x in r["notes"].split("; ") if not x.startswith("Also in"))
+    L.append(f"| {r['sku']} | {r['sku_8digit']} | {r['name_en']} | {r['source_image']} | {r['confidence']} | {reason} |")
 open(os.path.join(INTERNAL, "extraction_report.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")
-print(len(rows), dict(by_mod), dict(by_conf), "verified:", sum(r["validacion"] == "validada" for r in rows))
+print(len(rows), dict(by_mod), dict(by_conf), "verified:", sum(r["validation"] == "verified" for r in rows))

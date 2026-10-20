@@ -266,26 +266,35 @@
   const SEEDS = VALIDATE ? ['data/internal/parts_all.csv', 'data/parts.csv'] : ['data/parts.csv'];
   const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
-  const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
-                'imagen_origen','posicion_en_diagrama','confianza','notas','cant_por_maquina','conteo','validacion','evidencia'];
+  const COLS = ['sku','sku_8digit','name_en','name_es','module','subassembly','price_cad',
+                'source_image','diagram_position','confidence','notes','qty_per_machine','on_hand','validation','evidence'];
   // The CSV people export has only the columns they use. The development columns (source image, diagram position,
   // confidence, validation, evidence) are exported only in team mode.
-  const PUBLIC_COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad','cant_por_maquina','conteo','notas'];
-  const REQUIRED = ['sku','nombre_en','modulo'];
+  const PUBLIC_COLS = ['sku','sku_8digit','name_en','name_es','module','subassembly','price_cad','qty_per_machine','on_hand','notes'];
+  const REQUIRED = ['sku','name_en','module'];
   const CONF = ['high','medium','low','illegible'];
   // Older copies stored Spanish confidence values.
   const LEGACY_CONF = { alta: 'high', media: 'medium', baja: 'low', ilegible: 'illegible' };
-  const normConf = (p) => { if (LEGACY_CONF[p.confianza]) p.confianza = LEGACY_CONF[p.confianza]; return p; };
-  // Older copies carried notes that are no longer used ("nombre_es = translation", "Manual section: ...").
+  const normConf = (p) => { if (LEGACY_CONF[p.confidence]) p.confidence = LEGACY_CONF[p.confidence]; return p; };
+  // Older copies carried notes that are no longer used ("name_es = translation", "Manual section: ...").
   const cleanNotes = (p) => {
-    if (p.notas) p.notas = p.notas.split('; ').filter(x => !/^nombre_es = (translation|traducci)/i.test(x) && !/^(Manual section|Secci.n manual):/i.test(x)).join('; ');
+    if (p.notes) p.notes = p.notes.split('; ').filter(x => !/^name_es = (translation|traducci)/i.test(x) && !/^(Manual section|Secci.n manual):/i.test(x)).join('; ');
     return p;
   };
-  const migrate = (p) => cleanNotes(normConf(p));
+  // Saved copies and CSV files from before the columns were renamed used Spanish names. They still load.
+  const LEGACY_KEYS = { nombre_en: 'name_en', nombre_es: 'name_es', modulo: 'module', subconjunto: 'subassembly', precio_cad: 'price_cad',
+    imagen_origen: 'source_image', posicion_en_diagrama: 'diagram_position', confianza: 'confidence', notas: 'notes',
+    cant_por_maquina: 'qty_per_machine', conteo: 'on_hand', validacion: 'validation', evidencia: 'evidence', sku_8dig: 'sku_8digit' };
+  const upgradeKeys = (p) => {
+    for (const [old, now] of Object.entries(LEGACY_KEYS)) if (old in p) { if (p[now] === undefined) p[now] = p[old]; delete p[old]; }
+    if (p.validation === 'validada') p.validation = 'verified'; else if (p.validation === 'pendiente') p.validation = 'pending';
+    return p;
+  };
+  const migrate = (p) => cleanNotes(normConf(upgradeKeys(p)));
   const isCount = (v) => v === '' || v == null || /^\d{1,6}$/.test(String(v).trim());
-  const needsReview = (p) => p.confianza === 'medium' || p.confianza === 'low' || p.confianza === 'illegible';
-  // Only parts explicitly marked 'pendiente' wait for validation; everything else counts as verified.
-  const isPending = (p) => p.validacion === 'pendiente';
+  const needsReview = (p) => p.confidence === 'medium' || p.confidence === 'low' || p.confidence === 'illegible';
+  // Only parts explicitly marked 'pending' wait for validation; everything else counts as verified.
+  const isPending = (p) => p.validation === 'pending';
   const inView = (p) => (VALIDATE && state.view === 'validate') === isPending(p);
   const today = () => new Date().toLocaleDateString('en-CA');
 
@@ -351,7 +360,7 @@
     const errors = [], warnings = [];
     const rows = parseCSV(text);
     if (!rows.length) return { parts: [], errors: ['The file is empty.'], warnings };
-    const header = rows[0].map(h => h.trim().toLowerCase());
+    const header = rows[0].map(h => { const k = h.trim().toLowerCase(); return LEGACY_KEYS[k] || k; });
     const missing = REQUIRED.filter(c => !header.includes(c));
     if (missing.length) errors.push('Missing required columns: ' + missing.join(', ') + '.');
     const unknown = header.filter(h => h && !COLS.includes(h));
@@ -363,14 +372,14 @@
       if (r.length !== header.length) { errors.push(`Line ${line}: has ${r.length} columns, expected ${header.length}.`); return; }
       const p = {}; COLS.forEach(c => { const k = header.indexOf(c); p[c] = k >= 0 ? r[k].trim() : ''; });
       if (!p.sku) { errors.push(`Line ${line}: empty SKU.`); return; }
-      if (!p.nombre_en) errors.push(`Line ${line} (${p.sku}): missing nombre_en.`);
-      if (p.modulo && !MODULES.includes(p.modulo)) errors.push(`Line ${line} (${p.sku}): invalid module "${p.modulo}". Use: ${MODULES.join(', ')}.`);
-      p.precio_cad = p.precio_cad.replace(',', '.');
-      if (p.precio_cad && !isPrice(p.precio_cad)) errors.push(`Line ${line} (${p.sku}): price "${p.precio_cad}" is not a valid number.`);
+      if (!p.name_en) errors.push(`Line ${line} (${p.sku}): missing name_en.`);
+      if (p.module && !MODULES.includes(p.module)) errors.push(`Line ${line} (${p.sku}): invalid module "${p.module}". Use: ${MODULES.join(', ')}.`);
+      p.price_cad = p.price_cad.replace(',', '.');
+      if (p.price_cad && !isPrice(p.price_cad)) errors.push(`Line ${line} (${p.sku}): price "${p.price_cad}" is not a valid number.`);
       migrate(p);
-      if (!header.includes('validacion')) p.validacion = 'validada';
-      if (!isCount(p.cant_por_maquina) || !isCount(p.conteo)) errors.push(`Line ${line} (${p.sku}): quantities must be whole numbers, 0 or more.`);
-      if (p.confianza && !CONF.includes(p.confianza)) warnings.push(`Line ${line} (${p.sku}): unknown confidence "${p.confianza}".`);
+      if (!header.includes('validation')) p.validation = 'verified';
+      if (!isCount(p.qty_per_machine) || !isCount(p.on_hand)) errors.push(`Line ${line} (${p.sku}): quantities must be whole numbers, 0 or more.`);
+      if (p.confidence && !CONF.includes(p.confidence)) warnings.push(`Line ${line} (${p.sku}): unknown confidence "${p.confidence}".`);
       const key = p.sku.toUpperCase();
       if (seen.has(key)) errors.push(`Line ${line}: duplicate SKU ${p.sku} (already on line ${seen.get(key)}).`);
       else seen.set(key, line);
@@ -471,7 +480,7 @@
     [/cover|housing|casing|hood|backwall|\bcase\b|chassis|\blid\b|electric box|\bcap\b/, 'cover'],
   ];
   const kindOf = (p) => {
-    const n = String(p.nombre_en || '').toLowerCase();
+    const n = String(p.name_en || '').toLowerCase();
     for (const [re, k] of KIND_RULES) if (re.test(n)) return k;
     return 'assembly';
   };
@@ -652,7 +661,7 @@
   async function suggestTranslation(text, from) {
     const t = String(text || '').trim(); if (!t) return null;
     const to = from === 'en' ? 'es' : 'en';
-    const mine = from === 'en' ? 'nombre_en' : 'nombre_es', other = from === 'en' ? 'nombre_es' : 'nombre_en';
+    const mine = from === 'en' ? 'name_en' : 'name_es', other = from === 'en' ? 'name_es' : 'name_en';
     const key = norm(t);
     const known = parts.find(p => p[other] && norm(p[mine]) === key);
     if (known) return { text: known[other], unknown: [], source: 'catalog' };
@@ -678,21 +687,21 @@
   // ---------- filtering and sorting ----------
   const matches = (p, skipModule) => {
     if (!inView(p)) return false;
-    if (!skipModule && state.mod && p.modulo !== state.mod) return false;
-    if (state.sub && p.subconjunto !== state.sub) return false;
-    if (state.noPrice && p.precio_cad) return false;
+    if (!skipModule && state.mod && p.module !== state.mod) return false;
+    if (state.sub && p.subassembly !== state.sub) return false;
+    if (state.noPrice && p.price_cad) return false;
     if (state.review && !needsReview(p)) return false;
     const q = norm(state.q.trim());
     if (!q) return true;
-    return [p.sku, p.sku_8dig, p.nombre_en, p.nombre_es].some(v => norm(v).includes(q));
+    return [p.sku, p.sku_8digit, p.name_en, p.name_es].some(v => norm(v).includes(q));
   };
   const priceNum = (v) => { const n = Number(String(v || '').replace(',', '.')); return v === '' || v == null || isNaN(n) ? -1 : n; };
   function filtered() {
     const a = parts.filter(p => matches(p, false));
     switch (state.sort) {
       case 'sku': a.sort((x, y) => x.sku.localeCompare(y.sku, 'en', { numeric: true })); break;
-      case 'name': a.sort((x, y) => x.nombre_en.localeCompare(y.nombre_en, 'en', { sensitivity: 'base' })); break;
-      case 'price': a.sort((x, y) => priceNum(y.precio_cad) - priceNum(x.precio_cad)); break;
+      case 'name': a.sort((x, y) => x.name_en.localeCompare(y.name_en, 'en', { sensitivity: 'base' })); break;
+      case 'price': a.sort((x, y) => priceNum(y.price_cad) - priceNum(x.price_cad)); break;
       case 'review': a.sort((x, y) => Number(needsReview(y)) - Number(needsReview(x))); break;
     }
     return a;
@@ -716,11 +725,11 @@
       : `<b>${nOk}</b> ${nOk === 1 ? 'part' : 'parts'} · Mastrena II`;
     const counts = { '': 0 };
     MODULES.forEach(m => counts[m] = 0);
-    parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.modulo] !== undefined) counts[p.modulo]++; } });
+    parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.module] !== undefined) counts[p.module]++; } });
     $('tabs').innerHTML = [['', 'All'], ...MODULES.map(m => [m, m])].map(([v, label]) =>
       `<button class="tab" role="tab" type="button" data-act="tab" data-mod="${v}" aria-selected="${state.mod === v}">${label}<span class="n">${counts[v] ?? 0}</span></button>`).join('');
     const subs = new Map();
-    parts.forEach(p => { if (inView(p) && p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
+    parts.forEach(p => { if (inView(p) && p.subassembly && (!state.mod || p.module === state.mod)) subs.set(p.subassembly, (subs.get(p.subassembly) || 0) + 1); });
     const opts = [...subs.entries()].sort((a, b) => cmpSec(a[0], b[0]));
     $('sub').innerHTML = `<option value="">All subassemblies</option>` + opts.map(([s, n]) =>
       `<option value="${esc(s)}" ${state.sub === s ? 'selected' : ''}>${esc(s)} (${n})</option>`).join('');
@@ -731,14 +740,14 @@
   }
 
   function factsHtml(p) {
-    const conf = p.confianza || '—';
+    const conf = p.confidence || '—';
     return `<dl class="facts">
-      <div class="fact"><dt>Module</dt><dd>${esc(p.modulo || '—')}</dd></div>
-      <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8dig || '—')}</dd></div>
+      <div class="fact"><dt>Module</dt><dd>${esc(p.module || '—')}</dd></div>
+      <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8digit || '—')}</dd></div>
       ${VALIDATE ? `<div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>` : ''}
-      <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subconjunto || '—')}</dd></div>
-      ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidencia || '—')}</dd></div>` : ''}
-      ${p.notas ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notas)}</dd></div>` : ''}
+      <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subassembly || '—')}</dd></div>
+      ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidence || '—')}</dd></div>` : ''}
+      ${p.notes ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notes)}</dd></div>` : ''}
     </dl>`;
   }
 
@@ -748,11 +757,11 @@
       <div class="qbox"><div class="qlabel"><span>On hand</span><span class="sample-pill">Sample</span></div>
         <div class="stepper">
           <button class="sbtn" type="button" data-act="dec" data-sku="${sku}" aria-label="One less">&minus;</button>
-          <input class="qin" data-field="conteo" data-sku="${sku}" inputmode="numeric" value="${esc(p.conteo || '0')}" aria-label="Pieces on hand">
+          <input class="qin" data-field="on_hand" data-sku="${sku}" inputmode="numeric" value="${esc(p.on_hand || '0')}" aria-label="Pieces on hand">
           <button class="sbtn" type="button" data-act="inc" data-sku="${sku}" aria-label="One more">+</button>
         </div></div>
       <div class="qbox"><div class="qlabel"><span>Per machine</span><span class="sample-pill">Sample</span></div>
-        <input class="qin" data-field="cant_por_maquina" data-sku="${sku}" inputmode="numeric" value="${esc(p.cant_por_maquina)}" placeholder="—" aria-label="Quantity per machine"></div>
+        <input class="qin" data-field="qty_per_machine" data-sku="${sku}" inputmode="numeric" value="${esc(p.qty_per_machine)}" placeholder="—" aria-label="Quantity per machine"></div>
     </div>`;
   }
 
@@ -764,7 +773,7 @@
       </form></div>`;
     }
     const confirmBox = confirming === p.sku ? `
-      <div class="confirm" role="alert">Remove <b class="mono">${esc(p.sku)}</b> (${esc(p.nombre_en)}) from the catalog?
+      <div class="confirm" role="alert">Remove <b class="mono">${esc(p.sku)}</b> (${esc(p.name_en)}) from the catalog?
         <div class="actions"><button class="btn danger" type="button" data-act="del-yes" data-sku="${esc(p.sku)}">Yes, remove</button><button class="btn" type="button" data-act="del-no">Cancel</button></div>
       </div>` : '';
     return `<div class="detail">
@@ -780,7 +789,7 @@
   }
 
   function rowHtml(p) {
-    const price = fmtPrice(p.precio_cad);
+    const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
     const review = VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
@@ -788,8 +797,8 @@
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
         <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}</div>
         <div class="info">
-          <div class="name">${esc(p.nombre_en)}</div>
-          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.nombre_es ? ' · ' + esc(p.nombre_es) : ''}${review}</div>
+          <div class="name">${esc(p.name_en)}</div>
+          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${review}</div>
         </div>
         <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>
@@ -839,38 +848,38 @@
       `<label class="${cls}">${label}<input name="${name}" value="${esc(p[name])}" ${extra}>${hint ? `<span class="hint" data-hint="${name}"></span>` : ''}</label>`;
     return `
       ${f('sku', 'SKU (Article no.) *', 'required autocomplete="off" class="mono"')}
-      ${f('sku_8dig', '8-digit SKU', 'inputmode="numeric" class="mono"')}
-      ${f('nombre_en', 'Name (EN) *', 'required autocomplete="off"', 'full', true)}
-      ${f('nombre_es', 'Name (ES)', 'autocomplete="off"', 'full', true)}
-      <label>Module *<select name="modulo" required>
-        ${MODULES.map(m => `<option ${p.modulo === m ? 'selected' : ''}>${m}</option>`).join('')}
+      ${f('sku_8digit', '8-digit SKU', 'inputmode="numeric" class="mono"')}
+      ${f('name_en', 'Name (EN) *', 'required autocomplete="off"', 'full', true)}
+      ${f('name_es', 'Name (ES)', 'autocomplete="off"', 'full', true)}
+      <label>Module *<select name="module" required>
+        ${MODULES.map(m => `<option ${p.module === m ? 'selected' : ''}>${m}</option>`).join('')}
       </select></label>
-      ${f('subconjunto', 'Subassembly')}
-      ${f('precio_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="No price"')}
-      ${VALIDATE ? `<label>Confidence<select name="confianza">
-        <option value="" ${!p.confianza ? 'selected' : ''}>—</option>
-        ${CONF.map(c => `<option ${p.confianza === c ? 'selected' : ''}>${c}</option>`).join('')}
+      ${f('subassembly', 'Subassembly')}
+      ${f('price_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="No price"')}
+      ${VALIDATE ? `<label>Confidence<select name="confidence">
+        <option value="" ${!p.confidence ? 'selected' : ''}>—</option>
+        ${CONF.map(c => `<option ${p.confidence === c ? 'selected' : ''}>${c}</option>`).join('')}
       </select></label>` : ''}
-      ${f('cant_por_maquina', 'Per machine', 'inputmode="numeric" placeholder="—"')}
-      ${f('conteo', 'On hand', 'inputmode="numeric" placeholder="0"')}
-      ${VALIDATE ? f('imagen_origen', 'Source image') + f('posicion_en_diagrama', 'Diagram position') : ''}
-      <label class="full">Notes<textarea name="notas" rows="2">${esc(p.notas)}</textarea></label>
+      ${f('qty_per_machine', 'Per machine', 'inputmode="numeric" placeholder="—"')}
+      ${f('on_hand', 'On hand', 'inputmode="numeric" placeholder="0"')}
+      ${VALIDATE ? f('source_image', 'Source image') + f('diagram_position', 'Diagram position') : ''}
+      <label class="full">Notes<textarea name="notes" rows="2">${esc(p.notes)}</textarea></label>
       <div class="err full" id="${idp}-err" role="alert"></div>`;
   }
 
   function readForm(form, base) {
     const p = {}; COLS.forEach(c => { const el = form.elements[c]; p[c] = el ? el.value.trim() : (base && base[c] != null ? base[c] : ''); });
-    p.precio_cad = p.precio_cad.replace(',', '.');
+    p.price_cad = p.price_cad.replace(',', '.');
     return p;
   }
   function checkPart(p, origSku) {
     if (!p.sku) return 'SKU is required.';
-    if (!p.nombre_en) return 'English name is required.';
-    if (!MODULES.includes(p.modulo)) return 'Choose a module.';
-    if (p.precio_cad && !isPrice(p.precio_cad)) return 'Price must be a number, for example 12.50.';
-    if (!isCount(p.cant_por_maquina) || !isCount(p.conteo)) return 'Quantities must be whole numbers, 0 or more.';
+    if (!p.name_en) return 'English name is required.';
+    if (!MODULES.includes(p.module)) return 'Choose a module.';
+    if (p.price_cad && !isPrice(p.price_cad)) return 'Price must be a number, for example 12.50.';
+    if (!isCount(p.qty_per_machine) || !isCount(p.on_hand)) return 'Quantities must be whole numbers, 0 or more.';
     const dup = parts.find(x => x.sku.toUpperCase() === p.sku.toUpperCase() && x.sku !== origSku);
-    if (dup) return `A part with SKU ${dup.sku} already exists (${dup.nombre_en}).`;
+    if (dup) return `A part with SKU ${dup.sku} already exists (${dup.name_en}).`;
     return '';
   }
 
@@ -891,7 +900,7 @@
 
   // ---------- name translation in the forms ----------
   // Typing in one name field fills the other with a suggestion. A name somebody typed by hand is never overwritten.
-  const NAME_FIELDS = { nombre_en: ['en', 'nombre_es'], nombre_es: ['es', 'nombre_en'] };
+  const NAME_FIELDS = { name_en: ['en', 'name_es'], name_es: ['es', 'name_en'] };
   function setHint(form, field, text, warn) {
     const h = form.querySelector(`[data-hint="${field}"]`);
     if (h) { h.textContent = text; h.classList.toggle('warn', !!warn); }
@@ -921,7 +930,7 @@
   // ---------- add ----------
   function openAdd() {
     $('add-form').innerHTML = `<form class="form" data-form="add" novalidate>
-      ${formFields({ modulo: state.mod || 'Mechanical', subconjunto: state.sub || '' }, 'add')}
+      ${formFields({ module: state.mod || 'Mechanical', subassembly: state.sub || '' }, 'add')}
       <div class="full actions"><button class="btn primary" type="submit">Add part</button><button class="btn" type="button" data-act="close">Cancel</button></div>
     </form>`;
     openSheet('sheet-add');
@@ -935,7 +944,7 @@
     if (form.dataset.form === 'add') {
       const err = checkPart(p, null);
       if (err) { $('add-err').textContent = err; return; }
-      p.validacion = 'validada'; p.evidencia = 'Added manually';
+      p.validation = 'verified'; p.evidence = 'Added manually';
       parts.unshift(p); save(); closeSheets();
       Object.assign(state, { view: 'catalog', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
       $('q').value = ''; openSku = p.sku; editing = null; confirming = null;
@@ -976,17 +985,17 @@
         $('q').value = ''; selected.clear(); openSku = editing = confirming = null; render(); break;
       case 'verify': {
         const p = parts.find(x => x.sku === sku); if (!p) break;
-        p.validacion = 'validada'; p.confianza = 'high'; p.evidencia = `Validated against the paper manual on ${today()}`;
+        p.validation = 'verified'; p.confidence = 'high'; p.evidence = `Validated against the paper manual on ${today()}`;
         selected.delete(sku); openSku = null; editing = null; save(); render(); toast(`Part ${sku} verified and moved to the catalog`); break;
       }
       case 'unverify': {
         const p = parts.find(x => x.sku === sku); if (!p) break;
-        p.validacion = 'pendiente'; selected.delete(sku); openSku = null; save(); render(); toast(`Part ${sku} sent back to validation`); break;
+        p.validation = 'pending'; selected.delete(sku); openSku = null; save(); render(); toast(`Part ${sku} sent back to validation`); break;
       }
       case 'dec': case 'inc': {
         const p = parts.find(x => x.sku === sku); if (!p) break;
-        const next = Math.max(0, (parseInt(p.conteo || '0', 10) || 0) + (b.dataset.act === 'inc' ? 1 : -1));
-        p.conteo = String(next); save();
+        const next = Math.max(0, (parseInt(p.on_hand || '0', 10) || 0) + (b.dataset.act === 'inc' ? 1 : -1));
+        p.on_hand = String(next); save();
         b.parentElement.querySelector('.qin').value = next; break;
       }
       case 'add': openAdd(); break;
@@ -1005,9 +1014,9 @@
     if (q) {
       const p = parts.find(x => x.sku === q.dataset.sku); if (!p) return;
       const v = q.value.trim(), field = q.dataset.field;
-      if (!isCount(v)) { q.value = p[field] || (field === 'conteo' ? '0' : ''); toast('Enter a whole number, 0 or more', 'bad'); return; }
+      if (!isCount(v)) { q.value = p[field] || (field === 'on_hand' ? '0' : ''); toast('Enter a whole number, 0 or more', 'bad'); return; }
       p[field] = v === '' ? '' : String(parseInt(v, 10));
-      q.value = p[field] || (field === 'conteo' ? '0' : '');
+      q.value = p[field] || (field === 'on_hand' ? '0' : '');
       save(); return;
     }
     const c = e.target.closest('.sel'); if (!c) return;
@@ -1031,7 +1040,7 @@
     const err = $('bulk-err'); err.textContent = '';
     if (value !== '' && !isPrice(value)) { err.textContent = 'Enter a price like 12.50.'; return; }
     const v = value.replace(',', '.');
-    let n = 0; parts.forEach(p => { if (selected.has(p.sku)) { p.precio_cad = v; n++; } });
+    let n = 0; parts.forEach(p => { if (selected.has(p.sku)) { p.price_cad = v; n++; } });
     save(); $('bulk-price').value = ''; render();
     const noun = n === 1 ? 'part' : 'parts';
     toast(v ? `Price set on ${n} ${noun}` : `Price cleared on ${n} ${noun}`);
@@ -1044,7 +1053,7 @@
   $('bulk-clear').onclick = () => bulkSet('');
   $('bulk-verify').onclick = () => {
     let n = 0;
-    parts.forEach(p => { if (selected.has(p.sku) && isPending(p)) { p.validacion = 'validada'; p.confianza = 'high'; p.evidencia = `Validated against the paper manual on ${today()}`; n++; } });
+    parts.forEach(p => { if (selected.has(p.sku) && isPending(p)) { p.validation = 'verified'; p.confidence = 'high'; p.evidence = `Validated against the paper manual on ${today()}`; n++; } });
     selected.clear(); openSku = null; save(); render(); toast(`${n} ${n === 1 ? 'part' : 'parts'} verified and moved to the catalog`);
   };
   $('bulk-done').onclick = () => { selected.clear(); $('bulk-err').textContent = ''; render(); };
@@ -1052,7 +1061,7 @@
   // ---------- labels ----------
   function showLabel(sku) {
     const p = parts.find(x => x.sku === sku); if (!p) return;
-    $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.nombre_en)}</div>${p.nombre_es ? `<div class="label-es">${esc(p.nombre_es)}</div>` : ''}${p.sku_8dig ? `<div class="label-es mono">SKU ${esc(p.sku_8dig)}</div>` : ''}`;
+    $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.name_en)}</div>${p.name_es ? `<div class="label-es">${esc(p.name_es)}</div>` : ''}${p.sku_8digit ? `<div class="label-es mono">SKU ${esc(p.sku_8digit)}</div>` : ''}`;
     try {
       JsBarcode('#bc', p.sku, { format: 'CODE128', height: 60, fontSize: 16, margin: 8, font: 'JetBrains Mono' });
     } catch (err) {
@@ -1079,7 +1088,7 @@
     try { text = await file.text(); } catch (e) { toast('Could not read the file', 'bad'); return; }
     const r = validateCSV(text);
     pendingImport = r.errors.length ? null : r.parts;
-    const byMod = MODULES.map(m => `${m}: ${r.parts.filter(p => p.modulo === m).length}`).join(' · ');
+    const byMod = MODULES.map(m => `${m}: ${r.parts.filter(p => p.module === m).length}`).join(' · ');
     $('import-body').innerHTML = `
       <p><b>${esc(file.name)}</b> · ${r.parts.length} parts read (${byMod}).</p>
       ${r.errors.length ? `<div class="msg bad"><b>${r.errors.length} error(s). Fix the file and import again:</b><ul>${r.errors.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>`
@@ -1113,15 +1122,15 @@
   // Copies saved before the validation status existed get it from the published catalog.
   // Rows that came from the manual but are not in the published catalog are still to be validated, so they are dropped.
   async function mergeSeedFlags() {
-    if (!parts.some(p => p.validacion === undefined)) return;
+    if (!parts.some(p => p.validation === undefined)) return;
     const list = await fetchSeed(); if (!list) return;
     const seed = new Map(list.map(x => [x.sku, x]));
     parts = parts.filter(p => {
-      if (p.validacion !== undefined) return true;
+      if (p.validation !== undefined) return true;
       const m = seed.get(p.sku);
-      if (m) { p.validacion = m.validacion; if (!p.evidencia) p.evidencia = m.evidencia; return true; }
-      if (p.imagen_origen && !VALIDATE) return false;
-      p.validacion = 'validada'; if (!p.evidencia) p.evidencia = 'Added manually';
+      if (m) { p.validation = m.validation; if (!p.evidence) p.evidence = m.evidence; return true; }
+      if (p.source_image && !VALIDATE) return false;
+      p.validation = 'verified'; if (!p.evidence) p.evidence = 'Added manually';
       return true;
     });
     save(); render();

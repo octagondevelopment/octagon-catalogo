@@ -10,7 +10,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Sorts by manual order, SKU, name or price.
 - Adds, edits (including price) and removes parts. Removing asks for confirmation inside the page.
 - Selects several parts at once and sets or clears their price in one step.
-- Shows two quantities per part in the opened row, as a sample for the database stage: **On hand** (a counter with - and + buttons) and **Per machine** (how many the machine uses). The header shows the total number of parts. Per-machine values are filled only for the 19 main assemblies listed on page 3 of the manual; everything else is blank until the next stage. Both numbers are saved in this browser only and travel in the CSV (`conteo`, `cant_por_maquina`).
+- Shows two quantities per part in the opened row, as a sample for the database stage: **On hand** (a counter with - and + buttons) and **Per machine** (how many the machine uses). The header shows the total number of parts. Per-machine values are filled only for the 19 main assemblies listed on page 3 of the manual; everything else is blank until the next stage. Both numbers are saved in this browser only and travel in the CSV (`on_hand`, `qty_per_machine`).
 - Suggests the translation of a part name while you type it: write the English name and the Spanish one fills in, or the other way around. The suggestion is marked so it can be checked, and a name someone typed by hand is never overwritten (see Translation below).
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Prints barcode labels (CODE128 of the SKU).
@@ -44,7 +44,7 @@ Everything else waits to be validated. That list is internal and is not publishe
 - Run the app locally (`python -m http.server`) and open `http://localhost:8000/?validate`. That mode shows the **Catalog** and **To validate** views, the evidence for each part, and the **Mark verified** buttons. It keeps its own saved copy, separate from the normal one.
 - After checking a part against the paper manual, add its Article no. to `data/manual_validations.txt` and run `build_parts.py`. The part moves into `data/parts.csv`, and the next push publishes it.
 
-The status is kept in two columns of `data/internal/parts_all.csv`: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence). They are not in the published CSV.
+The status is kept in two columns of `data/internal/parts_all.csv`: `validation` (`verified` or `pending`) and `evidence` (a short sentence). They are not in the published CSV.
 
 ## Translation
 
@@ -90,7 +90,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 ## Files
 
 - `index.html`: the app.
-- `data/parts.csv`: the published catalog (UTF-8 with BOM so Excel shows accents correctly). It has only the columns people use: `sku`, `sku_8dig`, `nombre_en`, `nombre_es`, `modulo`, `subconjunto`, `precio_cad`, `cant_por_maquina`, `conteo`, `notas`. The CSV that people export from the app has the same columns. The development columns live in `data/internal/parts_all.csv`. `nombre_es` is a translation made by Claude, not text from the manual. In `data/internal/parts_all.csv`, `imagen_origen` and `posicion_en_diagrama` point back to the source photo. `confianza` (the confidence of the reading) is the same kind of field. They are for the team only. The app shows them only in team mode (`?validate`), and only team mode exports them in the CSV. Regular users never see them, and their exported file does not contain them.
+- `data/parts.csv`: the published catalog (UTF-8 with BOM so Excel shows accents correctly). It has only the columns people use: `sku`, `sku_8digit`, `name_en`, `name_es`, `module`, `subassembly`, `price_cad`, `qty_per_machine`, `on_hand`, `notes`. The CSV that people export from the app has the same columns. The development columns live in `data/internal/parts_all.csv`. `name_es` is a translation made by Claude, not text from the manual. In `data/internal/parts_all.csv`, `source_image` and `diagram_position` point back to the source photo. `confidence` (the confidence of the reading) is the same kind of field. They are for the team only. The app shows them only in team mode (`?validate`), and only team mode exports them in the CSV. Regular users never see them, and their exported file does not contain them.
 - `data/glossary.csv`: English and Spanish terms used to suggest translations.
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
