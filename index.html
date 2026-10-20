@@ -98,6 +98,10 @@
   .confirm { margin-top: 12px; padding: 12px; border-radius: 12px; background: var(--danger-soft); color: var(--ink); font-size: 14px; }
   .confirm .actions { margin-top: 10px; }
   .tagline b { color: var(--ink); font-weight: 600; }
+  .views { display: flex; gap: 4px; background: var(--soft); border-radius: 12px; padding: 4px; margin-bottom: 4px; }
+  .views button { flex: 1; border: 0; background: transparent; border-radius: 9px; padding: 8px 10px; font-weight: 600; font-size: 13.5px; color: var(--ink2); }
+  .views button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .14); }
+  .views .n { font-weight: 400; color: var(--muted); margin-left: 6px; }
   .qty { display: flex; flex-wrap: wrap; gap: 10px; margin: 6px 0 12px; }
   .qbox { flex: 1 1 140px; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 8px 10px 10px; }
   .qlabel { display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--muted); margin-bottom: 6px; }
@@ -163,11 +167,12 @@
 <div class="wrap">
   <div class="top-row">
     <div>
-      <h1>Parts catalog</h1>
-      <div class="tagline"><b id="total">0</b> parts · Mastrena II · Octagon Services</div>
+      <h1>Mastrena parts catalog</h1>
+      <div class="tagline"><b id="total">0</b> verified · <b id="pending">0</b> to validate</div>
     </div>
     <button class="btn primary" id="btn-add" type="button">+ Add part</button>
   </div>
+  <div class="views" id="views" role="tablist" aria-label="View"></div>
 </div>
 
 <div class="sticky">
@@ -192,14 +197,14 @@
 
   <div class="filters">
     <button class="chip" id="chip-noprice" type="button" aria-pressed="false">No price</button>
-    <button class="chip" id="chip-review" type="button" aria-pressed="false">Needs review</button>
+    <button class="chip hidden" id="chip-review" type="button" aria-pressed="false">With doubts</button>
     <select id="sub" aria-label="Filter by subassembly"></select>
     <select id="sort" aria-label="Sort parts">
       <option value="manual">Sort: manual</option>
       <option value="sku">Sort: SKU</option>
       <option value="name">Sort: name</option>
       <option value="price">Sort: price</option>
-      <option value="review">Sort: review first</option>
+      <option value="review">Sort: doubts first</option>
     </select>
   </div>
 
@@ -216,6 +221,7 @@
     <input id="bulk-price" inputmode="decimal" placeholder="CAD" aria-label="Price in CAD for the selected parts" autocomplete="off">
     <button class="btn sm primary" id="bulk-apply" type="button">Set price</button>
     <button class="btn sm" id="bulk-clear" type="button">Clear price</button>
+    <button class="btn sm primary hidden" id="bulk-verify" type="button">Mark verified</button>
     <button class="btn sm" id="bulk-done" type="button">Done</button>
     <div class="bulk-err" id="bulk-err" role="alert"></div>
   </div>
@@ -255,7 +261,7 @@
   const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
   const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
-                'imagen_origen','posicion_en_diagrama','confianza','notas','cant_por_maquina','conteo'];
+                'imagen_origen','posicion_en_diagrama','confianza','notas','cant_por_maquina','conteo','validacion','evidencia'];
   const REQUIRED = ['sku','nombre_en','modulo'];
   const CONF = ['high','medium','low','illegible'];
   // Older copies stored Spanish confidence values.
@@ -269,6 +275,9 @@
   const migrate = (p) => cleanNotes(normConf(p));
   const isCount = (v) => v === '' || v == null || /^\d{1,6}$/.test(String(v).trim());
   const needsReview = (p) => p.confianza === 'medium' || p.confianza === 'low' || p.confianza === 'illegible';
+  // Only parts explicitly marked 'pendiente' wait for validation; everything else counts as verified.
+  const isPending = (p) => p.validacion === 'pendiente';
+  const today = () => new Date().toLocaleDateString('en-CA');
 
   let parts = [];
   let openSku = null;      // row expanded
@@ -276,7 +285,7 @@
   let confirming = null;   // sku with the delete confirmation open
   let pendingImport = null;
   const selected = new Set();
-  const state = { q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE };
+  const state = { view: 'catalog', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE };
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -349,6 +358,7 @@
       p.precio_cad = p.precio_cad.replace(',', '.');
       if (p.precio_cad && !isPrice(p.precio_cad)) errors.push(`Line ${line} (${p.sku}): price "${p.precio_cad}" is not a valid number.`);
       migrate(p);
+      if (!header.includes('validacion')) p.validacion = 'validada';
       if (!isCount(p.cant_por_maquina) || !isCount(p.conteo)) errors.push(`Line ${line} (${p.sku}): quantities must be whole numbers, 0 or more.`);
       if (p.confianza && !CONF.includes(p.confianza)) warnings.push(`Line ${line} (${p.sku}): unknown confidence "${p.confianza}".`);
       const key = p.sku.toUpperCase();
@@ -459,6 +469,7 @@
 
   // ---------- filtering and sorting ----------
   const matches = (p, skipModule) => {
+    if ((state.view === 'validate') !== isPending(p)) return false;
     if (!skipModule && state.mod && p.modulo !== state.mod) return false;
     if (state.sub && p.subconjunto !== state.sub) return false;
     if (state.noPrice && p.precio_cad) return false;
@@ -487,18 +498,24 @@
 
   // ---------- render ----------
   function renderControls() {
+    const nPend = parts.filter(isPending).length;
+    $('views').innerHTML = `<button type="button" role="tab" data-act="view" data-view="catalog" aria-selected="${state.view === 'catalog'}">Catalog<span class="n">${parts.length - nPend}</span></button>` +
+      `<button type="button" role="tab" data-act="view" data-view="validate" aria-selected="${state.view === 'validate'}">To validate<span class="n">${nPend}</span></button>`;
+    $('total').textContent = parts.length - nPend;
+    $('pending').textContent = nPend;
     const counts = { '': 0 };
     MODULES.forEach(m => counts[m] = 0);
     parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.modulo] !== undefined) counts[p.modulo]++; } });
     $('tabs').innerHTML = [['', 'All'], ...MODULES.map(m => [m, m])].map(([v, label]) =>
       `<button class="tab" role="tab" type="button" data-act="tab" data-mod="${v}" aria-selected="${state.mod === v}">${label}<span class="n">${counts[v] ?? 0}</span></button>`).join('');
     const subs = new Map();
-    parts.forEach(p => { if (p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
+    parts.forEach(p => { if ((state.view === 'validate') === isPending(p) && p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
     const opts = [...subs.entries()].sort((a, b) => cmpSec(a[0], b[0]));
     $('sub').innerHTML = `<option value="">All subassemblies</option>` + opts.map(([s, n]) =>
       `<option value="${esc(s)}" ${state.sub === s ? 'selected' : ''}>${esc(s)} (${n})</option>`).join('');
     $('chip-noprice').setAttribute('aria-pressed', state.noPrice);
     $('chip-review').setAttribute('aria-pressed', state.review);
+    $('chip-review').classList.toggle('hidden', state.view !== 'validate');
     $('sort').value = state.sort;
   }
 
@@ -509,6 +526,7 @@
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8dig || '—')}</dd></div>
       <div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subconjunto || '—')}</dd></div>
+      <div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidencia || '—')}</dd></div>
       ${p.notas ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notas)}</dd></div>` : ''}
     </dl>`;
   }
@@ -542,8 +560,10 @@
       ${qtyHtml(p)}
       ${factsHtml(p)}
       <div class="actions">
+        ${isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
         <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
         <button class="btn sm" type="button" data-act="label" data-sku="${esc(p.sku)}">Label</button>
+        ${isPending(p) ? '' : `<button class="btn sm" type="button" data-act="unverify" data-sku="${esc(p.sku)}">Send back to validation</button>`}
         <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
       </div>${confirmBox}</div>`;
   }
@@ -570,13 +590,15 @@
     renderControls();
     const list = filtered();
     const shown = list.slice(0, state.limit);
-    $('total').textContent = parts.length;
     $('count').textContent = parts.length ? `Showing ${shown.length} of ${list.length}` : '';
     $('selall').disabled = !list.length;
     if (!parts.length) {
       $('list').innerHTML = `<li class="empty"><b>No parts yet</b>Add the first one, or import a catalog CSV.<br><button class="btn primary" type="button" data-act="add">+ Add part</button></li>`;
     } else if (!list.length) {
-      $('list').innerHTML = `<li class="empty"><b>No matches</b>No parts fit the current search and filters.<br><button class="btn" type="button" data-act="reset">Clear filters</button></li>`;
+      const done = state.view === 'validate' && !parts.some(isPending);
+      $('list').innerHTML = done
+        ? `<li class="empty"><b>Everything is verified</b>No parts are waiting for validation.</li>`
+        : `<li class="empty"><b>No matches</b>No parts fit the current search and filters.<br><button class="btn" type="button" data-act="reset">Clear filters</button></li>`;
     } else {
       $('list').innerHTML = shown.map(rowHtml).join('');
     }
@@ -598,6 +620,7 @@
     $('bulk').classList.toggle('hidden', !n);
     document.body.classList.toggle('has-bulk', n > 0);
     $('bulk-n').textContent = `${n} selected`;
+    $('bulk-verify').classList.toggle('hidden', state.view !== 'validate');
   }
 
   function formFields(p, idp) {
@@ -625,8 +648,8 @@
       <div class="err full" id="${idp}-err" role="alert"></div>`;
   }
 
-  function readForm(form) {
-    const p = {}; COLS.forEach(c => { const el = form.elements[c]; p[c] = el ? el.value.trim() : ''; });
+  function readForm(form, base) {
+    const p = {}; COLS.forEach(c => { const el = form.elements[c]; p[c] = el ? el.value.trim() : (base && base[c] != null ? base[c] : ''); });
     p.precio_cad = p.precio_cad.replace(',', '.');
     return p;
   }
@@ -669,12 +692,13 @@
 
   document.addEventListener('submit', (e) => {
     const form = e.target; e.preventDefault();
-    const p = readForm(form);
+    const p = readForm(form, form.dataset.form === 'edit' ? parts.find(x => x.sku === form.dataset.orig) : null);
     if (form.dataset.form === 'add') {
       const err = checkPart(p, null);
       if (err) { $('add-err').textContent = err; return; }
+      p.validacion = 'validada'; p.evidencia = 'Added manually';
       parts.unshift(p); save(); closeSheets();
-      Object.assign(state, { q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
+      Object.assign(state, { view: 'catalog', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
       $('q').value = ''; openSku = p.sku; editing = null; confirming = null;
       render(); scrollToRow(p.sku); toast(`Part ${p.sku} added`);
     } else if (form.dataset.form === 'edit') {
@@ -708,6 +732,18 @@
         parts = parts.filter(x => x.sku !== sku); selected.delete(sku);
         confirming = null; openSku = null; save(); render(); toast(`Part ${sku} removed`); break;
       case 'label': showLabel(sku); break;
+      case 'view':
+        Object.assign(state, { view: b.dataset.view, q: '', mod: '', sub: '', noPrice: false, review: false, limit: PAGE });
+        $('q').value = ''; selected.clear(); openSku = editing = confirming = null; render(); break;
+      case 'verify': {
+        const p = parts.find(x => x.sku === sku); if (!p) break;
+        p.validacion = 'validada'; p.confianza = 'high'; p.evidencia = `Validated against the paper manual on ${today()}`;
+        selected.delete(sku); openSku = null; editing = null; save(); render(); toast(`Part ${sku} verified and moved to the catalog`); break;
+      }
+      case 'unverify': {
+        const p = parts.find(x => x.sku === sku); if (!p) break;
+        p.validacion = 'pendiente'; selected.delete(sku); openSku = null; save(); render(); toast(`Part ${sku} sent back to validation`); break;
+      }
       case 'dec': case 'inc': {
         const p = parts.find(x => x.sku === sku); if (!p) break;
         const next = Math.max(0, (parseInt(p.conteo || '0', 10) || 0) + (b.dataset.act === 'inc' ? 1 : -1));
@@ -767,6 +803,11 @@
     bulkSet(v);
   };
   $('bulk-clear').onclick = () => bulkSet('');
+  $('bulk-verify').onclick = () => {
+    let n = 0;
+    parts.forEach(p => { if (selected.has(p.sku) && isPending(p)) { p.validacion = 'validada'; p.confianza = 'high'; p.evidencia = `Validated against the paper manual on ${today()}`; n++; } });
+    selected.clear(); openSku = null; save(); render(); toast(`${n} ${n === 1 ? 'part' : 'parts'} verified and moved to the catalog`);
+  };
   $('bulk-done').onclick = () => { selected.clear(); $('bulk-err').textContent = ''; render(); };
 
   // ---------- labels ----------
@@ -817,9 +858,24 @@
   $('btn-import-cancel').onclick = closeSheets;
 
   // ---------- startup ----------
+  // Copies saved before the validation status existed get it from the published catalog.
+  async function mergeSeedFlags() {
+    if (!parts.some(p => p.validacion === undefined)) return;
+    try {
+      const res = await fetch(SEED_URL, { cache: 'no-store' }); if (!res.ok) return;
+      const seed = new Map(validateCSV(await res.text()).parts.map(x => [x.sku, x]));
+      parts.forEach(p => {
+        if (p.validacion !== undefined) return;
+        const m = seed.get(p.sku);
+        p.validacion = m ? m.validacion : 'validada';
+        if (!p.evidencia) p.evidencia = m ? m.evidencia : 'Added manually';
+      });
+      save(); render();
+    } catch (e) { /* offline: try again next time */ }
+  }
   async function init() {
     const stored = load();
-    if (stored !== null) { parts = stored; render(); return; }
+    if (stored !== null) { parts = stored; render(); await mergeSeedFlags(); return; }
     // First visit: try to load the catalog published next to the page.
     try {
       const res = await fetch(SEED_URL, { cache: 'no-store' });

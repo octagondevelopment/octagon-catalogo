@@ -4,6 +4,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 
 ## What it does
 
+- Has two views: **Catalog** (only parts that are verified) and **To validate** (parts still waiting to be checked against the paper manual). Open a part in To validate and press **Mark verified** (or select several and verify them together) to move it into the catalog; **Send back to validation** reverses it. Each part shows its **Evidence**: how it was cross-checked.
 - Shows the catalog as a compact list: a sketch, the English and Spanish names, SKU and price. Tap a row to open its details; the actions (edit, label, remove) live there.
 - Searches by name or SKU. Module tabs show counts, and you can also filter by subassembly (the manual's numbering, for example 1.10.2 Brew module), "No price" and "Needs review" (the rows marked medium or low confidence).
 - Sorts by manual order, SKU, name, price, or needs-review first.
@@ -27,6 +28,17 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 The first time someone opens the page, the app loads `data/parts.csv`. From then on it uses that person's local copy.
 
 > Opening `index.html` by double-clicking it (`file://`) won't work: the browser blocks reading `data/parts.csv`, so the app starts empty. Use **Import CSV** and pick `data/parts.csv`, or test locally with `python -m http.server` and open `http://localhost:8000`.
+
+## How parts become verified
+
+A part starts in the catalog only when a second, independent source agrees with the first reading. The build script (`data/build_parts.py`) applies this rule:
+
+1. The same Article no., 8-digit SKU and name were read identically on 2 or more clear pages, or
+2. The name equals the title of the part's own chapter in the manual (the SKU was read once).
+
+In both cases the Article no. must look like `NNN.NNN`, the 8-digit SKU must look like `11xxxxxx` and belong to no other article, and the manual must not have a typo flagged on that part. Everything else (SKUs with 6 or 7 digits, SKUs shared by two articles, parts that only appear in a blurry photo) goes to **To validate**. This is a cross-check of my reading, not a guarantee: the paper manual is still the final authority.
+
+The CSV carries this in two columns: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence).
 
 ## Update the catalog
 

@@ -6,7 +6,7 @@ from translations_es import TR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
-        "imagen_origen", "posicion_en_diagrama", "confianza", "notas", "cant_por_maquina", "conteo"]
+        "imagen_origen", "posicion_en_diagrama", "confianza", "notas", "cant_por_maquina", "conteo", "validacion", "evidencia"]
 # Quantity per machine, only where the manual states it for the whole machine: the main table on page 3 of the
 # catalogue ("1 Mastrena II - 230V"). Other quantities in the manual are per subassembly, so they stay blank.
 PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "127.950": "1", "128.036": "1",
@@ -61,6 +61,11 @@ for a, lst in occ.items():
     for o in lst:
         if o["sku"]: sku_owner[o["sku"]].add(a)
 
+# Chapter titles (normalized) -> chapter number, used to confirm assembly names against their own chapter page.
+def norm_title(s):
+    return re.sub(r"\s+", " ", s.lower().replace(" mastrena ii", "").replace("mastrena ii ", "")).strip(" .")
+CHAPTER = {norm_title(re.sub(r"^[\d.]+\s*", "", p["sec"])): p["sec"].split(" ")[0] for p in pages}
+
 rows = []
 for art, lst in occ.items():
     first = lst[0]; p = first["page"]
@@ -102,11 +107,29 @@ for art, lst in occ.items():
         more = f" +{len(names) - 4} more" if len(names) > 4 else ""
         notes.append("Also in: " + ", ".join(names[:4]) + more)
 
+    # Validation: a part goes straight into the catalog only when a second, independent source agrees with the first read.
+    #  a) the same article, SKU and name read identically on 2+ clear pages, or
+    #  b) its name equals the title of its own chapter (read once, but the name is confirmed elsewhere).
+    # Both need an article no. NNN.NNN, an 8-digit SKU 11xxxxxx used by no other article, and no typo flagged in the manual.
+    pages_seen = {o["page"]["n"] for o in lst}
+    clear = pages_seen - BLURRY
+    same = len(skus) == 1 and len({o["desc"].rstrip(".") for o in lst}) == 1
+    strict = bool(ART.match(art) and SKU8.match(sku8 or "") and len(sku_owner[sku8]) == 1 and art not in SIC)
+    verified, ev = False, f"Read on {len(clear)} clear page{'' if len(clear) == 1 else 's'}"
+    if not clear:
+        ev = "Only in a blurry photo"
+    elif not same:
+        ev = "Readings differ between pages"
+    elif strict and len(clear) >= 2:
+        verified, ev = True, f"Same values read on {len(clear)} independent clear pages"
+    elif strict and norm_title(en) in CHAPTER:
+        verified, ev = True, f"Name matches chapter title {CHAPTER[norm_title(en)]}; SKU read once"
     rows.append(dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=tr_es(art, en), modulo=mod,
                      subconjunto=sec, precio_cad="", imagen_origen=p["img"],
                      posicion_en_diagrama=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
                      confianza=conf, notas="; ".join(notes),
-                     cant_por_maquina=PER_MACHINE.get(art, ""), conteo=""))
+                     cant_por_maquina=PER_MACHINE.get(art, ""), conteo="",
+                     validacion="validada" if verified else "pendiente", evidencia=ev))
 
 with open(os.path.join(HERE, "parts.csv"), "w", newline="", encoding="utf-8-sig") as f:
     w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(rows)
@@ -118,6 +141,7 @@ rev = [r for r in rows if r["confianza"] in ("medium", "low")]
 L = ["# Extraction report: Mastrena II 230V catalog", "",
      f"Source: Thermoplan *Spare parts catalogue Mastrena II - 230V* (07.08.2023_EN), {len(pages)} pages with a parts table.", "",
      f"Unique parts: **{len(rows)}** (from {sum(len(v) for v in occ.values())} rows read; repeated rows were merged into one).", "",
+     f"Verified (shown in the catalog): **{sum(r['validacion'] == 'validada' for r in rows)}**. To validate: **{sum(r['validacion'] == 'pendiente' for r in rows)}**.", "",
      "## By module", ""] + [f"- {m}: {by_mod.get(m, 0)}" for m in ["Mechanical", "Steam", "Hydraulic", "Chassis", "Other"]] + [
      "", "## By confidence", ""] + [f"- {c}: {by_conf.get(c, 0)}" for c in ["high", "medium", "low", "illegible"]] + [
      "", f"## Rows to check against the paper manual ({len(rev)})", "",
@@ -126,4 +150,4 @@ for r in rev:
     reason = "; ".join(x for x in r["notas"].split("; ") if not x.startswith("Also in"))
     L.append(f"| {r['sku']} | {r['sku_8dig']} | {r['nombre_en']} | {r['imagen_origen']} | {r['confianza']} | {reason} |")
 open(os.path.join(HERE, "extraction_report.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")
-print(len(rows), dict(by_mod), dict(by_conf))
+print(len(rows), dict(by_mod), dict(by_conf), "verified:", sum(r["validacion"] == "validada" for r in rows))

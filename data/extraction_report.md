@@ -4,6 +4,8 @@ Source: Thermoplan *Spare parts catalogue Mastrena II - 230V* (07.08.2023_EN), 7
 
 Unique parts: **403** (from 606 rows read; repeated rows were merged into one).
 
+Verified (shown in the catalog): **103**. To validate: **300**.
+
 ## By module
 
 - Mechanical: 92
