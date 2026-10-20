@@ -268,6 +268,9 @@
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
   const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
                 'imagen_origen','posicion_en_diagrama','confianza','notas','cant_por_maquina','conteo','validacion','evidencia'];
+  // The CSV people export has only the columns they use. The development columns (source image, diagram position,
+  // confidence, validation, evidence) are exported only in team mode.
+  const PUBLIC_COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad','cant_por_maquina','conteo','notas'];
   const REQUIRED = ['sku','nombre_en','modulo'];
   const CONF = ['high','medium','low','illegible'];
   // Older copies stored Spanish confidence values.
@@ -333,8 +336,8 @@
     return rows.filter(r => !(r.length === 1 && r[0].trim() === ''));
   }
   const csvCell = (v) => { v = String(v ?? ''); return /[",\r\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
-  function toCSV(list) {
-    return [COLS.join(','), ...list.map(p => COLS.map(c => csvCell(p[c])).join(','))].join('\r\n') + '\r\n';
+  function toCSV(list, cols = COLS) {
+    return [cols.join(','), ...list.map(p => cols.map(c => csvCell(p[c])).join(','))].join('\r\n') + '\r\n';
   }
   const isPrice = (v) => /^\d+([.,]\d{1,2})?$/.test(String(v).trim());
   const fmtPrice = (v) => {
@@ -1061,7 +1064,7 @@
 
   // ---------- export / import ----------
   $('btn-export').onclick = () => {
-    const blob = new Blob(['﻿' + toCSV(parts)], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob(['﻿' + toCSV(parts, VALIDATE ? COLS : PUBLIC_COLS)], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = `octagon-catalog-${new Date().toLocaleDateString('en-CA')}.csv`;

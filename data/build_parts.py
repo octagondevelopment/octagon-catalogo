@@ -29,6 +29,10 @@ PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "
                "128.037": "1", "128.047": "1", "128.051": "1", "128.065": "1", "128.386": "1", "128.653": "1",
                "129.562": "1", "130.702": "2", "130.704": "1", "131.365": "1", "133.029": "1", "133.661": "1",
                "133.690": "1"}
+# Columns people see in the published catalog and in the CSV they export. The rest (source image, diagram position,
+# confidence, validation status, evidence) is for development only and stays in data/internal/parts_all.csv.
+PUBLIC_COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
+               "cant_por_maquina", "conteo", "notas"]
 ART = re.compile(r"^\d{3}\.\d{3}$")
 SKU8 = re.compile(r"^11\d{6}$")
 # Page 3 lists the main assemblies: module depends on what each assembly is.
@@ -149,11 +153,11 @@ for art, lst in occ.items():
                      cant_por_maquina=PER_MACHINE.get(art, ""), conteo="",
                      validacion="validada" if verified else "pendiente", evidencia=ev))
 
-def write_csv(path, subset):
+def write_csv(path, subset, cols):
     with open(path, "w", newline="", encoding="utf-8-sig") as f:
-        w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(subset)
-write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validacion"] == "validada"])
-write_csv(os.path.join(INTERNAL, "parts_all.csv"), rows)
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(subset)
+write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validacion"] == "validada"], PUBLIC_COLS)
+write_csv(os.path.join(INTERNAL, "parts_all.csv"), rows, COLS)
 
 # ---- report ----
 by_mod = collections.Counter(r["modulo"] for r in rows)

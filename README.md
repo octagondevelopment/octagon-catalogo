@@ -44,7 +44,7 @@ Everything else waits to be validated. That list is internal and is not publishe
 - Run the app locally (`python -m http.server`) and open `http://localhost:8000/?validate`. That mode shows the **Catalog** and **To validate** views, the evidence for each part, and the **Mark verified** buttons. It keeps its own saved copy, separate from the normal one.
 - After checking a part against the paper manual, add its Article no. to `data/manual_validations.txt` and run `build_parts.py`. The part moves into `data/parts.csv`, and the next push publishes it.
 
-The CSV carries the status in two columns: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence).
+The status is kept in two columns of `data/internal/parts_all.csv`: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence). They are not in the published CSV.
 
 ## Translation
 
@@ -90,7 +90,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 ## Files
 
 - `index.html`: the app.
-- `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo. `confianza` (the confidence of the reading) is the same kind of field. They are for the team only: they stay in the CSV, so nothing is lost when the file is exported and imported, but the app shows them only in team mode (`?validate`), never to regular users.
+- `data/parts.csv`: the published catalog (UTF-8 with BOM so Excel shows accents correctly). It has only the columns people use: `sku`, `sku_8dig`, `nombre_en`, `nombre_es`, `modulo`, `subconjunto`, `precio_cad`, `cant_por_maquina`, `conteo`, `notas`. The CSV that people export from the app has the same columns. The development columns live in `data/internal/parts_all.csv`. `nombre_es` is a translation made by Claude, not text from the manual. In `data/internal/parts_all.csv`, `imagen_origen` and `posicion_en_diagrama` point back to the source photo. `confianza` (the confidence of the reading) is the same kind of field. They are for the team only. The app shows them only in team mode (`?validate`), and only team mode exports them in the CSV. Regular users never see them, and their exported file does not contain them.
 - `data/glossary.csv`: English and Spanish terms used to suggest translations.
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
