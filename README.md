@@ -9,6 +9,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Adds, edits (including price) and removes parts. Removing a part asks for confirmation inside the page.
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Prints barcode labels (CODE128 of the SKU).
+- Shows a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
 
 **Important:** changes are saved in this browser only (localStorage, key `octagon-inv-v1`). Each device keeps its own copy, so export the CSV after editing.
 
@@ -40,7 +41,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 ## Files
 
 - `index.html`: the app.
-- `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...).
+- `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo (they are in the CSV and the edit form, not on the card).
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV and the report.
 - `data/extraction_report.md`: totals and the rows to check against the paper manual.

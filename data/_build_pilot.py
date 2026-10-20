@@ -89,11 +89,10 @@ def add(art, sku8, en, es, mod, sub, img, dimg, fila):
         r = seen[art]
         r["notas"] += f" | Repeated in {img} ({sub}) row {fila}"
         return
-    notas, conf = ["nombre_es = translation"], "high"
+    notas, conf = [], "high"
     if not ART.match(art): conf = "low"; notas.append("Article no. does not match NNN.NNN")
     if sku8 and not SKU8.match(sku8):
         conf = "medium"; notas.append(f"8-digit SKU '{sku8}' does not match 11xxxxxx; check on paper")
-    if mod == "Other": notas.append(f"Manual section: {sub}")
     r = dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=es, modulo=mod, subconjunto=sub,
              precio_cad="", imagen_origen=img, posicion_en_diagrama=pos, confianza=conf, notas="; ".join(notas))
     seen[art] = r; rows.append(r)

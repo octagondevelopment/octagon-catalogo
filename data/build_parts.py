@@ -62,7 +62,7 @@ for art, lst in occ.items():
     descs = sorted({o["desc"] for o in lst}, key=len, reverse=True)
     en = descs[0]
     sku8 = skus[-1] if skus else ""
-    conf, notes = "high", ["nombre_es = translation"]
+    conf, notes = "high", []
     mod = TOP_MODULE.get(art, "Other") if p["mod"] == "*" else p["mod"]
     sec = TOP_SECTION if p["mod"] == "*" else p["sec"]
 
@@ -87,14 +87,14 @@ for art, lst in occ.items():
         notes.append("Uncertain name: " + DOUBT_DESC[art])
     if art in SIC:
         notes.append(f"'{SIC[art]}' as printed in the manual")
-    if p["mod"] != "*" and mod == "Other":
-        notes.append("Manual section: " + p["sec"])
     secs = []
     for o in lst[1:]:
         s = o["page"]["sec"]
         if s != p["sec"] and s not in secs: secs.append(s)
     if secs:
-        notes.append("Also in: " + ", ".join(s.split(" ")[0] for s in secs))
+        names = [s.split(" ")[0] for s in secs]
+        more = f" +{len(names) - 4} more" if len(names) > 4 else ""
+        notes.append("Also in: " + ", ".join(names[:4]) + more)
 
     rows.append(dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=tr_es(art, en), modulo=mod,
                      subconjunto=sec, precio_cad="", imagen_origen=p["img"],
@@ -116,7 +116,7 @@ L = ["# Extraction report: Mastrena II 230V catalog", "",
      "", f"## Rows to check against the paper manual ({len(rev)})", "",
      "| SKU (Article no.) | 8-digit SKU | Name | Image | Confidence | Reason |", "|---|---|---|---|---|---|"]
 for r in rev:
-    reason = "; ".join(x for x in r["notas"].split("; ") if not x.startswith(("nombre_es", "Manual section", "Also in")))
+    reason = "; ".join(x for x in r["notas"].split("; ") if not x.startswith("Also in"))
     L.append(f"| {r['sku']} | {r['sku_8dig']} | {r['nombre_en']} | {r['imagen_origen']} | {r['confianza']} | {reason} |")
 open(os.path.join(HERE, "extraction_report.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")
 print(len(rows), dict(by_mod), dict(by_conf))
