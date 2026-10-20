@@ -850,8 +850,7 @@
       </select></label>
       ${f('cant_por_maquina', 'Per machine', 'inputmode="numeric" placeholder="—"')}
       ${f('conteo', 'On hand', 'inputmode="numeric" placeholder="0"')}
-      ${f('imagen_origen', 'Source image')}
-      ${f('posicion_en_diagrama', 'Diagram position')}
+      ${VALIDATE ? f('imagen_origen', 'Source image') + f('posicion_en_diagrama', 'Diagram position') : ''}
       <label class="full">Notes<textarea name="notas" rows="2">${esc(p.notas)}</textarea></label>
       <div class="err full" id="${idp}-err" role="alert"></div>`;
   }
