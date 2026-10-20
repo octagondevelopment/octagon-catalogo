@@ -4,12 +4,15 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 
 ## What it does
 
-- Lists each part with its SKU (Thermoplan Article no.), 8-digit SKU, EN/ES name, module, subassembly and price in CAD. Price is optional; a part without one shows "no price".
-- Searches by name or SKU and filters by module (Mechanical, Steam, Hydraulic, Chassis, Other).
-- Adds, edits (including price) and removes parts. Removing a part asks for confirmation inside the page.
+- Shows the catalog as a compact list: a sketch, the English and Spanish names, SKU and price. Tap a row to open its details; the actions (edit, label, remove) live there.
+- Searches by name or SKU. Module tabs show counts, and you can also filter by subassembly (the manual's numbering, for example 1.10.2 Brew module), "No price" and "Needs review" (the rows marked medium or low confidence).
+- Sorts by manual order, SKU, name, price, or needs-review first.
+- Adds, edits (including price) and removes parts. Removing asks for confirmation inside the page.
+- Selects several parts at once and sets or clears their price in one step.
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Prints barcode labels (CODE128 of the SKU).
-- Shows a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
+- Draws a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
+- Works on phones (designed for 400px wide) and follows the device's light or dark mode.
 
 **Important:** changes are saved in this browser only (localStorage, key `octagon-inv-v1`). Each device keeps its own copy, so export the CSV after editing.
 

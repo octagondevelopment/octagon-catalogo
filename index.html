@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
 <title>Octagon · Parts Catalog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -10,74 +11,135 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 <style>
   :root {
-    --bg: #f4f5f7; --card: #fff; --ink: #1b1f24; --muted: #5d6673; --line: #dde1e6;
-    --brand: #0b5d4b; --brand-ink: #fff; --warn-bg: #fff4d6; --warn-line: #e8c15a;
-    --danger: #b3261e; --danger-bg: #fde8e6; --ok-bg: #e5f4ee;
-    --chip: #eef1f4; --radius: 10px;
+    --bg: #f6f6f3; --surface: #fff; --ink: #17181a; --ink2: #3a3d42; --muted: #6b7077;
+    --line: #e6e6e1; --soft: #f1f1ed; --accent: #0f6b57; --accent-ink: #fff; --accent-soft: #e2f2ed;
+    --warn: #8a5a00; --warn-soft: #fff0cc; --danger: #b3261e; --danger-soft: #fdeceb;
+    --radius: 14px; --shadow: 0 6px 24px rgba(20, 24, 22, .14);
     --gutter-l: max(16px, env(safe-area-inset-left, 0px));
     --gutter-r: max(16px, env(safe-area-inset-right, 0px));
   }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1110; --surface: #171918; --ink: #ecece9; --ink2: #c9cbc8; --muted: #9a9fa4;
+      --line: #272a29; --soft: #1e2120; --accent: #46c4a3; --accent-ink: #06231b; --accent-soft: #12302a;
+      --warn: #f0c060; --warn-soft: #352a10; --danger: #ff8a80; --danger-soft: #3a1c1a;
+      --shadow: 0 6px 24px rgba(0, 0, 0, .5);
+    }
+  }
   * { box-sizing: border-box; }
   html, body { margin: 0; }
-  body { background: var(--bg); color: var(--ink); font: 15px/1.45 Inter, system-ui, sans-serif; overflow-x: hidden; }
-  .wrap { max-width: 980px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
-  header { background: var(--brand); color: var(--brand-ink); padding: 14px 0; }
-  header h1 { margin: 0; font-size: 18px; font-weight: 700; }
-  header p { margin: 2px 0 0; font-size: 13px; opacity: .85; }
+  body { background: var(--bg); color: var(--ink); font: 15px/1.45 Inter, system-ui, sans-serif; overflow-x: hidden; padding-bottom: 96px; -webkit-text-size-adjust: 100%; }
+  .wrap { max-width: 860px; margin: 0 auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
   .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
-  .banner { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: var(--radius); padding: 10px 12px; margin: 12px 0; font-size: 13px; display: flex; gap: 10px; align-items: flex-start; }
-  .banner b { display: block; }
-  .banner button { margin-left: auto; flex: none; }
-  .toolbar { display: grid; gap: 8px; grid-template-columns: 1fr; margin: 12px 0; }
-  @media (min-width: 640px) { .toolbar { grid-template-columns: 1fr 200px; } }
-  input, select, textarea { width: 100%; font: inherit; padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); min-width: 0; }
-  input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand); outline-offset: -1px; }
-  button { font: inherit; font-weight: 600; font-size: 14px; border-radius: 8px; padding: 8px 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); cursor: pointer; }
-  button.primary { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
-  button.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
-  button.link { border: 0; background: none; padding: 4px 6px; color: var(--brand); }
-  button:disabled { opacity: .5; cursor: default; }
-  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; }
-  .count { color: var(--muted); font-size: 13px; margin: 4px 0 8px; }
-  .list { display: grid; gap: 10px; padding-bottom: 40px; }
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; min-width: 0; }
-  .card-row { display: flex; gap: 12px; align-items: flex-start; }
-  .card-info { min-width: 0; flex: 1; }
-  .thumb { flex: none; width: 64px; height: 64px; border: 1px solid var(--line); border-radius: 8px; background: #fcfcfa; display: grid; place-items: center; }
-  .thumb svg { width: 56px; height: 56px; fill: none; stroke: #2b2f36; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; filter: url(#rough); }
-  .card-top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-  .sku { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 15px; }
-  .sku8 { font-family: "JetBrains Mono", monospace; color: var(--muted); font-size: 12px; }
-  .price { margin-left: auto; font-weight: 700; }
-  .price.none { font-weight: 500; color: var(--muted); font-style: italic; }
-  .name { margin: 4px 0 0; font-weight: 600; overflow-wrap: anywhere; }
-  .name-es { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
-  .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-  .chip { background: var(--chip); border-radius: 999px; padding: 2px 9px; font-size: 12px; overflow-wrap: anywhere; max-width: 100%; }
-  .chip.conf-medium { background: #fff1c2; } .chip.conf-low, .chip.conf-illegible { background: var(--danger-bg); color: var(--danger); }
-  .notes { font-size: 12px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
-  .card-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
-  .confirm { background: var(--danger-bg); border: 1px solid #f2b8b5; border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 14px; }
-  .confirm .row { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-  .form { display: grid; gap: 10px; grid-template-columns: 1fr; }
-  @media (min-width: 640px) { .form { grid-template-columns: 1fr 1fr; } .form .full { grid-column: 1 / -1; } }
-  .form label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); font-weight: 500; min-width: 0; }
-  .form .err { color: var(--danger); font-size: 13px; }
-  .panel { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px; margin-bottom: 12px; }
-  .panel h2 { font-size: 16px; margin: 0 0 10px; }
-  .empty { text-align: center; padding: 32px 12px; color: var(--muted); background: var(--card); border: 1px dashed var(--line); border-radius: var(--radius); }
-  .empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
-  .msg { border-radius: 8px; padding: 10px 12px; margin: 8px 0; font-size: 14px; }
-  .msg.ok { background: var(--ok-bg); } .msg.bad { background: var(--danger-bg); color: var(--danger); }
-  .msg ul { margin: 6px 0 0; padding-left: 18px; max-height: 220px; overflow: auto; }
   .hidden { display: none !important; }
-  #label-area { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; }
-  #label-area svg { max-width: 100%; height: auto; }
-  .label-name { font-weight: 600; text-align: center; overflow-wrap: anywhere; }
+  h1 { margin: 0; font-size: 21px; font-weight: 700; letter-spacing: -.01em; }
+  .top-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 0 8px; }
+  .tagline { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+  .sticky { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 96%, transparent); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); padding: 6px 0 8px; }
+  .search { position: relative; display: block; }
+  .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+  input, select, textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; min-width: 0; width: 100%; color-scheme: light dark; }
+  .search input { height: 48px; padding-left: 42px; border-radius: 14px; font-size: 16px; }
+  input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible, .row-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 10px 0 2px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { flex: none; white-space: nowrap; border: 1px solid var(--line); background: var(--surface); color: var(--ink2); border-radius: 999px; padding: 6px 13px; font-size: 13px; font-weight: 500; }
+  .tab .n { color: var(--muted); margin-left: 5px; font-weight: 400; }
+  .tab[aria-selected="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+  .tab[aria-selected="true"] .n { color: inherit; opacity: .7; }
+
+  button { font: inherit; cursor: pointer; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 40px; padding: 0 15px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 600; font-size: 14px; white-space: nowrap; }
+  .btn:hover { background: var(--soft); }
+  .btn.sm { height: 34px; padding: 0 12px; font-size: 13px; border-radius: 10px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.06); }
+  .btn.danger { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .btn.ghost { border-color: transparent; background: transparent; }
+  .btn.ghost:hover { background: var(--soft); }
+  .btn.warnlink { color: var(--danger); }
+
+  .notice { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; margin: 8px 0 10px; padding: 9px 12px; border-radius: 12px; background: var(--accent-soft); color: var(--ink2); font-size: 13px; }
+  .notice b { color: var(--ink); font-weight: 600; }
+  .notice-actions { display: flex; gap: 6px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .chip { border: 1px solid var(--line); background: var(--surface); color: var(--ink2); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 500; }
+  .chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .filters select { width: auto; flex: 1 1 calc(50% - 4px); font-size: 13px; padding: 7px 10px; text-overflow: ellipsis; }
+  .filters .chip { flex: none; }
+  .listbar { display: flex; align-items: center; justify-content: space-between; margin: 4px 2px 8px; color: var(--muted); font-size: 13px; }
+  .selall { display: flex; align-items: center; gap: 8px; }
+  input[type="checkbox"] { width: 19px; height: 19px; padding: 0; accent-color: var(--accent); flex: none; }
+
+  .list { list-style: none; margin: 0; padding: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  .row { border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row-head { display: grid; grid-template-columns: auto 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; cursor: pointer; }
+  .row-head:hover, .row.open .row-head { background: var(--soft); }
+  .thumb { width: 44px; height: 44px; border-radius: 10px; background: var(--soft); display: grid; place-items: center; }
+  .row.open .thumb, .row-head:hover .thumb { background: var(--surface); }
+  .thumb svg { width: 36px; height: 36px; fill: none; stroke: var(--ink2); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; filter: url(#rough); }
+  .info { min-width: 0; }
+  .name { font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
+  .sub2 { color: var(--muted); font-size: 12.5px; margin-top: 2px; overflow-wrap: anywhere; }
+  .sub2 .mono { color: var(--ink2); font-size: 12px; }
+  .pill { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 600; margin-left: 4px; vertical-align: 1px; }
+  .pill.warn { background: var(--warn-soft); color: var(--warn); }
+  .price { font-weight: 600; font-size: 14px; text-align: right; }
+  .price.none { color: var(--muted); font-weight: 400; font-size: 12px; }
+  .detail { padding: 2px 12px 14px; background: var(--soft); }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 6px 0 12px; }
+  .fact { margin: 0; min-width: 0; }
+  .fact.wide { grid-column: 1 / -1; }
+  .fact dt { font-size: 11.5px; color: var(--muted); margin-bottom: 1px; }
+  .fact dd { margin: 0; font-size: 14px; overflow-wrap: anywhere; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .confirm { margin-top: 12px; padding: 12px; border-radius: 12px; background: var(--danger-soft); color: var(--ink); font-size: 14px; }
+  .confirm .actions { margin-top: 10px; }
+  .more { text-align: center; margin: 14px 0; }
+  .empty { padding: 34px 16px; text-align: center; color: var(--muted); }
+  .empty b { display: block; color: var(--ink); font-size: 16px; margin-bottom: 4px; }
+  .empty .btn { margin-top: 12px; }
+
+  .form { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
+  .form label { display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); font-weight: 500; min-width: 0; }
+  .form .err { color: var(--danger); font-size: 13px; min-height: 0; }
+  @media (min-width: 640px) { .form { grid-template-columns: 1fr 1fr; } .form .full { grid-column: 1 / -1; } .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  .bulk { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 0 var(--gutter-r) calc(12px + env(safe-area-inset-bottom, 0px)) var(--gutter-l); pointer-events: none; }
+  .bulk-card { pointer-events: auto; max-width: 860px; margin: 0 auto; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; box-shadow: var(--shadow); }
+  .bulk-card .grow { flex: 1; font-weight: 600; font-size: 14px; }
+  .bulk-card input { width: 92px; height: 34px; padding: 0 10px; }
+  .bulk-card .btn { background: transparent; color: var(--bg); border-color: color-mix(in srgb, var(--bg) 35%, transparent); }
+  .bulk-card .btn.primary { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+  .bulk-err { width: 100%; font-size: 12.5px; color: var(--warn-soft); }
+  .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); z-index: 60; max-width: calc(100vw - 32px); background: var(--ink); color: var(--bg); padding: 10px 16px; border-radius: 12px; font-size: 14px; box-shadow: var(--shadow); }
+  .toast.bad { background: var(--danger); color: #fff; }
+  body.has-bulk .toast { bottom: 86px; }
+
+  .sheet { position: fixed; inset: 0; z-index: 50; display: flex; align-items: flex-end; justify-content: center; background: rgba(8, 10, 9, .5); }
+  .sheet-card { background: var(--surface); width: 100%; max-width: 620px; max-height: 92vh; overflow: auto; border-radius: 20px 20px 0 0; padding: 18px var(--gutter-r) calc(18px + env(safe-area-inset-bottom, 0px)) var(--gutter-l); }
+  @media (min-width: 640px) { .sheet { align-items: center; } .sheet-card { border-radius: 20px; padding: 22px; } }
+  .sheet h2 { margin: 0 0 4px; font-size: 18px; }
+  .sheet-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .msg { border-radius: 12px; padding: 10px 12px; margin: 10px 0; font-size: 14px; background: var(--accent-soft); }
+  .msg.bad { background: var(--danger-soft); }
+  .msg.warn { background: var(--warn-soft); }
+  .msg ul { margin: 6px 0 0; padding-left: 18px; max-height: 200px; overflow: auto; }
+  #label-area { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; text-align: center; }
+  #label-area svg { max-width: 100%; height: auto; background: #fff; border-radius: 8px; }
+  .label-name { font-weight: 600; overflow-wrap: anywhere; }
+  .label-es { color: var(--muted); font-size: 14px; }
   @media print {
-    body > *:not(#label-panel) { display: none !important; }
-    #label-panel { display: block !important; border: 0; margin: 0; padding: 0; }
-    #label-panel .no-print { display: none !important; }
+    body > *:not(#sheet-label) { display: none !important; }
+    #sheet-label { position: static; display: block !important; background: none; }
+    #sheet-label .sheet-card { box-shadow: none; max-height: none; padding: 0; background: none; }
+    #sheet-label .no-print { display: none !important; }
+    #label-area svg { background: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .row-head, .tab, .chip, .btn { transition: background-color .12s, border-color .12s, color .12s; }
   }
 </style>
 </head>
@@ -85,71 +147,103 @@
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
     <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="n"/>
-    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
   </filter>
 </svg>
-<header>
-  <div class="wrap">
-    <h1>Octagon · Mastrena Parts Catalog</h1>
-    <p>Internal use · Octagon Services, Vancouver BC</p>
+
+<div class="wrap">
+  <div class="top-row">
+    <div>
+      <h1>Parts catalog</h1>
+      <div class="tagline">Mastrena II · Octagon Services</div>
+    </div>
+    <button class="btn primary" id="btn-add" type="button">+ Add part</button>
   </div>
-</header>
+</div>
+
+<div class="sticky">
+  <div class="wrap">
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search name or SKU" aria-label="Search by name or SKU" autocomplete="off" enterkeyhint="search">
+    </label>
+    <div class="tabs" id="tabs" role="tablist" aria-label="Module"></div>
+  </div>
+</div>
 
 <main class="wrap">
-  <div class="banner" id="storage-banner" role="note">
-    <div>
-      <b>Changes are saved in this browser only.</b>
-      Each computer or phone keeps its own copy. Export the CSV after editing so you don't lose changes and can share them.
-      <span id="storage-error" class="hidden"> <strong>Warning: this browser can't save (private mode or storage blocked). Changes will be lost when you close it.</strong></span>
+  <div class="notice" role="note">
+    <div><b>Saved in this browser only.</b> Each device keeps its own copy. Export the CSV after editing to back up or share.<span id="storage-error" class="hidden"> <b>This browser can't save (private mode or storage blocked), so changes will be lost when you close it.</b></span></div>
+    <div class="notice-actions">
+      <button class="btn sm" id="btn-export" type="button">Export CSV</button>
+      <button class="btn sm" id="btn-import" type="button">Import CSV</button>
+      <input id="file" type="file" accept=".csv,text/csv" class="hidden">
     </div>
   </div>
 
-  <div class="toolbar">
-    <input id="q" type="search" placeholder="Search by name or SKU" aria-label="Search by name or SKU" autocomplete="off">
-    <select id="mod" aria-label="Filter by module">
-      <option value="">All modules</option>
+  <div class="filters">
+    <button class="chip" id="chip-noprice" type="button" aria-pressed="false">No price</button>
+    <button class="chip" id="chip-review" type="button" aria-pressed="false">Needs review</button>
+    <select id="sub" aria-label="Filter by subassembly"></select>
+    <select id="sort" aria-label="Sort parts">
+      <option value="manual">Sort: manual</option>
+      <option value="sku">Sort: SKU</option>
+      <option value="name">Sort: name</option>
+      <option value="price">Sort: price</option>
+      <option value="review">Sort: review first</option>
     </select>
   </div>
 
-  <div class="actions">
-    <button class="primary" id="btn-add">+ Add part</button>
-    <button id="btn-export">Export CSV</button>
-    <button id="btn-import">Import CSV</button>
-    <input id="file" type="file" accept=".csv,text/csv" class="hidden">
+  <div class="listbar">
+    <label class="selall"><input type="checkbox" id="selall" aria-label="Select all matching parts"><span id="count"></span></label>
   </div>
-
-  <div id="flash"></div>
-
-  <section class="panel hidden" id="import-panel" aria-live="polite">
-    <h2>Import CSV</h2>
-    <div id="import-body"></div>
-    <div class="actions">
-      <button class="primary" id="btn-import-ok">Replace catalog</button>
-      <button id="btn-import-cancel">Cancel</button>
-    </div>
-  </section>
-
-  <section class="panel hidden" id="add-panel">
-    <h2>New part</h2>
-    <div id="add-form"></div>
-  </section>
-
-  <section class="panel hidden" id="label-panel">
-    <div id="label-area"></div>
-    <div class="actions no-print">
-      <button class="primary" id="btn-print">Print label</button>
-      <button id="btn-label-close">Close</button>
-    </div>
-  </section>
-
-  <div class="count" id="count"></div>
-  <div class="list" id="list"></div>
+  <ul class="list" id="list"></ul>
+  <div class="more"><button class="btn hidden" id="btn-more" type="button">Show more</button></div>
 </main>
+
+<div class="bulk hidden" id="bulk">
+  <div class="bulk-card">
+    <span class="grow" id="bulk-n"></span>
+    <input id="bulk-price" inputmode="decimal" placeholder="CAD" aria-label="Price in CAD for the selected parts" autocomplete="off">
+    <button class="btn sm primary" id="bulk-apply" type="button">Set price</button>
+    <button class="btn sm" id="bulk-clear" type="button">Clear price</button>
+    <button class="btn sm" id="bulk-done" type="button">Done</button>
+    <div class="bulk-err" id="bulk-err" role="alert"></div>
+  </div>
+</div>
+<div class="toast hidden" id="toast" role="status"></div>
+
+<div class="sheet hidden" id="sheet-add" role="dialog" aria-modal="true" aria-label="New part">
+  <div class="sheet-card">
+    <div class="sheet-top"><h2>New part</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
+    <div id="add-form"></div>
+  </div>
+</div>
+
+<div class="sheet hidden" id="sheet-import" role="dialog" aria-modal="true" aria-label="Import CSV">
+  <div class="sheet-card" aria-live="polite">
+    <div class="sheet-top"><h2>Import CSV</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
+    <div id="import-body"></div>
+    <div class="actions" style="margin-top:12px">
+      <button class="btn primary" id="btn-import-ok" type="button">Replace catalog</button>
+      <button class="btn" id="btn-import-cancel" type="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet hidden" id="sheet-label" role="dialog" aria-modal="true" aria-label="Barcode label">
+  <div class="sheet-card">
+    <div class="sheet-top no-print"><h2>Barcode label</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
+    <div id="label-area"></div>
+    <div class="actions no-print"><button class="btn primary" id="btn-print" type="button">Print label</button></div>
+  </div>
+</div>
 
 <script>
 (() => {
   const STORAGE_KEY = 'octagon-inv-v1';
   const SEED_URL = 'data/parts.csv';
+  const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
   const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
                 'imagen_origen','posicion_en_diagrama','confianza','notas'];
@@ -158,11 +252,15 @@
   // Older copies stored Spanish confidence values.
   const LEGACY_CONF = { alta: 'high', media: 'medium', baja: 'low', ilegible: 'illegible' };
   const normConf = (p) => { if (LEGACY_CONF[p.confianza]) p.confianza = LEGACY_CONF[p.confianza]; return p; };
+  const needsReview = (p) => p.confianza === 'medium' || p.confianza === 'low' || p.confianza === 'illegible';
 
   let parts = [];
+  let openSku = null;      // row expanded
   let editing = null;      // sku being edited
   let confirming = null;   // sku with the delete confirmation open
   let pendingImport = null;
+  const selected = new Set();
+  const state = { q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE };
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -206,6 +304,12 @@
   function toCSV(list) {
     return [COLS.join(','), ...list.map(p => COLS.map(c => csvCell(p[c])).join(','))].join('\r\n') + '\r\n';
   }
+  const isPrice = (v) => /^\d+([.,]\d{1,2})?$/.test(String(v).trim());
+  const fmtPrice = (v) => {
+    if (v === '' || v == null) return null;
+    const n = Number(String(v).replace(',', '.'));
+    return isNaN(n) ? null : n.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
+  };
 
   // Validates a CSV and returns { parts, errors, warnings }
   function validateCSV(text) {
@@ -237,38 +341,6 @@
     });
     if (!out.length && !errors.length) errors.push('The file has no parts.');
     return { parts: out, errors, warnings };
-  }
-
-  const isPrice = (v) => /^\d+([.,]\d{1,2})?$/.test(String(v).trim());
-  const fmtPrice = (v) => {
-    if (v === '' || v == null) return null;
-    const n = Number(String(v).replace(',', '.'));
-    return isNaN(n) ? null : n.toLocaleString('en-CA', { style: 'currency', currency: 'CAD' });
-  };
-
-  // ---------- render ----------
-  function filtered() {
-    const q = norm($('q').value.trim()); const m = $('mod').value;
-    return parts.filter(p => {
-      if (m && p.modulo !== m) return false;
-      if (!q) return true;
-      return [p.sku, p.sku_8dig, p.nombre_en, p.nombre_es].some(v => norm(v).includes(q));
-    });
-  }
-
-  function render() {
-    const list = $('list');
-    const shown = filtered();
-    $('count').textContent = parts.length ? `${shown.length} of ${parts.length} parts` : '';
-    if (!parts.length) {
-      list.innerHTML = `<div class="empty"><b>No parts yet</b>Add the first one with “+ Add part” or import a catalog CSV.</div>`;
-      return;
-    }
-    if (!shown.length) {
-      list.innerHTML = `<div class="empty"><b>No results</b>No parts match the search and module selected.</div>`;
-      return;
-    }
-    list.innerHTML = shown.map(p => p.sku === editing ? editCard(p) : viewCard(p)).join('');
   }
 
   // ---------- part sketches ----------
@@ -368,44 +440,131 @@
   };
   const sketch = (p) => `<svg class="sketch" viewBox="0 0 64 64" aria-hidden="true">${ICONS[kindOf(p)]}</svg>`;
 
-  function viewCard(p) {
-    const price = fmtPrice(p.precio_cad);
-    const conf = p.confianza ? `<span class="chip conf-${esc(p.confianza)}">confidence ${esc(p.confianza)}</span>` : '';
+  // ---------- filtering and sorting ----------
+  const matches = (p, skipModule) => {
+    if (!skipModule && state.mod && p.modulo !== state.mod) return false;
+    if (state.sub && p.subconjunto !== state.sub) return false;
+    if (state.noPrice && p.precio_cad) return false;
+    if (state.review && !needsReview(p)) return false;
+    const q = norm(state.q.trim());
+    if (!q) return true;
+    return [p.sku, p.sku_8dig, p.nombre_en, p.nombre_es].some(v => norm(v).includes(q));
+  };
+  const priceNum = (v) => { const n = Number(String(v || '').replace(',', '.')); return v === '' || v == null || isNaN(n) ? -1 : n; };
+  function filtered() {
+    const a = parts.filter(p => matches(p, false));
+    switch (state.sort) {
+      case 'sku': a.sort((x, y) => x.sku.localeCompare(y.sku, 'en', { numeric: true })); break;
+      case 'name': a.sort((x, y) => x.nombre_en.localeCompare(y.nombre_en, 'en', { sensitivity: 'base' })); break;
+      case 'price': a.sort((x, y) => priceNum(y.precio_cad) - priceNum(x.precio_cad)); break;
+      case 'review': a.sort((x, y) => Number(needsReview(y)) - Number(needsReview(x))); break;
+    }
+    return a;
+  }
+  const secKey = (s) => { const m = /^[\d.]+/.exec(s || ''); return m ? m[0].split('.').filter(Boolean).map(Number) : [9999]; };
+  const cmpSec = (a, b) => {
+    const x = secKey(a), y = secKey(b);
+    for (let i = 0; i < Math.max(x.length, y.length); i++) { const d = (x[i] ?? -1) - (y[i] ?? -1); if (d) return d; }
+    return a.localeCompare(b);
+  };
+
+  // ---------- render ----------
+  function renderControls() {
+    const counts = { '': 0 };
+    MODULES.forEach(m => counts[m] = 0);
+    parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.modulo] !== undefined) counts[p.modulo]++; } });
+    $('tabs').innerHTML = [['', 'All'], ...MODULES.map(m => [m, m])].map(([v, label]) =>
+      `<button class="tab" role="tab" type="button" data-act="tab" data-mod="${v}" aria-selected="${state.mod === v}">${label}<span class="n">${counts[v] ?? 0}</span></button>`).join('');
+    const subs = new Map();
+    parts.forEach(p => { if (p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
+    const opts = [...subs.entries()].sort((a, b) => cmpSec(a[0], b[0]));
+    $('sub').innerHTML = `<option value="">All subassemblies</option>` + opts.map(([s, n]) =>
+      `<option value="${esc(s)}" ${state.sub === s ? 'selected' : ''}>${esc(s)} (${n})</option>`).join('');
+    $('chip-noprice').setAttribute('aria-pressed', state.noPrice);
+    $('chip-review').setAttribute('aria-pressed', state.review);
+    $('sort').value = state.sort;
+  }
+
+  function factsHtml(p) {
+    const conf = p.confianza || '—';
+    return `<dl class="facts">
+      <div class="fact"><dt>Module</dt><dd>${esc(p.modulo || '—')}</dd></div>
+      <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8dig || '—')}</dd></div>
+      <div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>
+      <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subconjunto || '—')}</dd></div>
+      ${p.notas ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notas)}</dd></div>` : ''}
+    </dl>`;
+  }
+
+  function detailHtml(p) {
+    if (editing === p.sku) {
+      return `<div class="detail"><form class="form" data-form="edit" data-orig="${esc(p.sku)}" novalidate>
+        ${formFields(p, 'edit')}
+        <div class="full actions"><button class="btn primary" type="submit">Save</button><button class="btn" type="button" data-act="cancel-edit">Cancel</button></div>
+      </form></div>`;
+    }
     const confirmBox = confirming === p.sku ? `
-      <div class="confirm" role="alert">
-        Remove <b class="mono">${esc(p.sku)}</b> · ${esc(p.nombre_en)} from the catalog?
-        <div class="row">
-          <button class="danger" data-act="del-yes" data-sku="${esc(p.sku)}">Yes, remove</button>
-          <button data-act="del-no">Cancel</button>
-        </div>
+      <div class="confirm" role="alert">Remove <b class="mono">${esc(p.sku)}</b> (${esc(p.nombre_en)}) from the catalog?
+        <div class="actions"><button class="btn danger" type="button" data-act="del-yes" data-sku="${esc(p.sku)}">Yes, remove</button><button class="btn" type="button" data-act="del-no">Cancel</button></div>
       </div>` : '';
-    return `
-    <article class="card">
-      <div class="card-row">
-      <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}</div>
-      <div class="card-info">
-      <div class="card-top">
-        <span class="sku">${esc(p.sku)}</span>
-        ${p.sku_8dig ? `<span class="sku8">SKU ${esc(p.sku_8dig)}</span>` : ''}
-        <span class="price ${price ? '' : 'none'}">${price ?? 'no price'}</span>
+    return `<div class="detail">
+      ${factsHtml(p)}
+      <div class="actions">
+        <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
+        <button class="btn sm" type="button" data-act="label" data-sku="${esc(p.sku)}">Label</button>
+        <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
+      </div>${confirmBox}</div>`;
+  }
+
+  function rowHtml(p) {
+    const price = fmtPrice(p.precio_cad);
+    const open = openSku === p.sku;
+    const review = needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
+    return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
+      <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
+        <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
+        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}</div>
+        <div class="info">
+          <div class="name">${esc(p.nombre_en)}</div>
+          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.nombre_es ? ' · ' + esc(p.nombre_es) : ''}${review}</div>
+        </div>
+        <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>
-      <p class="name">${esc(p.nombre_en)}</p>
-      ${p.nombre_es ? `<p class="name-es">${esc(p.nombre_es)}</p>` : ''}
-      <div class="meta">
-        ${p.modulo ? `<span class="chip">${esc(p.modulo)}</span>` : ''}
-        ${p.subconjunto ? `<span class="chip">${esc(p.subconjunto)}</span>` : ''}
-        ${conf}
-      </div>
-      ${p.notas ? `<div class="notes">${esc(p.notas)}</div>` : ''}
-      <div class="card-actions">
-        <button class="link" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
-        <button class="link" data-act="label" data-sku="${esc(p.sku)}">Label</button>
-        <button class="link" data-act="del" data-sku="${esc(p.sku)}" style="color:var(--danger)">Remove</button>
-      </div>
-      </div>
-      </div>
-      ${confirmBox}
-    </article>`;
+      ${open ? detailHtml(p) : ''}
+    </li>`;
+  }
+
+  function render() {
+    renderControls();
+    const list = filtered();
+    const shown = list.slice(0, state.limit);
+    $('count').textContent = parts.length ? `Showing ${shown.length} of ${list.length}` : '';
+    $('selall').disabled = !list.length;
+    if (!parts.length) {
+      $('list').innerHTML = `<li class="empty"><b>No parts yet</b>Add the first one, or import a catalog CSV.<br><button class="btn primary" type="button" data-act="add">+ Add part</button></li>`;
+    } else if (!list.length) {
+      $('list').innerHTML = `<li class="empty"><b>No matches</b>No parts fit the current search and filters.<br><button class="btn" type="button" data-act="reset">Clear filters</button></li>`;
+    } else {
+      $('list').innerHTML = shown.map(rowHtml).join('');
+    }
+    $('btn-more').classList.toggle('hidden', list.length <= state.limit);
+    refreshSelection();
+  }
+
+  function refreshSelection() {
+    const list = filtered();
+    const nSel = list.filter(p => selected.has(p.sku)).length;
+    const all = $('selall');
+    all.checked = list.length > 0 && nSel === list.length;
+    all.indeterminate = nSel > 0 && nSel < list.length;
+    renderBulk();
+  }
+
+  function renderBulk() {
+    const n = selected.size;
+    $('bulk').classList.toggle('hidden', !n);
+    document.body.classList.toggle('has-bulk', n > 0);
+    $('bulk-n').textContent = `${n} selected`;
   }
 
   function formFields(p, idp) {
@@ -420,7 +579,7 @@
         ${MODULES.map(m => `<option ${p.modulo === m ? 'selected' : ''}>${m}</option>`).join('')}
       </select></label>
       ${f('subconjunto', 'Subassembly')}
-      ${f('precio_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="no price"')}
+      ${f('precio_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="No price"')}
       <label>Confidence<select name="confianza">
         <option value="" ${!p.confianza ? 'selected' : ''}>—</option>
         ${CONF.map(c => `<option ${p.confianza === c ? 'selected' : ''}>${c}</option>`).join('')}
@@ -429,19 +588,6 @@
       ${f('posicion_en_diagrama', 'Diagram position')}
       <label class="full">Notes<textarea name="notas" rows="2">${esc(p.notas)}</textarea></label>
       <div class="err full" id="${idp}-err" role="alert"></div>`;
-  }
-
-  function editCard(p) {
-    return `
-    <article class="card">
-      <form class="form" data-form="edit" data-orig="${esc(p.sku)}" novalidate>
-        ${formFields(p, 'edit')}
-        <div class="full actions" style="margin:0">
-          <button class="primary" type="submit">Save</button>
-          <button type="button" data-act="cancel-edit">Cancel</button>
-        </div>
-      </form>
-    </article>`;
   }
 
   function readForm(form) {
@@ -459,25 +605,31 @@
     return '';
   }
 
-  function flash(html, kind = 'ok') {
-    $('flash').innerHTML = `<div class="msg ${kind}">${html}</div>`;
-    clearTimeout(flash.t); flash.t = setTimeout(() => { $('flash').innerHTML = ''; }, 5000);
+  function toast(msg, kind) {
+    const t = $('toast');
+    t.textContent = msg; t.className = 'toast' + (kind ? ' ' + kind : '');
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.add('hidden'), 4200);
   }
+
+  // ---------- sheets ----------
+  function openSheet(id) { $(id).classList.remove('hidden'); }
+  function closeSheets() {
+    document.querySelectorAll('.sheet').forEach(s => s.classList.add('hidden'));
+    $('add-form').innerHTML = ''; pendingImport = null;
+  }
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheets(); });
+  document.querySelectorAll('.sheet').forEach(s => s.addEventListener('click', (e) => { if (e.target === s) closeSheets(); }));
 
   // ---------- add ----------
   function openAdd() {
-    $('add-panel').classList.remove('hidden');
-    $('add-form').innerHTML = `
-      <form class="form" data-form="add" novalidate>
-        ${formFields({ modulo: $('mod').value || 'Mechanical' }, 'add')}
-        <div class="full actions" style="margin:0">
-          <button class="primary" type="submit">Add</button>
-          <button type="button" data-act="cancel-add">Cancel</button>
-        </div>
-      </form>`;
+    $('add-form').innerHTML = `<form class="form" data-form="add" novalidate>
+      ${formFields({ modulo: state.mod || 'Mechanical', subconjunto: state.sub || '' }, 'add')}
+      <div class="full actions"><button class="btn primary" type="submit">Add part</button><button class="btn" type="button" data-act="close">Cancel</button></div>
+    </form>`;
+    openSheet('sheet-add');
     $('add-form').querySelector('input[name=sku]').focus();
   }
-  function closeAdd() { $('add-panel').classList.add('hidden'); $('add-form').innerHTML = ''; }
+  $('btn-add').onclick = openAdd;
 
   document.addEventListener('submit', (e) => {
     const form = e.target; e.preventDefault();
@@ -485,48 +637,99 @@
     if (form.dataset.form === 'add') {
       const err = checkPart(p, null);
       if (err) { $('add-err').textContent = err; return; }
-      parts.unshift(p); save(); closeAdd(); render();
-      flash(`Part <b class="mono">${esc(p.sku)}</b> added.`);
+      parts.unshift(p); save(); closeSheets();
+      Object.assign(state, { q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
+      $('q').value = ''; openSku = p.sku; editing = null; confirming = null;
+      render(); scrollToRow(p.sku); toast(`Part ${p.sku} added`);
     } else if (form.dataset.form === 'edit') {
       const orig = form.dataset.orig;
       const err = checkPart(p, orig);
       if (err) { $('edit-err').textContent = err; return; }
-      const i = parts.findIndex(x => x.sku === orig);
-      parts[i] = p; editing = null; save(); render();
-      flash(`Part <b class="mono">${esc(p.sku)}</b> saved.`);
+      parts[parts.findIndex(x => x.sku === orig)] = p;
+      if (orig !== p.sku && selected.delete(orig)) selected.add(p.sku);
+      openSku = p.sku; editing = null; save(); render(); toast(`Part ${p.sku} saved`);
     }
   });
+  function scrollToRow(sku) {
+    const row = [...document.querySelectorAll('.row')].find(r => r.dataset.sku === sku);
+    if (row) row.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
 
+  // ---------- list interactions ----------
+  const toggleRow = (sku) => { openSku = openSku === sku ? null : sku; editing = null; confirming = null; render(); };
   document.addEventListener('click', (e) => {
+    if (e.target.closest('.sel')) return;
     const b = e.target.closest('[data-act]'); if (!b) return;
     const sku = b.dataset.sku;
     switch (b.dataset.act) {
+      case 'toggle': toggleRow(sku); break;
+      case 'tab': state.mod = b.dataset.mod; state.sub = ''; state.limit = PAGE; render(); break;
       case 'edit': editing = sku; confirming = null; render(); break;
       case 'cancel-edit': editing = null; render(); break;
-      case 'cancel-add': closeAdd(); break;
       case 'del': confirming = sku; editing = null; render(); break;
       case 'del-no': confirming = null; render(); break;
       case 'del-yes':
-        parts = parts.filter(x => x.sku !== sku); confirming = null; save(); render();
-        flash(`Part <b class="mono">${esc(sku)}</b> removed.`); break;
+        parts = parts.filter(x => x.sku !== sku); selected.delete(sku);
+        confirming = null; openSku = null; save(); render(); toast(`Part ${sku} removed`); break;
       case 'label': showLabel(sku); break;
+      case 'add': openAdd(); break;
+      case 'close': closeSheets(); break;
+      case 'reset':
+        Object.assign(state, { q: '', mod: '', sub: '', noPrice: false, review: false, limit: PAGE });
+        $('q').value = ''; render(); break;
     }
   });
+  document.addEventListener('keydown', (e) => {
+    const h = e.target.closest && e.target.closest('.row-head');
+    if (h && e.target === h && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggleRow(h.dataset.sku); }
+  });
+  document.addEventListener('change', (e) => {
+    const c = e.target.closest('.sel'); if (!c) return;
+    if (c.checked) selected.add(c.dataset.sku); else selected.delete(c.dataset.sku);
+    refreshSelection();
+  });
+  $('selall').onchange = (e) => {
+    const list = filtered();
+    if (e.target.checked) list.forEach(p => selected.add(p.sku)); else list.forEach(p => selected.delete(p.sku));
+    render();
+  };
+  $('q').addEventListener('input', (e) => { state.q = e.target.value; state.limit = PAGE; render(); });
+  $('sub').addEventListener('change', (e) => { state.sub = e.target.value; state.limit = PAGE; render(); });
+  $('sort').addEventListener('change', (e) => { state.sort = e.target.value; state.limit = PAGE; render(); });
+  $('chip-noprice').onclick = () => { state.noPrice = !state.noPrice; state.limit = PAGE; render(); };
+  $('chip-review').onclick = () => { state.review = !state.review; state.limit = PAGE; render(); };
+  $('btn-more').onclick = () => { state.limit += PAGE; render(); };
+
+  // ---------- bulk price ----------
+  function bulkSet(value) {
+    const err = $('bulk-err'); err.textContent = '';
+    if (value !== '' && !isPrice(value)) { err.textContent = 'Enter a price like 12.50.'; return; }
+    const v = value.replace(',', '.');
+    let n = 0; parts.forEach(p => { if (selected.has(p.sku)) { p.precio_cad = v; n++; } });
+    save(); $('bulk-price').value = ''; render();
+    const noun = n === 1 ? 'part' : 'parts';
+    toast(v ? `Price set on ${n} ${noun}` : `Price cleared on ${n} ${noun}`);
+  }
+  $('bulk-apply').onclick = () => {
+    const v = $('bulk-price').value.trim();
+    if (!v) { $('bulk-err').textContent = 'Enter a price, or use Clear price.'; return; }
+    bulkSet(v);
+  };
+  $('bulk-clear').onclick = () => bulkSet('');
+  $('bulk-done').onclick = () => { selected.clear(); $('bulk-err').textContent = ''; render(); };
 
   // ---------- labels ----------
   function showLabel(sku) {
     const p = parts.find(x => x.sku === sku); if (!p) return;
-    $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.nombre_en)}</div>${p.nombre_es ? `<div class="name-es">${esc(p.nombre_es)}</div>` : ''}${p.sku_8dig ? `<div class="sku8">SKU ${esc(p.sku_8dig)}</div>` : ''}`;
+    $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.nombre_en)}</div>${p.nombre_es ? `<div class="label-es">${esc(p.nombre_es)}</div>` : ''}${p.sku_8dig ? `<div class="label-es mono">SKU ${esc(p.sku_8dig)}</div>` : ''}`;
     try {
-      JsBarcode('#bc', p.sku, { format: 'CODE128', height: 60, fontSize: 16, margin: 6, font: 'JetBrains Mono' });
+      JsBarcode('#bc', p.sku, { format: 'CODE128', height: 60, fontSize: 16, margin: 8, font: 'JetBrains Mono' });
     } catch (err) {
       $('label-area').insertAdjacentHTML('afterbegin', `<div class="msg bad">Could not generate the barcode${typeof JsBarcode === 'undefined' ? ' (no connection to cdnjs)' : ''}.</div>`);
     }
-    $('label-panel').classList.remove('hidden');
-    $('label-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    openSheet('sheet-label');
   }
   $('btn-print').onclick = () => window.print();
-  $('btn-label-close').onclick = () => $('label-panel').classList.add('hidden');
 
   // ---------- export / import ----------
   $('btn-export').onclick = () => {
@@ -536,39 +739,33 @@
     a.download = `octagon-catalog-${new Date().toLocaleDateString('en-CA')}.csv`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    flash(`Exported ${parts.length} parts.`);
+    toast(`Exported ${parts.length} ${parts.length === 1 ? 'part' : 'parts'}`);
   };
   $('btn-import').onclick = () => $('file').click();
   $('file').onchange = async () => {
     const file = $('file').files[0]; $('file').value = ''; if (!file) return;
     let text;
-    try { text = await file.text(); } catch (e) { flash('Could not read the file.', 'bad'); return; }
+    try { text = await file.text(); } catch (e) { toast('Could not read the file', 'bad'); return; }
     const r = validateCSV(text);
     pendingImport = r.errors.length ? null : r.parts;
     const byMod = MODULES.map(m => `${m}: ${r.parts.filter(p => p.modulo === m).length}`).join(' · ');
     $('import-body').innerHTML = `
       <p><b>${esc(file.name)}</b> · ${r.parts.length} parts read (${byMod}).</p>
       ${r.errors.length ? `<div class="msg bad"><b>${r.errors.length} error(s). Fix the file and import again:</b><ul>${r.errors.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>`
-        : `<div class="msg ok">No errors. Confirming will replace the current ${parts.length} parts with these ${r.parts.length}.</div>`}
-      ${r.warnings.length ? `<div class="msg" style="background:var(--warn-bg)"><b>Warnings:</b><ul>${r.warnings.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>` : ''}`;
+        : `<div class="msg">No errors. Confirming will replace the current ${parts.length} parts with these ${r.parts.length}.</div>`}
+      ${r.warnings.length ? `<div class="msg warn"><b>Warnings:</b><ul>${r.warnings.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>` : ''}`;
     $('btn-import-ok').disabled = !pendingImport;
-    $('import-panel').classList.remove('hidden');
-    $('import-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    openSheet('sheet-import');
   };
   $('btn-import-ok').onclick = () => {
     if (!pendingImport) return;
-    parts = pendingImport; pendingImport = null; editing = confirming = null;
-    save(); $('import-panel').classList.add('hidden'); render();
-    flash(`Catalog replaced: ${parts.length} parts.`);
+    parts = pendingImport; const n = parts.length; closeSheets();
+    selected.clear(); openSku = editing = confirming = null; state.limit = PAGE;
+    save(); render(); toast(`Catalog replaced: ${n} parts`);
   };
-  $('btn-import-cancel').onclick = () => { pendingImport = null; $('import-panel').classList.add('hidden'); };
+  $('btn-import-cancel').onclick = closeSheets;
 
   // ---------- startup ----------
-  $('btn-add').onclick = openAdd;
-  $('mod').insertAdjacentHTML('beforeend', MODULES.map(m => `<option>${m}</option>`).join(''));
-  $('q').addEventListener('input', render);
-  $('mod').addEventListener('change', render);
-
   async function init() {
     const stored = load();
     if (stored !== null) { parts = stored; render(); return; }
@@ -578,7 +775,7 @@
       if (res.ok) {
         const r = validateCSV(await res.text());
         if (!r.errors.length) { parts = r.parts; save(); }
-        else console.warn('data/parts.csv con errores:', r.errors);
+        else console.warn('data/parts.csv has errors:', r.errors);
       }
     } catch (e) { /* opened as a local file: start empty */ }
     render();
