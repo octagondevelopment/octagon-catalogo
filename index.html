@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Octagon · Catálogo de partes</title>
+<title>Octagon · Parts Catalog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -80,55 +80,55 @@
 <body>
 <header>
   <div class="wrap">
-    <h1>Octagon · Catálogo de partes Mastrena</h1>
-    <p>Uso interno · Octagon Services, Vancouver BC</p>
+    <h1>Octagon · Mastrena Parts Catalog</h1>
+    <p>Internal use · Octagon Services, Vancouver BC</p>
   </div>
 </header>
 
 <main class="wrap">
   <div class="banner" id="storage-banner" role="note">
     <div>
-      <b>Los cambios se guardan solo en este navegador.</b>
-      Cada computador o teléfono tiene su propia copia. Exporta el CSV después de editar para no perder cambios y para compartirlos.
-      <span id="storage-error" class="hidden"> <strong>Ojo: este navegador no permite guardar (modo privado o almacenamiento bloqueado). Los cambios se pierden al cerrar.</strong></span>
+      <b>Changes are saved in this browser only.</b>
+      Each computer or phone keeps its own copy. Export the CSV after editing so you don't lose changes and can share them.
+      <span id="storage-error" class="hidden"> <strong>Warning: this browser can't save (private mode or storage blocked). Changes will be lost when you close it.</strong></span>
     </div>
   </div>
 
   <div class="toolbar">
-    <input id="q" type="search" placeholder="Buscar por nombre o SKU" aria-label="Buscar por nombre o SKU" autocomplete="off">
-    <select id="mod" aria-label="Filtrar por módulo">
-      <option value="">Todos los módulos</option>
+    <input id="q" type="search" placeholder="Search by name or SKU" aria-label="Search by name or SKU" autocomplete="off">
+    <select id="mod" aria-label="Filter by module">
+      <option value="">All modules</option>
     </select>
   </div>
 
   <div class="actions">
-    <button class="primary" id="btn-add">+ Agregar pieza</button>
-    <button id="btn-export">Exportar CSV</button>
-    <button id="btn-import">Importar CSV</button>
+    <button class="primary" id="btn-add">+ Add part</button>
+    <button id="btn-export">Export CSV</button>
+    <button id="btn-import">Import CSV</button>
     <input id="file" type="file" accept=".csv,text/csv" class="hidden">
   </div>
 
   <div id="flash"></div>
 
   <section class="panel hidden" id="import-panel" aria-live="polite">
-    <h2>Importar CSV</h2>
+    <h2>Import CSV</h2>
     <div id="import-body"></div>
     <div class="actions">
-      <button class="primary" id="btn-import-ok">Reemplazar catálogo</button>
-      <button id="btn-import-cancel">Cancelar</button>
+      <button class="primary" id="btn-import-ok">Replace catalog</button>
+      <button id="btn-import-cancel">Cancel</button>
     </div>
   </section>
 
   <section class="panel hidden" id="add-panel">
-    <h2>Nueva pieza</h2>
+    <h2>New part</h2>
     <div id="add-form"></div>
   </section>
 
   <section class="panel hidden" id="label-panel">
     <div id="label-area"></div>
     <div class="actions no-print">
-      <button class="primary" id="btn-print">Imprimir etiqueta</button>
-      <button id="btn-label-close">Cerrar</button>
+      <button class="primary" id="btn-print">Print label</button>
+      <button id="btn-label-close">Close</button>
     </div>
   </section>
 
@@ -198,30 +198,30 @@
   function validateCSV(text) {
     const errors = [], warnings = [];
     const rows = parseCSV(text);
-    if (!rows.length) return { parts: [], errors: ['El archivo está vacío.'], warnings };
+    if (!rows.length) return { parts: [], errors: ['The file is empty.'], warnings };
     const header = rows[0].map(h => h.trim().toLowerCase());
     const missing = REQUIRED.filter(c => !header.includes(c));
-    if (missing.length) errors.push('Faltan columnas obligatorias: ' + missing.join(', ') + '.');
+    if (missing.length) errors.push('Missing required columns: ' + missing.join(', ') + '.');
     const unknown = header.filter(h => h && !COLS.includes(h));
-    if (unknown.length) warnings.push('Columnas que se ignoran: ' + unknown.join(', ') + '.');
+    if (unknown.length) warnings.push('Ignored columns: ' + unknown.join(', ') + '.');
     if (missing.length) return { parts: [], errors, warnings };
     const seen = new Map(); const out = [];
     rows.slice(1).forEach((r, i) => {
       const line = i + 2;
-      if (r.length !== header.length) { errors.push(`Línea ${line}: tiene ${r.length} columnas, se esperaban ${header.length}.`); return; }
+      if (r.length !== header.length) { errors.push(`Line ${line}: has ${r.length} columns, expected ${header.length}.`); return; }
       const p = {}; COLS.forEach(c => { const k = header.indexOf(c); p[c] = k >= 0 ? r[k].trim() : ''; });
-      if (!p.sku) { errors.push(`Línea ${line}: SKU vacío.`); return; }
-      if (!p.nombre_en) errors.push(`Línea ${line} (${p.sku}): falta nombre_en.`);
-      if (p.modulo && !MODULES.includes(p.modulo)) errors.push(`Línea ${line} (${p.sku}): módulo "${p.modulo}" no válido. Usa: ${MODULES.join(', ')}.`);
+      if (!p.sku) { errors.push(`Line ${line}: empty SKU.`); return; }
+      if (!p.nombre_en) errors.push(`Line ${line} (${p.sku}): missing nombre_en.`);
+      if (p.modulo && !MODULES.includes(p.modulo)) errors.push(`Line ${line} (${p.sku}): invalid module "${p.modulo}". Use: ${MODULES.join(', ')}.`);
       p.precio_cad = p.precio_cad.replace(',', '.');
-      if (p.precio_cad && !isPrice(p.precio_cad)) errors.push(`Línea ${line} (${p.sku}): precio "${p.precio_cad}" no es un número válido.`);
-      if (p.confianza && !CONF.includes(p.confianza)) warnings.push(`Línea ${line} (${p.sku}): confianza "${p.confianza}" no reconocida.`);
+      if (p.precio_cad && !isPrice(p.precio_cad)) errors.push(`Line ${line} (${p.sku}): price "${p.precio_cad}" is not a valid number.`);
+      if (p.confianza && !CONF.includes(p.confianza)) warnings.push(`Line ${line} (${p.sku}): unknown confidence "${p.confianza}".`);
       const key = p.sku.toUpperCase();
-      if (seen.has(key)) errors.push(`Línea ${line}: SKU ${p.sku} repetido (ya está en la línea ${seen.get(key)}).`);
+      if (seen.has(key)) errors.push(`Line ${line}: duplicate SKU ${p.sku} (already on line ${seen.get(key)}).`);
       else seen.set(key, line);
       out.push(p);
     });
-    if (!out.length && !errors.length) errors.push('El archivo no tiene piezas.');
+    if (!out.length && !errors.length) errors.push('The file has no parts.');
     return { parts: out, errors, warnings };
   }
 
@@ -245,13 +245,13 @@
   function render() {
     const list = $('list');
     const shown = filtered();
-    $('count').textContent = parts.length ? `${shown.length} de ${parts.length} piezas` : '';
+    $('count').textContent = parts.length ? `${shown.length} of ${parts.length} parts` : '';
     if (!parts.length) {
-      list.innerHTML = `<div class="empty"><b>Aún no hay piezas</b>Agrega la primera con “+ Agregar pieza” o importa un CSV del catálogo.</div>`;
+      list.innerHTML = `<div class="empty"><b>No parts yet</b>Add the first one with “+ Add part” or import a catalog CSV.</div>`;
       return;
     }
     if (!shown.length) {
-      list.innerHTML = `<div class="empty"><b>Sin resultados</b>Ninguna pieza calza con la búsqueda y el módulo elegidos.</div>`;
+      list.innerHTML = `<div class="empty"><b>No results</b>No parts match the search and module selected.</div>`;
       return;
     }
     list.innerHTML = shown.map(p => p.sku === editing ? editCard(p) : viewCard(p)).join('');
@@ -259,13 +259,13 @@
 
   function viewCard(p) {
     const price = fmtPrice(p.precio_cad);
-    const conf = p.confianza ? `<span class="chip conf-${esc(p.confianza)}">confianza ${esc(p.confianza)}</span>` : '';
+    const conf = p.confianza ? `<span class="chip conf-${esc(p.confianza)}">confidence ${esc(p.confianza)}</span>` : '';
     const confirmBox = confirming === p.sku ? `
       <div class="confirm" role="alert">
-        ¿Quitar <b class="mono">${esc(p.sku)}</b> · ${esc(p.nombre_en)} del catálogo?
+        Remove <b class="mono">${esc(p.sku)}</b> · ${esc(p.nombre_en)} from the catalog?
         <div class="row">
-          <button class="danger" data-act="del-yes" data-sku="${esc(p.sku)}">Sí, quitar</button>
-          <button data-act="del-no">Cancelar</button>
+          <button class="danger" data-act="del-yes" data-sku="${esc(p.sku)}">Yes, remove</button>
+          <button data-act="del-no">Cancel</button>
         </div>
       </div>` : '';
     return `
@@ -273,7 +273,7 @@
       <div class="card-top">
         <span class="sku">${esc(p.sku)}</span>
         ${p.sku_8dig ? `<span class="sku8">SKU ${esc(p.sku_8dig)}</span>` : ''}
-        <span class="price ${price ? '' : 'none'}">${price ?? 'sin precio'}</span>
+        <span class="price ${price ? '' : 'none'}">${price ?? 'no price'}</span>
       </div>
       <p class="name">${esc(p.nombre_en)}</p>
       ${p.nombre_es ? `<p class="name-es">${esc(p.nombre_es)}</p>` : ''}
@@ -283,11 +283,11 @@
         ${conf}
       </div>
       ${p.notas ? `<div class="notes">${esc(p.notas)}</div>` : ''}
-      ${p.imagen_origen ? `<div class="notes">Fuente: ${esc(p.imagen_origen)}${p.posicion_en_diagrama ? ' · ' + esc(p.posicion_en_diagrama) : ''}</div>` : ''}
+      ${p.imagen_origen ? `<div class="notes">Source: ${esc(p.imagen_origen)}${p.posicion_en_diagrama ? ' · ' + esc(p.posicion_en_diagrama) : ''}</div>` : ''}
       <div class="card-actions">
-        <button class="link" data-act="edit" data-sku="${esc(p.sku)}">Editar</button>
-        <button class="link" data-act="label" data-sku="${esc(p.sku)}">Etiqueta</button>
-        <button class="link" data-act="del" data-sku="${esc(p.sku)}" style="color:var(--danger)">Quitar</button>
+        <button class="link" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
+        <button class="link" data-act="label" data-sku="${esc(p.sku)}">Label</button>
+        <button class="link" data-act="del" data-sku="${esc(p.sku)}" style="color:var(--danger)">Remove</button>
       </div>
       ${confirmBox}
     </article>`;
@@ -298,21 +298,21 @@
       `<label class="${cls}">${label}<input name="${name}" value="${esc(p[name])}" ${extra}></label>`;
     return `
       ${f('sku', 'SKU (Article no.) *', 'required autocomplete="off" class="mono"')}
-      ${f('sku_8dig', 'SKU 8 dígitos', 'inputmode="numeric" class="mono"')}
-      ${f('nombre_en', 'Nombre (EN) *', 'required', 'full')}
-      ${f('nombre_es', 'Nombre (ES)', '', 'full')}
-      <label>Módulo *<select name="modulo" required>
+      ${f('sku_8dig', '8-digit SKU', 'inputmode="numeric" class="mono"')}
+      ${f('nombre_en', 'Name (EN) *', 'required', 'full')}
+      ${f('nombre_es', 'Name (ES)', '', 'full')}
+      <label>Module *<select name="modulo" required>
         ${MODULES.map(m => `<option ${p.modulo === m ? 'selected' : ''}>${m}</option>`).join('')}
       </select></label>
-      ${f('subconjunto', 'Subconjunto')}
-      ${f('precio_cad', 'Precio CAD (opcional)', 'inputmode="decimal" placeholder="sin precio"')}
-      <label>Confianza<select name="confianza">
+      ${f('subconjunto', 'Subassembly')}
+      ${f('precio_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="no price"')}
+      <label>Confidence<select name="confianza">
         <option value="" ${!p.confianza ? 'selected' : ''}>—</option>
         ${CONF.map(c => `<option ${p.confianza === c ? 'selected' : ''}>${c}</option>`).join('')}
       </select></label>
-      ${f('imagen_origen', 'Imagen de origen')}
-      ${f('posicion_en_diagrama', 'Posición en diagrama')}
-      <label class="full">Notas<textarea name="notas" rows="2">${esc(p.notas)}</textarea></label>
+      ${f('imagen_origen', 'Source image')}
+      ${f('posicion_en_diagrama', 'Diagram position')}
+      <label class="full">Notes<textarea name="notas" rows="2">${esc(p.notas)}</textarea></label>
       <div class="err full" id="${idp}-err" role="alert"></div>`;
   }
 
@@ -322,8 +322,8 @@
       <form class="form" data-form="edit" data-orig="${esc(p.sku)}" novalidate>
         ${formFields(p, 'edit')}
         <div class="full actions" style="margin:0">
-          <button class="primary" type="submit">Guardar</button>
-          <button type="button" data-act="cancel-edit">Cancelar</button>
+          <button class="primary" type="submit">Save</button>
+          <button type="button" data-act="cancel-edit">Cancel</button>
         </div>
       </form>
     </article>`;
@@ -335,12 +335,12 @@
     return p;
   }
   function checkPart(p, origSku) {
-    if (!p.sku) return 'El SKU es obligatorio.';
-    if (!p.nombre_en) return 'El nombre en inglés es obligatorio.';
-    if (!MODULES.includes(p.modulo)) return 'Elige un módulo.';
-    if (p.precio_cad && !isPrice(p.precio_cad)) return 'El precio debe ser un número, por ejemplo 12.50.';
+    if (!p.sku) return 'SKU is required.';
+    if (!p.nombre_en) return 'English name is required.';
+    if (!MODULES.includes(p.modulo)) return 'Choose a module.';
+    if (p.precio_cad && !isPrice(p.precio_cad)) return 'Price must be a number, for example 12.50.';
     const dup = parts.find(x => x.sku.toUpperCase() === p.sku.toUpperCase() && x.sku !== origSku);
-    if (dup) return `Ya existe una pieza con el SKU ${dup.sku} (${dup.nombre_en}).`;
+    if (dup) return `A part with SKU ${dup.sku} already exists (${dup.nombre_en}).`;
     return '';
   }
 
@@ -356,8 +356,8 @@
       <form class="form" data-form="add" novalidate>
         ${formFields({ modulo: $('mod').value || 'Mechanical' }, 'add')}
         <div class="full actions" style="margin:0">
-          <button class="primary" type="submit">Agregar</button>
-          <button type="button" data-act="cancel-add">Cancelar</button>
+          <button class="primary" type="submit">Add</button>
+          <button type="button" data-act="cancel-add">Cancel</button>
         </div>
       </form>`;
     $('add-form').querySelector('input[name=sku]').focus();
@@ -371,14 +371,14 @@
       const err = checkPart(p, null);
       if (err) { $('add-err').textContent = err; return; }
       parts.unshift(p); save(); closeAdd(); render();
-      flash(`Pieza <b class="mono">${esc(p.sku)}</b> agregada.`);
+      flash(`Part <b class="mono">${esc(p.sku)}</b> added.`);
     } else if (form.dataset.form === 'edit') {
       const orig = form.dataset.orig;
       const err = checkPart(p, orig);
       if (err) { $('edit-err').textContent = err; return; }
       const i = parts.findIndex(x => x.sku === orig);
       parts[i] = p; editing = null; save(); render();
-      flash(`Pieza <b class="mono">${esc(p.sku)}</b> guardada.`);
+      flash(`Part <b class="mono">${esc(p.sku)}</b> saved.`);
     }
   });
 
@@ -393,7 +393,7 @@
       case 'del-no': confirming = null; render(); break;
       case 'del-yes':
         parts = parts.filter(x => x.sku !== sku); confirming = null; save(); render();
-        flash(`Pieza <b class="mono">${esc(sku)}</b> quitada.`); break;
+        flash(`Part <b class="mono">${esc(sku)}</b> removed.`); break;
       case 'label': showLabel(sku); break;
     }
   });
@@ -405,7 +405,7 @@
     try {
       JsBarcode('#bc', p.sku, { format: 'CODE128', height: 60, fontSize: 16, margin: 6, font: 'JetBrains Mono' });
     } catch (err) {
-      $('label-area').insertAdjacentHTML('afterbegin', `<div class="msg bad">No se pudo generar el código de barras${typeof JsBarcode === 'undefined' ? ' (sin conexión a cdnjs)' : ''}.</div>`);
+      $('label-area').insertAdjacentHTML('afterbegin', `<div class="msg bad">Could not generate the barcode${typeof JsBarcode === 'undefined' ? ' (no connection to cdnjs)' : ''}.</div>`);
     }
     $('label-panel').classList.remove('hidden');
     $('label-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -418,24 +418,24 @@
     const blob = new Blob(['﻿' + toCSV(parts)], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `octagon-catalogo-${new Date().toLocaleDateString('en-CA')}.csv`;
+    a.download = `octagon-catalog-${new Date().toLocaleDateString('en-CA')}.csv`;
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    flash(`Exportadas ${parts.length} piezas.`);
+    flash(`Exported ${parts.length} parts.`);
   };
   $('btn-import').onclick = () => $('file').click();
   $('file').onchange = async () => {
     const file = $('file').files[0]; $('file').value = ''; if (!file) return;
     let text;
-    try { text = await file.text(); } catch (e) { flash('No se pudo leer el archivo.', 'bad'); return; }
+    try { text = await file.text(); } catch (e) { flash('Could not read the file.', 'bad'); return; }
     const r = validateCSV(text);
     pendingImport = r.errors.length ? null : r.parts;
     const byMod = MODULES.map(m => `${m}: ${r.parts.filter(p => p.modulo === m).length}`).join(' · ');
     $('import-body').innerHTML = `
-      <p><b>${esc(file.name)}</b> · ${r.parts.length} piezas leídas (${byMod}).</p>
-      ${r.errors.length ? `<div class="msg bad"><b>${r.errors.length} error(es). Corrige el archivo y vuelve a importar:</b><ul>${r.errors.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>`
-        : `<div class="msg ok">Sin errores. Al confirmar se reemplazan las ${parts.length} piezas actuales por estas ${r.parts.length}.</div>`}
-      ${r.warnings.length ? `<div class="msg" style="background:var(--warn-bg)"><b>Avisos:</b><ul>${r.warnings.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>` : ''}`;
+      <p><b>${esc(file.name)}</b> · ${r.parts.length} parts read (${byMod}).</p>
+      ${r.errors.length ? `<div class="msg bad"><b>${r.errors.length} error(s). Fix the file and import again:</b><ul>${r.errors.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>`
+        : `<div class="msg ok">No errors. Confirming will replace the current ${parts.length} parts with these ${r.parts.length}.</div>`}
+      ${r.warnings.length ? `<div class="msg" style="background:var(--warn-bg)"><b>Warnings:</b><ul>${r.warnings.map(e => `<li>${esc(e)}</li>`).join('')}</ul></div>` : ''}`;
     $('btn-import-ok').disabled = !pendingImport;
     $('import-panel').classList.remove('hidden');
     $('import-panel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -444,7 +444,7 @@
     if (!pendingImport) return;
     parts = pendingImport; pendingImport = null; editing = confirming = null;
     save(); $('import-panel').classList.add('hidden'); render();
-    flash(`Catálogo reemplazado: ${parts.length} piezas.`);
+    flash(`Catalog replaced: ${parts.length} parts.`);
   };
   $('btn-import-cancel').onclick = () => { pendingImport = null; $('import-panel').classList.add('hidden'); };
 
