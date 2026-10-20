@@ -1,10 +1,26 @@
-# Builds data/parts.csv and data/extraction_report.md from data/transcription_A.txt.
+# Builds from data/transcription_A.txt:
+#   data/parts.csv                    verified parts only (published, loaded by the app)
+#   data/internal/parts_all.csv       every part, including the ones still to validate (local only, not committed)
+#   data/internal/extraction_report.md  totals and the rows to check (local only, not committed)
+# Parts validated by hand against the paper manual are listed in data/manual_validations.txt.
 # The transcription is read #1; an independent read #2 found no differences,
 # and the manual's repeated left/right pages serve as a cross-check.
 import csv, os, re, collections
 from translations_es import TR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+INTERNAL = os.path.join(HERE, "internal")
+os.makedirs(INTERNAL, exist_ok=True)
+
+# Article numbers validated by hand against the paper manual. One per line: "NNN.NNN  optional note"; "#" starts a comment.
+MANUAL = {}
+_mv = os.path.join(HERE, "manual_validations.txt")
+if os.path.exists(_mv):
+    for _line in open(_mv, encoding="utf-8"):
+        _line = _line.split("#", 1)[0].strip()
+        if _line:
+            _a, _, _note = _line.partition(" ")
+            MANUAL[_a] = "Validated against the paper manual" + (f" ({_note.strip()})" if _note.strip() else "")
 COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
         "imagen_origen", "posicion_en_diagrama", "confianza", "notas", "cant_por_maquina", "conteo", "validacion", "evidencia"]
 # Quantity per machine, only where the manual states it for the whole machine: the main table on page 3 of the
@@ -124,6 +140,8 @@ for art, lst in occ.items():
         verified, ev = True, f"Same values read on {len(clear)} independent clear pages"
     elif strict and norm_title(en) in CHAPTER:
         verified, ev = True, f"Name matches chapter title {CHAPTER[norm_title(en)]}; SKU read once"
+    if art in MANUAL:
+        verified, ev, conf = True, MANUAL[art], "high"
     rows.append(dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=tr_es(art, en), modulo=mod,
                      subconjunto=sec, precio_cad="", imagen_origen=p["img"],
                      posicion_en_diagrama=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
@@ -131,8 +149,11 @@ for art, lst in occ.items():
                      cant_por_maquina=PER_MACHINE.get(art, ""), conteo="",
                      validacion="validada" if verified else "pendiente", evidencia=ev))
 
-with open(os.path.join(HERE, "parts.csv"), "w", newline="", encoding="utf-8-sig") as f:
-    w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(rows)
+def write_csv(path, subset):
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(subset)
+write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validacion"] == "validada"])
+write_csv(os.path.join(INTERNAL, "parts_all.csv"), rows)
 
 # ---- report ----
 by_mod = collections.Counter(r["modulo"] for r in rows)
@@ -149,5 +170,5 @@ L = ["# Extraction report: Mastrena II 230V catalog", "",
 for r in rev:
     reason = "; ".join(x for x in r["notas"].split("; ") if not x.startswith("Also in"))
     L.append(f"| {r['sku']} | {r['sku_8dig']} | {r['nombre_en']} | {r['imagen_origen']} | {r['confianza']} | {reason} |")
-open(os.path.join(HERE, "extraction_report.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")
+open(os.path.join(INTERNAL, "extraction_report.md"), "w", encoding="utf-8").write("\n".join(L) + "\n")
 print(len(rows), dict(by_mod), dict(by_conf), "verified:", sum(r["validacion"] == "validada" for r in rows))

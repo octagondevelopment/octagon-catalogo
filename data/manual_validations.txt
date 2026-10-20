@@ -1,0 +1,3 @@
+# Article numbers checked by hand against the paper manual (one per line, optional note after a space).
+# Listing a part here moves it into the published catalog the next time build_parts.py runs.
+# Example:  104.049  checked 2026-10-21

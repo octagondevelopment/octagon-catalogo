@@ -4,10 +4,10 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 
 ## What it does
 
-- Has two views: **Catalog** (only parts that are verified) and **To validate** (parts still waiting to be checked against the paper manual). Open a part in To validate and press **Mark verified** (or select several and verify them together) to move it into the catalog; **Send back to validation** reverses it. Each part shows its **Evidence**: how it was cross-checked.
+- Shows only parts that have been verified (see below). The header counts them.
 - Shows the catalog as a compact list: a sketch, the English and Spanish names, SKU and price. Tap a row to open its details; the actions (edit, label, remove) live there.
-- Searches by name or SKU. Module tabs show counts, and you can also filter by subassembly (the manual's numbering, for example 1.10.2 Brew module), "No price" and "Needs review" (the rows marked medium or low confidence).
-- Sorts by manual order, SKU, name, price, or needs-review first.
+- Searches by name or SKU. Module tabs show counts, and you can also filter by subassembly (the manual's numbering, for example 1.10.2 Brew module), "No price".
+- Sorts by manual order, SKU, name or price.
 - Adds, edits (including price) and removes parts. Removing asks for confirmation inside the page.
 - Selects several parts at once and sets or clears their price in one step.
 - Shows two quantities per part in the opened row, as a sample for the database stage: **On hand** (a counter with - and + buttons) and **Per machine** (how many the machine uses). The header shows the total number of parts. Per-machine values are filled only for the 19 main assemblies listed on page 3 of the manual; everything else is blank until the next stage. Both numbers are saved in this browser only and travel in the CSV (`conteo`, `cant_por_maquina`).
@@ -31,14 +31,19 @@ The first time someone opens the page, the app loads `data/parts.csv`. From then
 
 ## How parts become verified
 
-A part starts in the catalog only when a second, independent source agrees with the first reading. The build script (`data/build_parts.py`) applies this rule:
+The published catalog contains only verified parts. A part is verified when a second, independent source agrees with the first reading. `data/build_parts.py` applies this rule:
 
 1. The same Article no., 8-digit SKU and name were read identically on 2 or more clear pages, or
 2. The name equals the title of the part's own chapter in the manual (the SKU was read once).
 
-In both cases the Article no. must look like `NNN.NNN`, the 8-digit SKU must look like `11xxxxxx` and belong to no other article, and the manual must not have a typo flagged on that part. Everything else (SKUs with 6 or 7 digits, SKUs shared by two articles, parts that only appear in a blurry photo) goes to **To validate**. This is a cross-check of my reading, not a guarantee: the paper manual is still the final authority.
+In both cases the Article no. must look like `NNN.NNN`, the 8-digit SKU must look like `11xxxxxx` and belong to no other article, and the manual must not have a typo flagged on that part. This is a cross-check of the reading, not a guarantee: the paper manual is still the final authority.
 
-The CSV carries this in two columns: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence).
+Everything else waits to be validated. That list is internal and is not published: the build writes it to `data/internal/` (ignored by git), together with a report of the rows to check. To work through it:
+
+- Run the app locally (`python -m http.server`) and open `http://localhost:8000/?validate`. That mode shows the **Catalog** and **To validate** views, the evidence for each part, and the **Mark verified** buttons. It keeps its own saved copy, separate from the normal one.
+- After checking a part against the paper manual, add its Article no. to `data/manual_validations.txt` and run `build_parts.py`. The part moves into `data/parts.csv`, and the next push publishes it.
+
+The CSV carries the status in two columns: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence).
 
 ## Update the catalog
 
@@ -50,7 +55,7 @@ The CSV carries this in two columns: `validacion` (`validada` or `pendiente`) an
 **Re-extract from the manuals:**
 1. Fix `data/transcription_A.txt`. Each page starts with `## image_no|file|section|module` and each row is `article|sku8|description`.
 2. If you add a new part, add its Spanish name to `data/translations_es.py`.
-3. Run `cd data && python build_parts.py`. This regenerates `parts.csv` and `extraction_report.md`.
+3. Run `cd data && python build_parts.py`. This regenerates `parts.csv` (verified parts only) and, in `data/internal/`, `parts_all.csv` and `extraction_report.md`.
 
 Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit them in the app instead.
 
@@ -59,9 +64,9 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 - `index.html`: the app.
 - `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo (they are in the CSV and the edit form, not on the card).
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
-- `data/build_parts.py` and `data/translations_es.py`: build the CSV and the report.
-- `data/extraction_report.md`: totals and the rows to check against the paper manual.
-- `data/pilot_parts.csv` and `data/_build_pilot.py`: the 3-image pilot Francisco approved.
+- `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
+- `data/manual_validations.txt`: Article numbers checked by hand against the paper manual.
+- `data/internal/`: local only, not committed (all parts, the report and the pilot).
 - `IDEAS.md`: ideas outside the current scope.
 
 The manual images are not committed to the repository.

@@ -168,7 +168,7 @@
   <div class="top-row">
     <div>
       <h1>Mastrena parts catalog</h1>
-      <div class="tagline"><b id="total">0</b> verified · <b id="pending">0</b> to validate</div>
+      <div class="tagline" id="tagline"></div>
     </div>
     <button class="btn primary" id="btn-add" type="button">+ Add part</button>
   </div>
@@ -256,8 +256,11 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = 'octagon-inv-v1';
-  const SEED_URL = 'data/parts.csv';
+  // Validation mode is for the team only: open the page with ?validate (served locally, with data/internal/parts_all.csv).
+  // Everyone else sees only the verified catalog.
+  const VALIDATE = new URLSearchParams(location.search).has('validate');
+  const STORAGE_KEY = VALIDATE ? 'octagon-inv-v1-validate' : 'octagon-inv-v1';
+  const SEEDS = VALIDATE ? ['data/internal/parts_all.csv', 'data/parts.csv'] : ['data/parts.csv'];
   const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
   const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
@@ -277,6 +280,7 @@
   const needsReview = (p) => p.confianza === 'medium' || p.confianza === 'low' || p.confianza === 'illegible';
   // Only parts explicitly marked 'pendiente' wait for validation; everything else counts as verified.
   const isPending = (p) => p.validacion === 'pendiente';
+  const inView = (p) => (VALIDATE && state.view === 'validate') === isPending(p);
   const today = () => new Date().toLocaleDateString('en-CA');
 
   let parts = [];
@@ -469,7 +473,7 @@
 
   // ---------- filtering and sorting ----------
   const matches = (p, skipModule) => {
-    if ((state.view === 'validate') !== isPending(p)) return false;
+    if (!inView(p)) return false;
     if (!skipModule && state.mod && p.modulo !== state.mod) return false;
     if (state.sub && p.subconjunto !== state.sub) return false;
     if (state.noPrice && p.precio_cad) return false;
@@ -498,18 +502,21 @@
 
   // ---------- render ----------
   function renderControls() {
-    const nPend = parts.filter(isPending).length;
-    $('views').innerHTML = `<button type="button" role="tab" data-act="view" data-view="catalog" aria-selected="${state.view === 'catalog'}">Catalog<span class="n">${parts.length - nPend}</span></button>` +
-      `<button type="button" role="tab" data-act="view" data-view="validate" aria-selected="${state.view === 'validate'}">To validate<span class="n">${nPend}</span></button>`;
-    $('total').textContent = parts.length - nPend;
-    $('pending').textContent = nPend;
+    const nPend = parts.filter(isPending).length, nOk = parts.length - nPend;
+    $('views').classList.toggle('hidden', !VALIDATE);
+    if (VALIDATE) {
+      $('views').innerHTML = `<button type="button" role="tab" data-act="view" data-view="catalog" aria-selected="${state.view === 'catalog'}">Catalog<span class="n">${nOk}</span></button>` +
+        `<button type="button" role="tab" data-act="view" data-view="validate" aria-selected="${state.view === 'validate'}">To validate<span class="n">${nPend}</span></button>`;
+    }
+    $('tagline').innerHTML = VALIDATE ? `<b>${nOk}</b> verified · <b>${nPend}</b> to validate`
+      : `<b>${nOk}</b> ${nOk === 1 ? 'part' : 'parts'} · Mastrena II`;
     const counts = { '': 0 };
     MODULES.forEach(m => counts[m] = 0);
     parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.modulo] !== undefined) counts[p.modulo]++; } });
     $('tabs').innerHTML = [['', 'All'], ...MODULES.map(m => [m, m])].map(([v, label]) =>
       `<button class="tab" role="tab" type="button" data-act="tab" data-mod="${v}" aria-selected="${state.mod === v}">${label}<span class="n">${counts[v] ?? 0}</span></button>`).join('');
     const subs = new Map();
-    parts.forEach(p => { if ((state.view === 'validate') === isPending(p) && p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
+    parts.forEach(p => { if (inView(p) && p.subconjunto && (!state.mod || p.modulo === state.mod)) subs.set(p.subconjunto, (subs.get(p.subconjunto) || 0) + 1); });
     const opts = [...subs.entries()].sort((a, b) => cmpSec(a[0], b[0]));
     $('sub').innerHTML = `<option value="">All subassemblies</option>` + opts.map(([s, n]) =>
       `<option value="${esc(s)}" ${state.sub === s ? 'selected' : ''}>${esc(s)} (${n})</option>`).join('');
@@ -526,7 +533,7 @@
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8dig || '—')}</dd></div>
       <div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subconjunto || '—')}</dd></div>
-      <div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidencia || '—')}</dd></div>
+      ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidencia || '—')}</dd></div>` : ''}
       ${p.notas ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notas)}</dd></div>` : ''}
     </dl>`;
   }
@@ -563,7 +570,7 @@
         ${isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
         <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
         <button class="btn sm" type="button" data-act="label" data-sku="${esc(p.sku)}">Label</button>
-        ${isPending(p) ? '' : `<button class="btn sm" type="button" data-act="unverify" data-sku="${esc(p.sku)}">Send back to validation</button>`}
+        ${isPending(p) || !VALIDATE ? '' : `<button class="btn sm" type="button" data-act="unverify" data-sku="${esc(p.sku)}">Send back to validation</button>`}
         <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
       </div>${confirmBox}</div>`;
   }
@@ -858,33 +865,46 @@
   $('btn-import-cancel').onclick = closeSheets;
 
   // ---------- startup ----------
+  // First published catalog found in SEEDS, or null when none can be read (for example when opened as a local file).
+  async function fetchSeed() {
+    for (const url of SEEDS) {
+      try {
+        const res = await fetch(url, { cache: 'no-store' });
+        if (!res.ok) continue;
+        const r = validateCSV(await res.text());
+        if (!r.errors.length) return r.parts;
+        console.warn(url + ' has errors:', r.errors);
+      } catch (e) { /* try the next one */ }
+    }
+    return null;
+  }
   // Copies saved before the validation status existed get it from the published catalog.
+  // Rows that came from the manual but are not in the published catalog are still to be validated, so they are dropped.
   async function mergeSeedFlags() {
     if (!parts.some(p => p.validacion === undefined)) return;
-    try {
-      const res = await fetch(SEED_URL, { cache: 'no-store' }); if (!res.ok) return;
-      const seed = new Map(validateCSV(await res.text()).parts.map(x => [x.sku, x]));
-      parts.forEach(p => {
-        if (p.validacion !== undefined) return;
-        const m = seed.get(p.sku);
-        p.validacion = m ? m.validacion : 'validada';
-        if (!p.evidencia) p.evidencia = m ? m.evidencia : 'Added manually';
-      });
-      save(); render();
-    } catch (e) { /* offline: try again next time */ }
+    const list = await fetchSeed(); if (!list) return;
+    const seed = new Map(list.map(x => [x.sku, x]));
+    parts = parts.filter(p => {
+      if (p.validacion !== undefined) return true;
+      const m = seed.get(p.sku);
+      if (m) { p.validacion = m.validacion; if (!p.evidencia) p.evidencia = m.evidencia; return true; }
+      if (p.imagen_origen && !VALIDATE) return false;
+      p.validacion = 'validada'; if (!p.evidencia) p.evidencia = 'Added manually';
+      return true;
+    });
+    save(); render();
   }
   async function init() {
+    if (VALIDATE) document.title += ' (validation)';
+    else $('sort').querySelector('option[value="review"]').remove();
     const stored = load();
-    if (stored !== null) { parts = stored; render(); await mergeSeedFlags(); return; }
-    // First visit: try to load the catalog published next to the page.
-    try {
-      const res = await fetch(SEED_URL, { cache: 'no-store' });
-      if (res.ok) {
-        const r = validateCSV(await res.text());
-        if (!r.errors.length) { parts = r.parts; save(); }
-        else console.warn('data/parts.csv has errors:', r.errors);
-      }
-    } catch (e) { /* opened as a local file: start empty */ }
+    if (stored !== null) {
+      parts = VALIDATE ? stored : stored.filter(p => !isPending(p));
+      render(); await mergeSeedFlags(); return;
+    }
+    // First visit: load the catalog published next to the page.
+    const list = await fetchSeed();
+    if (list) { parts = list; save(); }
     render();
   }
   init();
