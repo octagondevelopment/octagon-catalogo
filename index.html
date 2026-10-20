@@ -98,6 +98,9 @@
   .confirm { margin-top: 12px; padding: 12px; border-radius: 12px; background: var(--danger-soft); color: var(--ink); font-size: 14px; }
   .confirm .actions { margin-top: 10px; }
   .tagline b { color: var(--ink); font-weight: 600; }
+  .hint { font-size: 12px; color: var(--muted); font-weight: 400; min-height: 0; }
+  .hint:empty { display: none; }
+  .hint.warn { color: var(--warn); }
   .views { display: flex; gap: 4px; background: var(--soft); border-radius: 12px; padding: 4px; margin-bottom: 4px; }
   .views button { flex: 1; border: 0; background: transparent; border-radius: 9px; padding: 8px 10px; font-weight: 600; font-size: 13.5px; color: var(--ink2); }
   .views button[aria-selected="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, .14); }
@@ -471,6 +474,204 @@
   };
   const sketch = (p) => `<svg class="sketch" viewBox="0 0 64 64" aria-hidden="true">${ICONS[kindOf(p)]}</svg>`;
 
+  // ---------- translation ----------
+  // Suggests the other language for a part name (English <-> Spanish). Providers run in this order:
+  //   1. a part already in the catalog with the same name,
+  //   2. the glossary (data/glossary.csv) plus a few grammar rules,
+  //   3. an optional remote service (AI). It is off until TRANSLATE_REMOTE_URL is set; see the README.
+  const TRANSLATE_REMOTE_URL = '';
+  const glossary = { en: new Map(), es: new Map(), maxEn: 1, maxEs: 1 };
+  // Words kept as they are: units and standards.
+  const KEEP_WORDS = new Set(['mm', 'cm', 'kg', 'kw', 'bar', 'x', 'v', 'w', 'fep', 'epdm', 'fkm', 'nbr', 'pvc', 'ul', 'ce', 'eu', 'ue', 'usb', 'ntc', 'dn']);
+  const ES_DE = new Set(['de', 'del']);
+
+  function buildGlossary(rows) {
+    glossary.en.clear(); glossary.es.clear(); glossary.maxEn = glossary.maxEs = 1;
+    for (const r of rows) {
+      let en = String(r.en || '').trim().toLowerCase(), es = String(r.es || '').trim();
+      let pos = (r.pos || 'N').trim(), dir = '';
+      if (/[<>]$/.test(pos)) { dir = pos.slice(-1); pos = pos.slice(0, -1); }   // '>' English to Spanish only, '<' Spanish to English only
+      if (dir === '<') [en, es] = [es.toLowerCase(), r.en.trim()];                // a '<' row is written as: spanish,english
+      if (!en || !es) continue;
+      const e = { en, es, pos, gen: (r.gen || '').trim() };
+      if (dir !== '<' && !glossary.en.has(en)) { glossary.en.set(en, e); glossary.maxEn = Math.max(glossary.maxEn, en.split(' ').length); }
+      const k = norm(es);
+      if (dir !== '>' && !glossary.es.has(k)) { glossary.es.set(k, e); glossary.maxEs = Math.max(glossary.maxEs, k.split(' ').length); }
+    }
+  }
+
+  function tokenize(text) {
+    const out = [];
+    const re = /[(),;"]|[^\s(),;"]+/g; let m;
+    while ((m = re.exec(text))) {
+      const raw = m[0];
+      if (/^[(),;"]$/.test(raw)) { out.push({ t: 'punct', raw }); continue; }
+      const word = raw.replace(/\.+$/, '');
+      out.push(/^[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'-]*$/.test(word) ? { t: 'word', raw: word } : { t: 'spec', raw });
+    }
+    return out;
+  }
+
+  // Plural and feminine variants of one word, as keys into the glossary of that language.
+  function variants(w, lang) {
+    const l = lang === 'en' ? w.toLowerCase() : norm(w), out = [];
+    if (lang === 'en') {
+      if (l.endsWith('ies')) out.push({ word: l.slice(0, -3) + 'y', plural: true });
+      if (l.endsWith('es')) out.push({ word: l.slice(0, -2), plural: true });
+      if (l.endsWith('s')) out.push({ word: l.slice(0, -1), plural: true });
+      return out;
+    }
+    const bases = [{ w: l, plural: false }];
+    if (l.endsWith('es')) bases.push({ w: l.slice(0, -2), plural: true });
+    if (l.endsWith('s')) bases.push({ w: l.slice(0, -1), plural: true });
+    for (const b of bases) {
+      if (b.plural) out.push({ word: b.w, plural: true, fem: false });
+      if (b.w.endsWith('a')) out.push({ word: b.w.slice(0, -1) + 'o', plural: b.plural, fem: true });
+    }
+    return out;
+  }
+
+  // Longest glossary phrase that starts at words[0].
+  function lookup(words, lang) {
+    const map = lang === 'en' ? glossary.en : glossary.es, max = lang === 'en' ? glossary.maxEn : glossary.maxEs;
+    const key = (ws) => lang === 'en' ? ws.join(' ').toLowerCase() : ws.map(norm).join(' ');
+    for (let len = Math.min(max, words.length); len >= 1; len--) {
+      const ws = words.slice(0, len);
+      const hit = map.get(key(ws));
+      if (hit) return { entry: hit, len, plural: false, fem: false };
+      for (const v of variants(ws[len - 1], lang)) {
+        const h = map.get(key([...ws.slice(0, -1), v.word]));
+        if (h) return { entry: h, len, plural: !!v.plural, fem: !!v.fem };
+      }
+    }
+    return null;
+  }
+
+  const isAdj = (h) => h.entry.pos === 'A' || h.entry.pos === 'AI' || h.entry.pos === 'AP';
+  const pluralOf = (w, lang) => lang === 'es' ? (/[aeiouáéíóú]$/i.test(w) ? w + 's' : w + 'es') : (/(s|x|ch|sh)$/i.test(w) ? w + 'es' : w + 's');
+  const feminine = (es, entry) => (entry.pos === 'AI' || es.includes(' ') || !/o$/.test(es)) ? es : es.slice(0, -1) + 'a';
+
+  function convertSpec(raw, from) {
+    return from === 'en'
+      ? raw.replace(/(\d+\/\d+)-way/gi, '$1 vías').replace(/(\d)\.(\d)/g, '$1,$2')
+      : raw.replace(/(\d),(\d)/g, '$1.$2');
+  }
+
+  // A run is a stretch of words with no number, bracket or function word in between.
+  function renderRun(units, from) {
+    const to = from === 'en' ? 'es' : 'en';
+    const nounish = (u) => u.unk || (u.hit && !isAdj(u.hit));
+    const name = (u) => u.unk ? u.unk : (from === 'en' ? u.hit.entry.es : u.hit.entry.en);
+    const withPlural = (u) => (u.hit && u.hit.plural) ? pluralOf(name(u), to) : name(u);
+    const adjs = units.filter(u => u.hit && isAdj(u.hit));
+    const nouns = units.filter(nounish);
+    if (!nouns.length) return adjs.map(name).join(' ');
+    if (from === 'en') {
+      // English puts modifiers first ("water pump cover"); Spanish puts the main noun first ("tapa de bomba de agua").
+      const head = nouns[nouns.length - 1], mods = nouns.slice(0, -1).reverse();
+      const gen = head.hit ? head.hit.entry.gen : 'm', pl = head.hit && head.hit.plural;
+      const adjTxt = adjs.map(a => {
+        let w = a.hit.entry.es;
+        if (gen === 'f') w = feminine(w, a.hit.entry);
+        return pl ? pluralOf(w, 'es') : w;
+      });
+      return [withPlural(head), ...mods.map(m => 'de ' + name(m)), ...adjTxt].join(' ');
+    }
+    // Spanish -> English: the main noun comes first; "A de B" becomes "B A".
+    const chain = nouns.slice().reverse();
+    const pre = adjs.filter(a => a.hit.entry.pos !== 'AP').map(name), post = adjs.filter(a => a.hit.entry.pos === 'AP').map(name);
+    const head = nouns[0];
+    const chainTxt = chain.map(u => u === head ? withPlural(u) : name(u));
+    return [...pre, ...chainTxt, ...post].join(' ');
+  }
+
+  // Glossary translation of a whole name. Returns { text, unknown }.
+  function translateGlossary(text, from) {
+    const toks = tokenize(text);
+    if (from === 'es') {
+      for (let i = 0; i < toks.length - 1; i++) {
+        if (toks[i].t === 'spec' && /^\d+\/\d+$/.test(toks[i].raw) && toks[i + 1].t === 'word' && norm(toks[i + 1].raw) === 'vias') {
+          toks.splice(i, 2, { t: 'spec', raw: toks[i].raw + '-way' });
+        }
+      }
+    }
+    const items = [], unknown = []; let run = null, assy = false, firstWord = true;
+    let deferred = null;   // "2/2-way" comes before the noun in English and after it in Spanish
+    const flush = () => { if (run) { items.push({ run }); run = null; } if (deferred) { items.push({ raw: deferred }); deferred = null; } };
+    for (let i = 0; i < toks.length;) {
+      const tk = toks[i];
+      if (tk.t === 'punct') {
+        if (from === 'es' && tk.raw === '(' && toks[i + 1] && norm(toks[i + 1].raw) === 'conjunto' && toks[i + 2] && toks[i + 2].raw === ')') { assy = true; i += 3; continue; }
+        flush(); items.push({ raw: tk.raw, punct: true }); i++; continue;
+      }
+      if (tk.t === 'spec') {
+        flush();
+        if (from === 'en' && /-way$/i.test(tk.raw)) deferred = convertSpec(tk.raw, from); else items.push({ raw: convertSpec(tk.raw, from) });
+        i++; continue;
+      }
+      const low = tk.raw.toLowerCase();
+      if (from === 'en' && (low === 'assy' || low === 'assembly')) { assy = true; i++; firstWord = false; continue; }
+      if (from === 'es' && ES_DE.has(norm(tk.raw))) { run = run || []; i++; firstWord = false; continue; }
+      const seq = []; for (let j = i; j < toks.length && toks[j].t === 'word'; j++) seq.push(toks[j].raw);
+      const hit = lookup(seq, from);
+      if (!hit && KEEP_WORDS.has(low)) { flush(); items.push({ raw: tk.raw }); i++; firstWord = false; continue; }
+      if (hit && hit.entry.pos === 'X') {
+        flush(); items.push({ raw: from === 'en' ? hit.entry.es : (/^[A-Z]/.test(hit.entry.es) ? hit.entry.es : hit.entry.en) });
+        i += hit.len; firstWord = false; continue;
+      }
+      if (hit) { (run = run || []).push({ hit }); i += hit.len; firstWord = false; continue; }
+      const proper = (/^[A-ZÀ-Ý]/.test(tk.raw) && !firstWord) || (tk.raw.length >= 2 && tk.raw === tk.raw.toUpperCase());
+      firstWord = false;
+      if (proper) { flush(); items.push({ raw: tk.raw }); i++; continue; }
+      (run = run || []).push({ unk: tk.raw.toLowerCase() }); unknown.push(tk.raw); i++;
+    }
+    flush();
+    if (assy) {
+      // Spanish puts "(conjunto)" at the end; the manual puts "assy." right after the main noun.
+      const at = from === 'en' ? -1 : items.findIndex(it => it.run);
+      if (at < 0) items.push({ raw: from === 'en' ? '(conjunto)' : 'assy.' }); else items.splice(at + 1, 0, { raw: 'assy.' });
+    }
+    // join, with sensible spacing around brackets, commas and quotes
+    let out = '', quoteOpen = false;
+    for (const it of items) {
+      const piece = it.run ? renderRun(it.run, from) : it.raw;
+      if (!piece) continue;
+      if (it.punct && piece === '"') { out += quoteOpen ? '"' : (out ? ' "' : '"'); quoteOpen = !quoteOpen; continue; }
+      if (it.punct && (piece === ')' || piece === ',' || piece === ';')) { out += piece; continue; }
+      const prev = out.slice(-1);
+      out += (!out || prev === '(' || (prev === '"' && quoteOpen)) ? piece : ' ' + piece;
+    }
+    out = out.replace(/\s+/g, ' ').trim();
+    return { text: out.charAt(0).toUpperCase() + out.slice(1), unknown };
+  }
+
+  // Best suggestion for `text` written in `from` ('en' or 'es'). Returns { text, unknown, source } or null.
+  async function suggestTranslation(text, from) {
+    const t = String(text || '').trim(); if (!t) return null;
+    const to = from === 'en' ? 'es' : 'en';
+    const mine = from === 'en' ? 'nombre_en' : 'nombre_es', other = from === 'en' ? 'nombre_es' : 'nombre_en';
+    const key = norm(t);
+    const known = parts.find(p => p[other] && norm(p[mine]) === key);
+    if (known) return { text: known[other], unknown: [], source: 'catalog' };
+    const g = translateGlossary(t, from);
+    if (g.unknown.length && TRANSLATE_REMOTE_URL) {
+      try {
+        const res = await fetch(TRANSLATE_REMOTE_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: t, from, to, draft: g.text, unknown: g.unknown }) });
+        if (res.ok) { const j = await res.json(); if (j && j.text) return { text: j.text, unknown: [], source: 'ai' }; }
+      } catch (e) { /* fall back to the glossary draft */ }
+    }
+    return { text: g.text, unknown: g.unknown, source: 'glossary' };
+  }
+  async function loadGlossary() {
+    try {
+      const res = await fetch('data/glossary.csv', { cache: 'no-store' }); if (!res.ok) return;
+      const rows = parseCSV(await res.text()), head = rows[0].map(h => h.trim().toLowerCase());
+      buildGlossary(rows.slice(1).map(r => Object.fromEntries(head.map((h, i) => [h, r[i]]))));
+    } catch (e) { /* opened as a local file: only catalog names are suggested */ }
+  }
+  // ---------- end translation ----------
+
   // ---------- filtering and sorting ----------
   const matches = (p, skipModule) => {
     if (!inView(p)) return false;
@@ -631,13 +832,13 @@
   }
 
   function formFields(p, idp) {
-    const f = (name, label, extra = '', cls = '') =>
-      `<label class="${cls}">${label}<input name="${name}" value="${esc(p[name])}" ${extra}></label>`;
+    const f = (name, label, extra = '', cls = '', hint = false) =>
+      `<label class="${cls}">${label}<input name="${name}" value="${esc(p[name])}" ${extra}>${hint ? `<span class="hint" data-hint="${name}"></span>` : ''}</label>`;
     return `
       ${f('sku', 'SKU (Article no.) *', 'required autocomplete="off" class="mono"')}
       ${f('sku_8dig', '8-digit SKU', 'inputmode="numeric" class="mono"')}
-      ${f('nombre_en', 'Name (EN) *', 'required', 'full')}
-      ${f('nombre_es', 'Name (ES)', '', 'full')}
+      ${f('nombre_en', 'Name (EN) *', 'required autocomplete="off"', 'full', true)}
+      ${f('nombre_es', 'Name (ES)', 'autocomplete="off"', 'full', true)}
       <label>Module *<select name="modulo" required>
         ${MODULES.map(m => `<option ${p.modulo === m ? 'selected' : ''}>${m}</option>`).join('')}
       </select></label>
@@ -685,6 +886,35 @@
   }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSheets(); });
   document.querySelectorAll('.sheet').forEach(s => s.addEventListener('click', (e) => { if (e.target === s) closeSheets(); }));
+
+  // ---------- name translation in the forms ----------
+  // Typing in one name field fills the other with a suggestion. A name somebody typed by hand is never overwritten.
+  const NAME_FIELDS = { nombre_en: ['en', 'nombre_es'], nombre_es: ['es', 'nombre_en'] };
+  function setHint(form, field, text, warn) {
+    const h = form.querySelector(`[data-hint="${field}"]`);
+    if (h) { h.textContent = text; h.classList.toggle('warn', !!warn); }
+  }
+  function hintText(r) {
+    if (r.source === 'catalog') return 'Same name as a part already in the catalog.';
+    if (r.source === 'ai') return 'Suggested by the translation service. Check it.';
+    return r.unknown.length ? `Suggested translation. Not in the glossary: ${r.unknown.join(', ')}. Check it.` : 'Suggested translation. Check it.';
+  }
+  let translateTimer;
+  document.addEventListener('input', (e) => {
+    const el = e.target, cfg = el.form && el.form.dataset.form && NAME_FIELDS[el.name];
+    if (!cfg) return;
+    const [from, otherName] = cfg, form = el.form, other = form.elements[otherName], typed = el.value;
+    el.dataset.auto = ''; setHint(form, el.name, '');     // typed by hand, so it is no longer a suggestion
+    clearTimeout(translateTimer);
+    translateTimer = setTimeout(async () => {
+      if (other.value.trim() && other.dataset.auto !== '1') return;
+      if (!typed.trim()) { if (other.dataset.auto === '1') { other.value = ''; other.dataset.auto = ''; setHint(form, otherName, ''); } return; }
+      const r = await suggestTranslation(typed, from);
+      if (!r || !el.isConnected || el.value !== typed || (other.value.trim() && other.dataset.auto !== '1')) return;
+      other.value = r.text; other.dataset.auto = '1';
+      setHint(form, otherName, hintText(r), r.unknown.length > 0);
+    }, 300);
+  });
 
   // ---------- add ----------
   function openAdd() {
@@ -895,6 +1125,7 @@
     save(); render();
   }
   async function init() {
+    loadGlossary();
     if (VALIDATE) document.title += ' (validation)';
     else $('sort').querySelector('option[value="review"]').remove();
     const stored = load();

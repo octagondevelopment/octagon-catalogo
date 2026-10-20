@@ -11,6 +11,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Adds, edits (including price) and removes parts. Removing asks for confirmation inside the page.
 - Selects several parts at once and sets or clears their price in one step.
 - Shows two quantities per part in the opened row, as a sample for the database stage: **On hand** (a counter with - and + buttons) and **Per machine** (how many the machine uses). The header shows the total number of parts. Per-machine values are filled only for the 19 main assemblies listed on page 3 of the manual; everything else is blank until the next stage. Both numbers are saved in this browser only and travel in the CSV (`conteo`, `cant_por_maquina`).
+- Suggests the translation of a part name while you type it: write the English name and the Spanish one fills in, or the other way around. The suggestion is marked so it can be checked, and a name someone typed by hand is never overwritten (see Translation below).
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Prints barcode labels (CODE128 of the SKU).
 - Draws a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
@@ -45,6 +46,33 @@ Everything else waits to be validated. That list is internal and is not publishe
 
 The CSV carries the status in two columns: `validacion` (`validada` or `pendiente`) and `evidencia` (a short sentence).
 
+## Translation
+
+When you add or edit a part, typing in **Name (EN)** fills **Name (ES)** with a suggestion, and typing in **Name (ES)** fills **Name (EN)**. A note under the field says where the suggestion came from, and lists the words it could not translate. Anything a person has typed by hand is left alone.
+
+Suggestions come from these sources, in this order:
+
+1. **A part already in the catalog** with the same name: its other-language name is reused.
+2. **The glossary**, `data/glossary.csv`, plus a few grammar rules (adjectives go after the noun, "water pump cover" becomes "tapa de bomba de agua", sizes keep their form, decimal points become commas). It works without internet and always uses the same vocabulary as the rest of the catalog.
+3. **A translation service (AI), not connected yet.** It is only asked when the glossary finds words it doesn't know.
+
+How good is it? Measured against the 403 names already translated by hand, the glossary gives the same name in about 7 of 10 English-to-Spanish cases and 6 of 10 Spanish-to-English (ignoring the word "de"). The rest are wording or word-order differences, or words that aren't in the glossary yet. Treat every suggestion as a draft.
+
+**Adding words.** Open `data/glossary.csv` and add a line: `en,es,pos,gen`.
+
+- `pos`: `N` noun, `U` fixed phrase (used as a noun, never reordered), `A` adjective (put in front in English), `AP` adjective that follows the noun in the manual ("module left"), `AI` adjective that doesn't change with gender, `X` word that is only swapped (with, for, and).
+- `gen`: `m` or `f`, for nouns and phrases. Adjectives agree with it.
+- End `pos` with `>` to use the line only English to Spanish, or `<` for Spanish to English only. A `<` line is written the other way round: `spanish,english`.
+- When two lines have the same English text, the first one is used for English to Spanish, and the first Spanish match is used for Spanish to English.
+
+**Connecting the AI service later.** The page already has the hook. In `index.html`, set `TRANSLATE_REMOTE_URL` to the address of a small server function (for example a Supabase Edge Function). The page then sends a POST with JSON like
+
+```json
+{ "text": "Brass heating element 230V", "from": "en", "to": "es", "draft": "Element de heating de brass 230V", "unknown": ["Element", "heating", "brass"] }
+```
+
+and expects `{ "text": "Resistencia calefactora de latón 230V" }` back. It is only called when the glossary has unknown words, and if it fails the glossary draft is used. The API key must live on the server, never in the page: the repository is public.
+
 ## Update the catalog
 
 **Changes made in the app** (prices, corrections):
@@ -63,6 +91,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 
 - `index.html`: the app.
 - `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo (they are in the CSV and the edit form, not on the card).
+- `data/glossary.csv`: English and Spanish terms used to suggest translations.
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
 - `data/manual_validations.txt`: Article numbers checked by hand against the paper manual.

@@ -1,0 +1,372 @@
+en,es,pos,gen
+oval head screw,tornillo cabeza oval,U,m
+oval-head screw,tornillo cabeza oval,U,m
+lens head screw,tornillo cabeza lenteja,U,m
+socket head screw,tornillo cabeza cilíndrica,U,m
+socket flat head screw,tornillo cabeza plana hexagonal interior,U,m
+hexagonal head screw combi,tornillo cabeza hexagonal combi,U,m
+hexagon socket screw plug,tapón roscado hexagonal interior,U,m
+hex cap assembled screw,tornillo hexagonal con arandela,U,m
+counter sunk screw,tornillo avellanado,U,m
+phillips sheet screw,tornillo autorroscante Phillips,U,m
+pt screw lens head,tornillo PT cabeza lenteja,U,m
+pt screw,tornillo PT,U,m
+phillips screw,tornillo Phillips,U,m
+drive screw,tornillo de accionamiento,U,m
+screw self thread grooving,tornillo autorroscante,U,m
+lock nut,tuerca de seguridad,U,f
+prevailing torque hex nut,tuerca hexagonal autoblocante,U,f
+coupling nut,tuerca de acople,U,f
+hex nuts,tuercas hexagonales,U,f
+o-ring,o-ring,U,m
+cable tie,amarra plástica,U,f
+metal zip tie,amarra metálica,U,f
+zip tie,amarra,U,f
+wire retainer,retenedor de cables,U,m
+wiring harness,arnés de cables,U,m
+power cord,cable de alimentación,U,m
+grounding cable,cable de tierra,U,m
+water pump,bomba de agua,U,f
+waterpump,bomba de agua,U,f
+magnet valve,electroválvula,U,f
+solenoid valve,electroválvula,U,f
+check valve,válvula antirretorno,U,f
+checkvalve,válvula antirretorno,U,f
+safety valve,válvula de seguridad,U,f
+emptying valve,válvula de vaciado,U,f
+bypass valve,válvula bypass,U,f
+filling valve,válvula de llenado,U,f
+valve cartridge,cartucho de válvula,U,m
+bean hopper,tolva de grano,U,f
+drip tray,bandeja de goteo,U,f
+ground drawer,cajón de borra,U,m
+steam wand,lanceta de vapor,U,f
+steam module,módulo de vapor,U,m
+brew unit,unidad de infusión,U,f
+brew chamber,cámara de infusión,U,f
+brew module,módulo de infusión,U,m
+grinder module,módulo de molino,U,m
+mechanic module,módulo mecánico,U,m
+hydraulic module,módulo hidráulico,U,m
+grinder motor,motor de molino,U,m
+grindermotor,motor de molino,U,m
+electric box,caja eléctrica,U,f
+control board,placa de control,U,f
+power board,placa de potencia,U,f
+powerboard,placa de potencia,U,f
+switching power supply,fuente de poder conmutada,U,f
+user interface,interfaz de usuario,U,f
+steam outlet,salida de vapor,U,f
+coffee outlet,salida de café,U,f
+snap ring,anillo de retención,U,m
+elastic clip washer,arandela clip elástica,U,f
+fep pipe,tubo FEP,U,m
+drain pipe,tubo de desagüe,U,m
+hexagonal spacer,separador hexagonal,U,m
+deck support piece,pieza de soporte de tapa,U,f
+spring plunger,émbolo con resorte,U,m
+compression spring,resorte de compresión,U,m
+deep groove ball bearing,rodamiento rígido de bolas,U,m
+ball bearing,rodamiento de bolas,U,m
+toothed belt,correa dentada,U,f
+level detector,sensor de nivel,U,m
+safety level detector,sensor de nivel de seguridad,U,m
+pressure switch,presostato,U,m
+reed switch,interruptor reed,U,m
+cleaning system,sistema de limpieza,U,m
+water supply,alimentación de agua,U,f
+heating cartridge,cartucho calefactor,U,m
+temperature sensor,sensor de temperatura,U,m
+fan set,set de ventilador,U,m
+micro sd-card,tarjeta micro SD,U,f
+button cell battery,pila botón,U,f
+spring clip,clip de resorte,U,m
+tool clip,clip herramienta,U,m
+quick snap,broche rápido,U,m
+stepper motor,motor paso a paso,U,m
+flow meter,flujómetro,U,m
+limit stop,tope,U,m
+overheat temp device,protector de sobretemperatura,U,m
+rubber bushing,buje de goma,U,m
+cleaningkey,llave de limpieza,U,f
+drive spindle,husillo de accionamiento,U,m
+screw,tornillo,N,m
+bolt,perno,N,m
+nut,tuerca,N,f
+washer,arandela,N,f
+ring,anillo,N,m
+pipe,tubo,N,m
+tube,tubo,N,m
+hose,manguera,N,f
+valve,válvula,N,f
+solenoid,solenoide,N,m
+coil,bobina,N,f
+cartridge,cartucho,N,m
+connector,conector,N,m
+connection,conexión,N,f
+fitting,racor,N,m
+adapter,adaptador,N,m
+plug,tapón,N,m
+nozzle,boquilla,N,f
+elbow,codo,N,m
+clip,clip,N,m
+pin,pasador,N,m
+rivet,remache,N,m
+peg,clavija,N,f
+spring,resorte,N,m
+bearing,rodamiento,N,m
+belt,correa,N,f
+motor,motor,N,m
+pump,bomba,N,f
+boiler,caldera,N,f
+module,módulo,N,m
+unit,unidad,N,f
+chamber,cámara,N,f
+piston,pistón,N,m
+plunger,émbolo,N,m
+shaft,eje,N,m
+spindle,husillo,N,m
+rail,riel,N,m
+guide,guía,N,f
+sleeve,casquillo,N,m
+spacer,separador,N,m
+plate,placa,N,f
+panel,panel,N,m
+frame,marco,N,m
+cover,tapa,N,f
+cap,tapa,N,f
+lid,tapa,N,f
+housing,carcasa,N,f
+casing,carcasa,N,f
+hood,capota,N,f
+tray,bandeja,N,f
+drawer,cajón,N,m
+hopper,tolva,N,f
+funnel,embudo,N,m
+handle,manilla,N,f
+knob,perilla,N,f
+latch,pestillo,N,m
+lever,palanca,N,f
+switch,interruptor,N,m
+sensor,sensor,N,m
+probe,sonda,N,f
+fuse,fusible,N,m
+relais,relé,N,m
+relay,relé,N,m
+capacitor,condensador,N,m
+board,placa,N,f
+terminal,bornera,N,f
+cable,cable,N,m
+cord,cable,N,m
+harness,arnés,N,m
+wire,cable,N,m
+filter,filtro,N,m
+seal,sello,N,m
+gasket,empaquetadura,N,f
+membrane,membrana,N,f
+insert,inserto,N,m
+block,bloque,N,m
+body,cuerpo,N,m
+box,caja,N,f
+case,carcasa,N,f
+label,etiqueta,N,f
+sticker,adhesivo,N,m
+fan,ventilador,N,m
+display,pantalla,N,f
+interface,interfaz,N,f
+manometer,manómetro,N,m
+meter,medidor,N,m
+agitator,agitador,N,m
+burr,muela,N,f
+disc,disco,N,m
+cam,leva,N,f
+support,soporte,N,m
+holder,soporte,N,m
+mount,soporte,N,m
+set,set,N,m
+kit,kit,N,m
+base,base,N,f
+tower,torre,N,f
+stop,tope,N,m
+buffer,amortiguador,N,m
+bushing,buje,N,m
+bridge,puente,N,m
+device,dispositivo,N,m
+tool,herramienta,N,f
+strut,puntal,N,m
+contact,contacto,N,m
+counter,contador,N,m
+beam,viga,N,f
+battery,pila,N,f
+water,agua,N,f
+steam,vapor,N,m
+coffee,café,N,m
+bean,grano,N,m
+drain,desagüe,N,m
+power,potencia,N,f
+supply,alimentación,N,f
+pressure,presión,N,f
+level,nivel,N,m
+flow,flujo,N,m
+head,cabeza,N,f
+cleaning,limpieza,N,f
+hydraulic,hidráulico,A,
+mechanical,mecánico,A,
+mechanic,mecánico,A,
+electric,eléctrico,A,
+electrical,eléctrico,A,
+hexagonal,hexagonal,A,
+hex,hexagonal,A,
+oval,oval,A,
+flat,plano,A,
+round,redondo,A,
+circular,circular,A,
+straight,recto,A,
+female,hembra,AI,
+male,macho,AI,
+black,negro,AP,
+small,pequeño,AP,
+big,grande,AP,
+mobile,móvil,A,
+fixed,fijo,A,
+rear,trasero,AP,
+back,trasero,AP,
+left,izquierdo,AP,
+right,derecho,AP,
+upper,superior,A,
+lower,inferior,A,
+double,doble,A,
+single,simple,A,
+main,principal,A,
+horizontal,horizontal,AP,
+vertical,vertical,AP,
+automatic,automático,A,
+auto,automático,A,
+adjustable,ajustable,A,
+elastic,elástico,A,
+rotary,giratorio,A,
+tilted,inclinado,A,
+stepped,escalonado,A,
+rapid,rápido,A,
+quick,rápido,A,
+pluggable,enchufable,A,
+plugable,enchufable,A,
+centre,central,A,
+central,central,A,
+full,completo,A,
+specific,específico,A,
+anti-twist,antirrotación,AI,
+anti-kink,antiquiebre,AI,
+photoelectric,fotoeléctrico,A,
+metal,metálico,A,
+safety,de seguridad,AP,
+with,con,X,
+for,para,X,
+and,y,X,
+to,a,X,
+elbow connector,conector codo,U,m
+chassis,chasis,N,m
+backwall,pared trasera,N,f
+protection,protección,N,f
+grinder,molino,N,m
+magnet,imán,N,m
+rod magnet,imán de barra,U,m
+cylinder,cilindro,N,m
+receptacle,conector hembra,N>,m
+rod,barra,N,f
+inlay,inserto,N,m
+grill,rejilla,N,f
+side,lateral,A,
+mounting,montaje,N,m
+clamping,sujeción,N,f
+cpl,completo,A,
+philips,Phillips,X,
+steamoutlet,salida de vapor,U,f
+springplate,placa resorte,N,f
+front,frontal,AP,
+t-connector,conector en T,U,m
+t-fitting,racor en T,U,m
+l-connector,conector en L,U,m
+y-plug connector,conector en Y,U,m
+angle plug connection,conexión enchufable en ángulo,U,f
+locking ring,anillo de bloqueo,U,m
+adjusting washer,arandela de ajuste,U,f
+springwasher,arandela elástica,U,f
+sealing washer,arandela de sello,U,f
+supporting ring,anillo de soporte,U,m
+circlip,anillo de retención,U,m
+drainsystem,sistema de desagüe,U,m
+valveblock,bloque de válvulas,U,m
+fix,fijo,A,
+isolation,aislación,N,f
+component,componente,N,m
+fixation,fijación,N,f
+reed,reed,N,m
+powder,polvo,N,m
+mech,mecánico,A,
+socket,enchufe,N,m
+flange,brida,N,f
+expansion,expansión,N,f
+hyd,hidráulico,A,
+hydr,hidráulico,A,
+pass,paso,N,m
+closure,cierre,N,m
+diffusor,difusor,N,m
+grinding,molienda,N,f
+ground,borra,N,f
+channel,canal,N,m
+adjusting,ajuste,N,m
+maintenance,mantenimiento,N,m
+scraper,raspador,N,m
+micro-screen,microfiltro,N,m
+pre-assy,premontado,A,
+piece,pieza,N,f
+thermical,térmico,A,
+security,seguridad,N,f
+brew,infusión,N,f
+clean,limpieza,N,f
+tapered,cónico,A,
+sealing,sello,N,m
+outlet,salida,N,f
+castle,castillo,N,m
+lock,bloqueo,N,m
+tab,pastilla,N,f
+detection,detección,N,f
+bride,abrazadera,N,f
+bypass,bypass,N,m
+bi-material,bimaterial,AI,
+thickness,espesor,N,m
+inox,inoxidable,A,
+copper,cobre,N,m
+hazard,peligro,N,m
+ferrit,ferrita,N,f
+cubierta,cover,N<,f
+manguito,sleeve,N<,m
+autoajustable,auto adjustable,A<,
+sin,without,X<,
+brass,latón,N,m
+steel,acero,N,m
+stainless,inoxidable,AI,
+plastic,plástico,A,
+silicone,silicona,N,f
+rubber,goma,N,f
+heating element,resistencia calefactora,U,f
+heater,calefactor,N,m
+thermostat,termostato,N,m
+orifice,orificio,N,m
+jet,tobera,N,f
+wand,lanceta,N,f
+tank,tanque,N,m
+reservoir,depósito,N,m
+bracket,soporte,N,m
+spout,pitón,N,m
+outlet valve,válvula de salida,U,f
+inlet,entrada,N,f
+inlet valve,válvula de entrada,U,f
+carbon,carbón,N,m
+paddle,paleta,N,f
+gear,engranaje,N,m
+pulley,polea,N,f
+brush,escobilla,N,f
+magnetic,magnético,A,
+thermal,térmico,A,
