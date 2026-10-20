@@ -9,6 +9,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Sorts by manual order, SKU, name, price, or needs-review first.
 - Adds, edits (including price) and removes parts. Removing asks for confirmation inside the page.
 - Selects several parts at once and sets or clears their price in one step.
+- Shows two quantities per part in the opened row, as a sample for the database stage: **On hand** (a counter with - and + buttons) and **Per machine** (how many the machine uses). The header shows the total number of parts. Per-machine values are filled only for the 19 main assemblies listed on page 3 of the manual; everything else is blank until the next stage. Both numbers are saved in this browser only and travel in the CSV (`conteo`, `cant_por_maquina`).
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Prints barcode labels (CODE128 of the SKU).
 - Draws a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.

@@ -6,7 +6,13 @@ from translations_es import TR
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 COLS = ["sku", "sku_8dig", "nombre_en", "nombre_es", "modulo", "subconjunto", "precio_cad",
-        "imagen_origen", "posicion_en_diagrama", "confianza", "notas"]
+        "imagen_origen", "posicion_en_diagrama", "confianza", "notas", "cant_por_maquina", "conteo"]
+# Quantity per machine, only where the manual states it for the whole machine: the main table on page 3 of the
+# catalogue ("1 Mastrena II - 230V"). Other quantities in the manual are per subassembly, so they stay blank.
+PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "127.950": "1", "128.036": "1",
+               "128.037": "1", "128.047": "1", "128.051": "1", "128.065": "1", "128.386": "1", "128.653": "1",
+               "129.562": "1", "130.702": "2", "130.704": "1", "131.365": "1", "133.029": "1", "133.661": "1",
+               "133.690": "1"}
 ART = re.compile(r"^\d{3}\.\d{3}$")
 SKU8 = re.compile(r"^11\d{6}$")
 # Page 3 lists the main assemblies: module depends on what each assembly is.
@@ -99,7 +105,8 @@ for art, lst in occ.items():
     rows.append(dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=tr_es(art, en), modulo=mod,
                      subconjunto=sec, precio_cad="", imagen_origen=p["img"],
                      posicion_en_diagrama=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
-                     confianza=conf, notas="; ".join(notes)))
+                     confianza=conf, notas="; ".join(notes),
+                     cant_por_maquina=PER_MACHINE.get(art, ""), conteo=""))
 
 with open(os.path.join(HERE, "parts.csv"), "w", newline="", encoding="utf-8-sig") as f:
     w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(rows)
