@@ -1,5 +1,5 @@
-# Lectura A (recorte a color). Formato: ## nro_imagen|archivo|seccion|modulo  luego  article|sku8|descripcion
-## 3|IMG_20260923_194949.jpg|1 Mastrena II - 230V (conjuntos principales)|*
+# Read A (color crop). Format: ## image_no|file|section|module  then  article|sku8|description
+## 3|IMG_20260923_194949.jpg|1 Mastrena II - 230V (main assemblies)|*
 110.533|11133893|Water pump Mastrena CE assy
 116.093||Water pump power cord CE
 127.028||Mechanic module Mastrena II

@@ -1,4 +1,4 @@
-# Genera data/pilot_parts.csv a partir de la doble lectura manual de 3 imágenes (piloto).
+# Builds data/pilot_parts.csv from the double manual read of 3 images (pilot).
 import csv, re, os
 COLS = ["sku","sku_8dig","nombre_en","nombre_es","modulo","subconjunto","precio_cad",
         "imagen_origen","posicion_en_diagrama","confianza","notas"]
@@ -84,25 +84,25 @@ t9 = [
 ART = re.compile(r"^\d{3}\.\d{3}$"); SKU8 = re.compile(r"^11\d{6}$")
 rows, seen = [], {}
 def add(art, sku8, en, es, mod, sub, img, dimg, fila):
-    pos = f"tabla fila {fila}; diagrama {dimg}"
+    pos = f"table row {fila}; diagram {dimg}"
     if art in seen:
         r = seen[art]
-        r["notas"] += f" | Repetido en {img} ({sub}) fila {fila}"
+        r["notas"] += f" | Repeated in {img} ({sub}) row {fila}"
         return
-    notas, conf = ["nombre_es = traducción"], "alta"
-    if not ART.match(art): conf = "baja"; notas.append("Article no. no calza con patrón NNN.NNN")
+    notas, conf = ["nombre_es = translation"], "high"
+    if not ART.match(art): conf = "low"; notas.append("Article no. does not match NNN.NNN")
     if sku8 and not SKU8.match(sku8):
-        conf = "media"; notas.append(f"SKU 8 díg. '{sku8}' no calza con patrón 11xxxxxx; verificar en papel")
-    if mod == "Other": notas.append(f"Sección manual: {sub}")
+        conf = "medium"; notas.append(f"8-digit SKU '{sku8}' does not match 11xxxxxx; check on paper")
+    if mod == "Other": notas.append(f"Manual section: {sub}")
     r = dict(sku=art, sku_8dig=sku8, nombre_en=en, nombre_es=es, modulo=mod, subconjunto=sub,
              precio_cad="", imagen_origen=img, posicion_en_diagrama=pos, confianza=conf, notas="; ".join(notas))
     seen[art] = r; rows.append(r)
-for i,(a,s,en,es,m) in enumerate(t3,1): add(a,s,en,es,m,"1 Mastrena II - 230V (conjuntos principales)",I3,D3,i)
+for i,(a,s,en,es,m) in enumerate(t3,1): add(a,s,en,es,m,"1 Mastrena II - 230V (main assemblies)",I3,D3,i)
 for i,(a,s,en,es) in enumerate(t5,1): add(a,s,en,es,"Other","1.1 Hood assy.",I5,D5,i)
 for i,(a,s,en,es) in enumerate(t9,1): add(a,s,en,es,"Other","1.2.1 Steam outlet",I9,D9,i)
 out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "pilot_parts.csv")
 with open(out,"w",newline="",encoding="utf-8-sig") as f:
     w = csv.DictWriter(f, fieldnames=COLS); w.writeheader(); w.writerows(rows)
-print(len(rows), "filas;", sum(r["confianza"]!="alta" for r in rows), "no-alta")
+print(len(rows), "rows;", sum(r["confianza"]!="high" for r in rows), "not high")
 for r in rows:
-    if r["confianza"]!="alta" or "Repetido" in r["notas"]: print(r["sku"], r["sku_8dig"], r["confianza"], "|", r["notas"])
+    if r["confianza"]!="high" or "Repeated" in r["notas"]: print(r["sku"], r["sku_8dig"], r["confianza"], "|", r["notas"])

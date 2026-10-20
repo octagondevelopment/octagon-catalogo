@@ -1,5 +1,5 @@
-# Traducciones al español (hechas por Claude, no vienen del manual). Clave: Article no.
-# FEP pipe, O-Ring y Wiring harness se traducen con reglas en build_parts.py.
+# Spanish part names (translated by Claude, not from the manual). Key: Article no.
+# FEP pipe, O-Ring and Wiring harness are translated by rules in build_parts.py.
 TR = {
 "110.533": "Bomba de agua Mastrena CE (conjunto)",
 "116.093": "Cable de alimentación bomba de agua CE",

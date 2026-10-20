@@ -50,7 +50,7 @@
   .name-es { margin: 0; color: var(--muted); font-size: 14px; overflow-wrap: anywhere; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .chip { background: var(--chip); border-radius: 999px; padding: 2px 9px; font-size: 12px; overflow-wrap: anywhere; max-width: 100%; }
-  .chip.conf-media { background: #fff1c2; } .chip.conf-baja, .chip.conf-ilegible { background: var(--danger-bg); color: var(--danger); }
+  .chip.conf-medium { background: #fff1c2; } .chip.conf-low, .chip.conf-illegible { background: var(--danger-bg); color: var(--danger); }
   .notes { font-size: 12px; color: var(--muted); margin-top: 6px; overflow-wrap: anywhere; }
   .card-actions { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
   .confirm { background: var(--danger-bg); border: 1px solid #f2b8b5; border-radius: 8px; padding: 10px; margin-top: 8px; font-size: 14px; }
@@ -144,24 +144,27 @@
   const COLS = ['sku','sku_8dig','nombre_en','nombre_es','modulo','subconjunto','precio_cad',
                 'imagen_origen','posicion_en_diagrama','confianza','notas'];
   const REQUIRED = ['sku','nombre_en','modulo'];
-  const CONF = ['alta','media','baja','ilegible'];
+  const CONF = ['high','medium','low','illegible'];
+  // Older copies stored Spanish confidence values.
+  const LEGACY_CONF = { alta: 'high', media: 'medium', baja: 'low', ilegible: 'illegible' };
+  const normConf = (p) => { if (LEGACY_CONF[p.confianza]) p.confianza = LEGACY_CONF[p.confianza]; return p; };
 
   let parts = [];
-  let editing = null;      // sku en edición
-  let confirming = null;   // sku con confirmación de borrado abierta
+  let editing = null;      // sku being edited
+  let confirming = null;   // sku with the delete confirmation open
   let pendingImport = null;
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-  // ---------- almacenamiento ----------
+  // ---------- storage ----------
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw === null) return null;
       const data = JSON.parse(raw);
-      return Array.isArray(data) ? data : (Array.isArray(data.parts) ? data.parts : []);
+      return (Array.isArray(data) ? data : (Array.isArray(data.parts) ? data.parts : [])).map(normConf);
     } catch (e) { storageFailed(); return null; }
   }
   function save() {
@@ -194,7 +197,7 @@
     return [COLS.join(','), ...list.map(p => COLS.map(c => csvCell(p[c])).join(','))].join('\r\n') + '\r\n';
   }
 
-  // Valida un CSV y devuelve { parts, errors, warnings }
+  // Validates a CSV and returns { parts, errors, warnings }
   function validateCSV(text) {
     const errors = [], warnings = [];
     const rows = parseCSV(text);
@@ -215,6 +218,7 @@
       if (p.modulo && !MODULES.includes(p.modulo)) errors.push(`Line ${line} (${p.sku}): invalid module "${p.modulo}". Use: ${MODULES.join(', ')}.`);
       p.precio_cad = p.precio_cad.replace(',', '.');
       if (p.precio_cad && !isPrice(p.precio_cad)) errors.push(`Line ${line} (${p.sku}): price "${p.precio_cad}" is not a valid number.`);
+      normConf(p);
       if (p.confianza && !CONF.includes(p.confianza)) warnings.push(`Line ${line} (${p.sku}): unknown confidence "${p.confianza}".`);
       const key = p.sku.toUpperCase();
       if (seen.has(key)) errors.push(`Line ${line}: duplicate SKU ${p.sku} (already on line ${seen.get(key)}).`);
@@ -349,7 +353,7 @@
     clearTimeout(flash.t); flash.t = setTimeout(() => { $('flash').innerHTML = ''; }, 5000);
   }
 
-  // ---------- agregar ----------
+  // ---------- add ----------
   function openAdd() {
     $('add-panel').classList.remove('hidden');
     $('add-form').innerHTML = `
@@ -398,7 +402,7 @@
     }
   });
 
-  // ---------- etiquetas ----------
+  // ---------- labels ----------
   function showLabel(sku) {
     const p = parts.find(x => x.sku === sku); if (!p) return;
     $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.nombre_en)}</div>${p.nombre_es ? `<div class="name-es">${esc(p.nombre_es)}</div>` : ''}${p.sku_8dig ? `<div class="sku8">SKU ${esc(p.sku_8dig)}</div>` : ''}`;
@@ -448,7 +452,7 @@
   };
   $('btn-import-cancel').onclick = () => { pendingImport = null; $('import-panel').classList.add('hidden'); };
 
-  // ---------- inicio ----------
+  // ---------- startup ----------
   $('btn-add').onclick = openAdd;
   $('mod').insertAdjacentHTML('beforeend', MODULES.map(m => `<option>${m}</option>`).join(''));
   $('q').addEventListener('input', render);
@@ -457,7 +461,7 @@
   async function init() {
     const stored = load();
     if (stored !== null) { parts = stored; render(); return; }
-    // Primera visita: intenta cargar el catálogo publicado junto a la página.
+    // First visit: try to load the catalog published next to the page.
     try {
       const res = await fetch(SEED_URL, { cache: 'no-store' });
       if (res.ok) {
@@ -465,7 +469,7 @@
         if (!r.errors.length) { parts = r.parts; save(); }
         else console.warn('data/parts.csv con errores:', r.errors);
       }
-    } catch (e) { /* abierto como archivo local: parte vacío */ }
+    } catch (e) { /* opened as a local file: start empty */ }
     render();
   }
   init();
