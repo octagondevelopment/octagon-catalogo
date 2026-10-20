@@ -732,7 +732,7 @@
     return `<dl class="facts">
       <div class="fact"><dt>Module</dt><dd>${esc(p.modulo || '—')}</dd></div>
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8dig || '—')}</dd></div>
-      <div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>
+      ${VALIDATE ? `<div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>` : ''}
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subconjunto || '—')}</dd></div>
       ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidencia || '—')}</dd></div>` : ''}
       ${p.notas ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notas)}</dd></div>` : ''}
@@ -779,7 +779,7 @@
   function rowHtml(p) {
     const price = fmtPrice(p.precio_cad);
     const open = openSku === p.sku;
-    const review = needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
+    const review = VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
@@ -844,10 +844,10 @@
       </select></label>
       ${f('subconjunto', 'Subassembly')}
       ${f('precio_cad', 'Price CAD (optional)', 'inputmode="decimal" placeholder="No price"')}
-      <label>Confidence<select name="confianza">
+      ${VALIDATE ? `<label>Confidence<select name="confianza">
         <option value="" ${!p.confianza ? 'selected' : ''}>—</option>
         ${CONF.map(c => `<option ${p.confianza === c ? 'selected' : ''}>${c}</option>`).join('')}
-      </select></label>
+      </select></label>` : ''}
       ${f('cant_por_maquina', 'Per machine', 'inputmode="numeric" placeholder="—"')}
       ${f('conteo', 'On hand', 'inputmode="numeric" placeholder="0"')}
       ${VALIDATE ? f('imagen_origen', 'Source image') + f('posicion_en_diagrama', 'Diagram position') : ''}

@@ -90,7 +90,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 ## Files
 
 - `index.html`: the app.
-- `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo. They are for the team only: they stay in the CSV, so nothing is lost when the file is exported and imported, but the app shows them only in team mode (`?validate`), never to regular users.
+- `data/parts.csv`: the catalog (UTF-8 with BOM so Excel shows accents correctly). Column names are kept from the spec (`nombre_en`, `modulo`, `precio_cad`, ...). `nombre_es` is a translation made by Claude, not text from the manual. `imagen_origen` and `posicion_en_diagrama` point back to the source photo. `confianza` (the confidence of the reading) is the same kind of field. They are for the team only: they stay in the CSV, so nothing is lost when the file is exported and imported, but the app shows them only in team mode (`?validate`), never to regular users.
 - `data/glossary.csv`: English and Spanish terms used to suggest translations.
 - `data/transcription_A.txt`: the manual's parts tables, transcribed page by page.
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
