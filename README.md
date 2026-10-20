@@ -14,9 +14,9 @@ Catálogo interno de repuestos Mastrena II para Octagon Services (Vancouver, BC)
 
 ## Publicar en GitHub Pages
 
-1. Crea un repositorio en GitHub y sube este proyecto (`git remote add origin ...` y luego `git push -u origin main`).
+1. Crea un repositorio en GitHub y sube este proyecto (`git remote add origin ...` y luego `git push -u origin master`).
 2. En GitHub, ve a **Settings → Pages**.
-3. En **Source** elige *Deploy from a branch*, la rama `main` y la carpeta `/ (root)`. Guarda.
+3. En **Source** elige *Deploy from a branch*, la rama `master` y la carpeta `/ (root)`. Guarda.
 4. Al minuto la app queda en `https://<usuario>.github.io/<repo>/`.
 
 La primera vez que alguien abre la página, la app carga `data/parts.csv`. Desde ahí trabaja con su copia local.
