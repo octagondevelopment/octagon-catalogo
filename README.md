@@ -27,7 +27,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 3. Under **Source**, choose *Deploy from a branch*, branch `master`, folder `/ (root)`, and save.
 4. After about a minute the app is live at `https://<user>.github.io/<repo>/`.
 
-The first time someone opens the page, the app loads `data/parts.csv`. From then on it uses that person's local copy.
+The first time someone opens the page, the app loads `data/parts.csv`. From then on it uses that person's local copy. Each time the page is opened it also checks `data/parts.csv` for parts that are new since that browser's last visit and adds them (a toast says how many). A part that was removed on purpose is not brought back. The first time an older copy syncs, parts that were removed before will come back once.
 
 > Opening `index.html` by double-clicking it (`file://`) won't work: the browser blocks reading `data/parts.csv`, so the app starts empty. Use **Import CSV** and pick `data/parts.csv`, or test locally with `python -m http.server` and open `http://localhost:8000`.
 

@@ -13,6 +13,7 @@
 116.106,11097244,PT screw lens head KA40x10,Tornillo PT cabeza lenteja KA40x10,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.2.1, 1.3, 1.6, 1.11.3"
 121.464,11097249,PT screw KA30x10 philips,Tornillo PT KA30x10 Phillips,Other,1.1 Hood assy. Mastrena II,,,,Also in: 1.13.2
 122.913,11101490,Cable tie with clip 100mm,Amarra plástica con clip 100 mm,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.10.1.1, 1.10.2.5, 1.10.3.1, 1.11.3"
+129.371,11080968,2/2-way magnet valve ø6 DN3 NO,Electroválvula 2/2 vías ø6 DN3 NA,Other,1.2 Steam outlet assy. Mastrena II,,,,Only appears in a blurry photo
 129.979,11080893,Membrane ETV-200 EPDM,Membrana ETV-200 EPDM,Other,1.2 Steam outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.1.4, 1.10.2.4.1.4, 1.11.3"
 103.238,11086497,Cable tie 80...100 x 2.3/2.4/2.5,"Amarra plástica 80...100 x 2,3/2,4/2,5",Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.2, 1.10.2.4.2, 1.13"
 104.034,11097240,Oval head screw Phillips M4x12,Tornillo cabeza oval Phillips M4x12,Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.9, 1.10.1.1, 1.10.2, 1.10.2.1 +8 more"
@@ -87,18 +88,51 @@
 128.897,11086433,Socket clip hydraulic right assy.,Clip hidráulico derecho de enchufe (conjunto),Mechanical,1.10.2.4 Brew unit ø50 with clip hydraulic right,,,,
 129.174,11101510,Valve assembly hydraulic,Conjunto de válvulas hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
 129.175,11097255,Boiler assembly hydraulic,Conjunto caldera hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+130.938,,FEP pipe ø4/2 x 80mm,Tubo FEP ø4/2 x 80mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,Also in: 1.11.1
+130.943,,FEP pipe ø4/2 x 270mm,Tubo FEP ø4/2 x 270mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+130.944,,FEP pipe ø4/2 x 155mm,Tubo FEP ø4/2 x 155mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
 124.867,11080859,Angle plug connection 6-4,Conexión enchufable en ángulo 6-4,Hydraulic,1.11.1 Boiler assembly hydraulic,,,,Also in: 1.11.2
 127.266,11086473,Boiler coffee horizontal assy.,Caldera de café horizontal (conjunto),Hydraulic,1.11.1 Boiler assembly hydraulic,,,,
 131.321,11080840,Hexagonal head screw combi M5x12 A4-80,Tornillo cabeza hexagonal combi M5x12 A4-80,Hydraulic,1.11.1.1.1 Cap boiler horizontal 2.5kW 230V set,,,,Also in: 1.12.2
 127.788,11080845,Valveblock brew and clean assy.,Bloque de válvulas infusión y limpieza (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
 128.062,11080848,Expansion chamber valve assy.,Válvula cámara de expansión (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+130.939,,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+130.940,,FEP pipe ø4/2 x 110mm,Tubo FEP ø4/2 x 110mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
 106.703,11086643,Coil for Lucifer valve,Bobina para válvula Lucifer,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.12.1.1
 129.762,11086554,Solenoid 22mm UL,Solenoide 22 mm UL,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
 130.361,11086552,Clip 22mm coil,Clip bobina 22 mm,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
+128.004,11080829,Flow meter assy. ø6/ø4,Flujómetro ø6/ø4 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+128.005,11086605,Wiring harness Mastrena II hyd. module,Arnés de cables Mastrena II hyd. module,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.332,11080827,Male connector tilted 4/4/6 assy.,Conector macho inclinado 4/4/6 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.930,,FEP pipe ø4/2 x 65mm,Tubo FEP ø4/2 x 65mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.932,,FEP pipe ø6/4 x 120mm,Tubo FEP ø6/4 x 120mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.934,,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.935,,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.937,,FEP pipe ø4/2 x 180mm,Tubo FEP ø4/2 x 180mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+131.655,,FEP pipe ø6/4 x 80mm,Tubo FEP ø6/4 x 80mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,Also in: 1.12.3
+135.239,11116104,Hydraulic set CL,Set hidráulico CL,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+135.241,11116105,Hydraulic set CR,Set hidráulico CR,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+136.901,11080831,Checkvalve pluggable ø4_EPDM,Válvula antirretorno enchufable ø4 EPDM,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
 128.013,11080935,Cap steam boiler 230V 5.4kW set,"Set tapa caldera de vapor 230V 5,4 kW",Steam,1.12 Steam module 230V-400V Mastrena II,,,,
 129.065,11101509,Base chassis steam module assy.,Chasis base módulo de vapor (conjunto),Steam,1.12 Steam module 230V-400V Mastrena II,,,,
+121.384,11086503,Coupling nut with anti-kink device ø6/4,Tuerca de acople con protección antiquiebre ø6/4,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Same 8-digit SKU as 119.109
 127.954,11086452,Elbow connector 8/6-1/4K,Conector codo 8/6-1/4K,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Also in: 1.12.2
 128.602,11080932,Safety valve 2.8bar,"Válvula de seguridad 2,8 bar",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
 130.613,11080930,"Solenoid valve 2/2, ø4, G1/4""","Electroválvula 2/2, ø4, G1/4""",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+130.949,,FEP pipe ø6/4 x 440mm,Tubo FEP ø6/4 x 440mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+130.950,,FEP pipe ø8/6 x 410mm,Tubo FEP ø8/6 x 410mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+131.651,,FEP pipe ø6/4 x 550mm,Tubo FEP ø6/4 x 550mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+133.318,11086502,Pin,Pasador,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+128.463,11080920,Check valve plugable ø6,Válvula antirretorno enchufable ø6,Steam,1.12.3 Component support steam module assy.,,,,
+129.080,11080914,Male connector double ø6/ø8 assy.,Conector macho doble ø6/ø8 (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
 129.972,11086627,"Solenoid valve 2/2, ø2.06N, 7.5W UL assy.","Electroválvula 2/2, ø2,06N, 7,5 W UL (conjunto)",Steam,1.12.3 Component support steam module assy.,,,,
+130.674,11080921,T-connector 8-6-8,Conector en T 8-6-8,Steam,1.12.3 Component support steam module assy.,,,,
+130.952,11080902,Emptying valve assy.,Válvula de vaciado (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
+130.953,11080904,Bypass valve assy.,Válvula bypass (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
+131.652,,FEP pipe ø6/4 x 540mm,Tubo FEP ø6/4 x 540mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.653,,FEP pipe ø6/4 x 155mm,Tubo FEP ø6/4 x 155mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.654,,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.656,,FEP pipe ø6/4 x 50mm,Tubo FEP ø6/4 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.657,,FEP pipe ø8/6 x 50mm,Tubo FEP ø8/6 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.658,,FEP pipe ø6/4 x 170mm,Tubo FEP ø6/4 x 170mm,Steam,1.12.3 Component support steam module assy.,,,,
 129.676,11101530,Coffee cleaning system assy.,Sistema de limpieza de café (conjunto),Other,1.13.2 Coffee cleaning system black set,,,,

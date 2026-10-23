@@ -340,16 +340,21 @@
   const norm = (s) => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
   // ---------- storage ----------
+  // SKUs that came from the published catalog the last time this browser synced with it. A part the user removed on purpose
+  // is in this list, so it is not brought back; a part that is new in the published catalog is not in it, so it is added.
+  // null means this copy was saved before the list existed.
+  let seeded = null;
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw === null) return null;
       const data = JSON.parse(raw);
+      seeded = Array.isArray(data.seeded) ? new Set(data.seeded) : null;
       return (Array.isArray(data) ? data : (Array.isArray(data.parts) ? data.parts : [])).map(migrate);
     } catch (e) { storageFailed(); return null; }
   }
   function save() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, parts })); }
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, parts, seeded: seeded ? [...seeded] : undefined })); }
     catch (e) { storageFailed(); }
   }
   function storageFailed() { $('storage-error').classList.remove('hidden'); }
@@ -1172,8 +1177,10 @@
     $('btn-import-ok').disabled = !pendingImport;
     openSheet('sheet-import');
   };
-  $('btn-import-ok').onclick = () => {
+  $('btn-import-ok').onclick = async () => {
     if (!pendingImport) return;
+    const list = await fetchSeed();
+    seeded = new Set([...(seeded || []), ...(list || []).map(m => m.sku)]);
     parts = pendingImport; const n = parts.length; closeSheets();
     selected.clear(); openSku = editing = confirming = null; state.limit = PAGE;
     save(); render(); toast(`Catalog replaced: ${n} parts`);
@@ -1210,6 +1217,28 @@
     });
     save(); render();
   }
+  // Brings in the parts that are new in the published catalog, and (team mode) the ones verified by hand since the last visit.
+  async function mergeNewFromSeed() {
+    const list = await fetchSeed(); if (!list) return;
+    const have = new Map(parts.map(p => [p.sku, p]));
+    let added = 0, changed = 0;
+    for (const m of list) {
+      const mine = have.get(m.sku);
+      if (!mine) {
+        if (seeded && seeded.has(m.sku)) continue;          // it was in the catalog before and was removed on purpose
+        if (!VALIDATE && isPending(m)) continue;
+        parts.push(m); added++;
+      } else if (VALIDATE && isPending(mine) && !isPending(m)) {
+        mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++;
+      }
+    }
+    const idx = new Map(list.map((m, i) => [m.sku, i]));
+    if (added) parts.sort((a, b) => (idx.get(a.sku) ?? -1) - (idx.get(b.sku) ?? -1));   // keep the manual order; parts added by hand stay first
+    const before = seeded ? seeded.size : -1;
+    seeded = new Set(list.map(m => m.sku));
+    if (added || changed || before !== seeded.size) { save(); render(); }
+    if (added) toast(`${added} new ${added === 1 ? 'part' : 'parts'} added to the catalog`);
+  }
   async function init() {
     loadGlossary();
     if (VALIDATE) document.title += ' (validation)';
@@ -1217,11 +1246,11 @@
     const stored = load();
     if (stored !== null) {
       parts = VALIDATE ? stored : stored.filter(p => !isPending(p));
-      render(); await mergeSeedFlags(); return;
+      render(); await mergeSeedFlags(); await mergeNewFromSeed(); return;
     }
     // First visit: load the catalog published next to the page.
     const list = await fetchSeed();
-    if (list) { parts = list; save(); }
+    if (list) { parts = list; seeded = new Set(list.map(m => m.sku)); save(); }
     render();
   }
   init();

@@ -1,3 +1,37 @@
 # Article numbers checked by hand against the paper manual (one per line, optional note after a space).
 # Listing a part here moves it into the published catalog the next time build_parts.py runs.
 # Example:  104.049  checked 2026-10-21
+121.384  checked 2026-10-23
+128.004  checked 2026-10-23
+128.005  checked 2026-10-23
+128.463  checked 2026-10-23
+129.080  checked 2026-10-23
+129.371  checked 2026-10-23
+130.332  checked 2026-10-23
+130.674  checked 2026-10-23
+130.930  checked 2026-10-23
+130.932  checked 2026-10-23
+130.934  checked 2026-10-23
+130.935  checked 2026-10-23
+130.937  checked 2026-10-23
+130.938  checked 2026-10-23
+130.939  checked 2026-10-23
+130.940  checked 2026-10-23
+130.943  checked 2026-10-23
+130.944  checked 2026-10-23
+130.949  checked 2026-10-23
+130.950  checked 2026-10-23
+130.952  checked 2026-10-23
+130.953  checked 2026-10-23
+131.651  checked 2026-10-23
+131.652  checked 2026-10-23
+131.653  checked 2026-10-23
+131.654  checked 2026-10-23
+131.655  checked 2026-10-23
+131.656  checked 2026-10-23
+131.657  checked 2026-10-23
+131.658  checked 2026-10-23
+133.318  checked 2026-10-23
+135.239  checked 2026-10-23
+135.241  checked 2026-10-23
+136.901  checked 2026-10-23
