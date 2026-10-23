@@ -90,6 +90,12 @@
   .price.none { color: var(--muted); font-weight: 400; font-size: 12px; }
   .detail { padding: 2px 12px 14px; background: var(--soft); }
   .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 6px 0 12px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px 16px; align-items: start; margin: 6px 0 12px; }
+  .detail-grid .facts { margin: 0; align-content: start; }
+  .lbl-thumb { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none; cursor: zoom-in; text-align: center; font: inherit; color: var(--muted); }
+  .lbl-thumb .lbl { width: 100%; pointer-events: none; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); }
+  .lbl-thumb:hover .lbl { box-shadow: 0 2px 10px rgba(0, 0, 0, .3); }
+  .lbl-thumb-hint { display: block; margin-top: 5px; font-size: 11.5px; }
   .fact { margin: 0; min-width: 0; }
   .fact.wide { grid-column: 1 / -1; }
   .fact dt { font-size: 11.5px; color: var(--muted); margin-bottom: 1px; }
@@ -121,7 +127,7 @@
   .form { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 8px; }
   .form label { display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); font-weight: 500; min-width: 0; }
   .form .err { color: var(--danger); font-size: 13px; min-height: 0; }
-  @media (min-width: 640px) { .form { grid-template-columns: 1fr 1fr; } .form .full { grid-column: 1 / -1; } .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  @media (min-width: 640px) { .form { grid-template-columns: 1fr 1fr; } .form .full { grid-column: 1 / -1; } .facts { grid-template-columns: repeat(4, minmax(0, 1fr)); } .detail-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 50%); } .detail-grid .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
   .bulk { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 0 var(--gutter-r) calc(12px + env(safe-area-inset-bottom, 0px)) var(--gutter-l); pointer-events: none; }
   .bulk-card { pointer-events: auto; max-width: 860px; margin: 0 auto; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 10px 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; box-shadow: var(--shadow); }
@@ -799,11 +805,15 @@
       </div>` : '';
     return `<div class="detail">
       ${qtyHtml(p)}
-      ${factsHtml(p)}
+      <div class="detail-grid">
+        ${factsHtml(p)}
+        <button class="lbl-thumb" type="button" data-act="label" data-sku="${esc(p.sku)}" aria-label="Enlarge the bag label of ${esc(p.sku)}" title="Click to enlarge and print">
+          ${labelHtml(p, 1)}<span class="lbl-thumb-hint">Click to enlarge and print</span>
+        </button>
+      </div>
       <div class="actions">
         ${isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
         <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
-        <button class="btn sm" type="button" data-act="label" data-sku="${esc(p.sku)}">Label</button>
         ${isPending(p) || !VALIDATE ? '' : `<button class="btn sm" type="button" data-act="unverify" data-sku="${esc(p.sku)}">Send back to validation</button>`}
         <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
       </div>${confirmBox}</div>`;
@@ -842,6 +852,7 @@
         : `<li class="empty"><b>No matches</b>No parts fit the current search and filters.<br><button class="btn" type="button" data-act="reset">Clear filters</button></li>`;
     } else {
       $('list').innerHTML = shown.map(rowHtml).join('');
+      drawBarcodes($('list'));
     }
     $('btn-more').classList.toggle('hidden', list.length <= state.limit);
     refreshSelection();
