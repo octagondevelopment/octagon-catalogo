@@ -7,7 +7,7 @@
 <title>Octagon · Parts Catalog</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Kaushan+Script&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
 <style>
   :root {
@@ -143,16 +143,35 @@
   .msg.bad { background: var(--danger-soft); }
   .msg.warn { background: var(--warn-soft); }
   .msg ul { margin: 6px 0 0; padding-left: 18px; max-height: 200px; overflow: auto; }
-  #label-area { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0; text-align: center; }
-  #label-area svg { max-width: 100%; height: auto; background: #fff; border-radius: 8px; }
-  .label-name { font-weight: 600; overflow-wrap: anywhere; }
-  .label-es { color: var(--muted); font-size: 14px; }
+  #label-area { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 10px 0; }
+  .lbl-opts { display: flex; gap: 12px; width: 100%; max-width: 480px; }
+  .lbl-opts label { flex: 1; display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
+  .lbl-note { font-size: 12.5px; color: var(--muted); max-width: 480px; text-align: center; margin: 0; }
+  /* The label: same layout as the Thermoplan bag label (big article number, description, quantity, barcode), with the Octagon logo. */
+  .lbl { container-type: inline-size; width: min(100%, 480px); aspect-ratio: 5 / 3; background: #fff; color: #000; border: 1px solid #999; border-radius: 6px; display: grid; grid-template-columns: 13cqw 1fr; grid-template-rows: minmax(0, 1fr); overflow: hidden; font-family: Inter, Arial, sans-serif; text-align: left; box-sizing: border-box; }
+  .lbl * { box-sizing: border-box; }
+  .lbl-side { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3cqw 0 2.4cqw; border-right: .4cqw solid #000; }
+  .lbl-brand { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; line-height: 1.15; }
+  .lbl-brand b { display: block; font-size: 4.6cqw; letter-spacing: .02em; }
+  .lbl-brand span { font-size: 2.6cqw; letter-spacing: .04em; }
+  .lbl-logo { width: 9.6cqw; height: 9.6cqw; flex: none; }
+  .lbl-main { display: flex; flex-direction: column; padding: 2.4cqw 4cqw 2cqw; min-width: 0; min-height: 0; }
+  .lbl-sku { font-size: 10cqw; font-weight: 700; line-height: 1; letter-spacing: -.01em; font-family: "JetBrains Mono", monospace; }
+  .lbl-rule { height: .45cqw; background: #000; margin: 1.4cqw 0 1.6cqw; }
+  .lbl-en { font-size: 4.8cqw; line-height: 1.12; font-weight: 500; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .lbl-es { font-size: 3.8cqw; line-height: 1.12; color: #333; margin-top: .6cqw; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .lbl-qty { margin-top: auto; padding-top: .8cqw; font-size: 5cqw; font-weight: 700; }
+  .lbl-foot { display: grid; grid-template-columns: 1fr auto; gap: 3cqw; align-items: end; margin-top: 1.2cqw; }
+  .lbl-foot svg { width: 100%; height: 13.5cqw; display: block; }
+  .lbl-meta { text-align: right; font-size: 3cqw; line-height: 1.35; color: #222; white-space: nowrap; }
+  #label-print { display: none; }
+  @page { size: 4in 2.4in; margin: 0; }
   @media print {
-    body > *:not(#sheet-label) { display: none !important; }
-    #sheet-label { position: static; display: block !important; background: none; }
-    #sheet-label .sheet-card { box-shadow: none; max-height: none; padding: 0; background: none; }
-    #sheet-label .no-print { display: none !important; }
-    #label-area svg { background: none; }
+    body > *:not(#label-print) { display: none !important; }
+    body { background: #fff; padding: 0; }
+    #label-print { display: block; }
+    #label-print .lbl { width: 4in; border: 0; border-radius: 0; page-break-after: always; break-after: page; page-break-inside: avoid; }
+    #label-print .lbl:last-child { page-break-after: auto; break-after: auto; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .row-head, .tab, .chip, .btn { transition: background-color .12s, border-color .12s, color .12s; }
@@ -230,6 +249,7 @@
   </div>
 </div>
 <div class="toast hidden" id="toast" role="status"></div>
+<div id="label-print" aria-hidden="true"></div>
 
 <div class="sheet hidden" id="sheet-add" role="dialog" aria-modal="true" aria-label="New part">
   <div class="sheet-card">
@@ -251,9 +271,9 @@
 
 <div class="sheet hidden" id="sheet-label" role="dialog" aria-modal="true" aria-label="Barcode label">
   <div class="sheet-card">
-    <div class="sheet-top no-print"><h2>Barcode label</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
+    <div class="sheet-top"><h2>Bag label</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
     <div id="label-area"></div>
-    <div class="actions no-print"><button class="btn primary" id="btn-print" type="button">Print label</button></div>
+    <div class="actions"><button class="btn primary" id="btn-print" type="button">Print label</button></div>
   </div>
 </div>
 
@@ -1060,17 +1080,57 @@
   $('bulk-done').onclick = () => { selected.clear(); $('bulk-err').textContent = ''; render(); };
 
   // ---------- labels ----------
+  // Octagon logo: an octagon outline with a script wordmark. Replace the text, or swap the whole <svg>, to use the final artwork.
+  const LOGO_SVG = '<svg class="lbl-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M31 5H69L95 31V69L69 95H31L5 69V31Z" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>' +
+    '<text x="50" y="62" text-anchor="middle" font-size="40" font-family="\'Kaushan Script\', cursive" fill="#000">Omg</text></svg>';
+  let labelPart = null;
+  const countOf = (id) => Math.max(1, Math.min(200, parseInt($(id).value, 10) || 1));
+
+  function labelHtml(p, qty) {
+    const date = new Date().toLocaleDateString('en-CA');
+    return `<div class="lbl">
+      <div class="lbl-side"><div class="lbl-brand"><b>Octagon Services</b><span>Mastrena parts · Vancouver, BC</span></div>${LOGO_SVG}</div>
+      <div class="lbl-main">
+        <div class="lbl-sku">${esc(p.sku)}</div>
+        <div class="lbl-rule"></div>
+        <div class="lbl-en">${esc(p.name_en)}</div>
+        ${p.name_es ? `<div class="lbl-es">${esc(p.name_es)}</div>` : ''}
+        <div class="lbl-qty">Quantity: ${qty}</div>
+        <div class="lbl-foot"><svg class="bc" data-code="${esc(p.sku)}"></svg>
+          <div class="lbl-meta">${p.sku_8digit ? `SKU ${esc(p.sku_8digit)}<br>` : ''}Mastrena II<br>${date}</div></div>
+      </div>
+    </div>`;
+  }
+  function drawBarcodes(root) {
+    root.querySelectorAll('svg.bc').forEach(el => {
+      try { JsBarcode(el, el.dataset.code, { format: 'CODE128', height: 40, displayValue: true, fontSize: 13, margin: 0, width: 2, font: 'JetBrains Mono' }); }
+      catch (err) { el.outerHTML = `<div class="msg bad">Could not generate the barcode${typeof JsBarcode === 'undefined' ? ' (no connection to cdnjs)' : ''}.</div>`; }
+    });
+  }
+  function renderLabelPreview() {
+    if (!labelPart) return;
+    $('label-preview').innerHTML = labelHtml(labelPart, countOf('lbl-qty'));
+    drawBarcodes($('label-preview'));
+  }
   function showLabel(sku) {
     const p = parts.find(x => x.sku === sku); if (!p) return;
-    $('label-area').innerHTML = `<svg id="bc"></svg><div class="label-name">${esc(p.name_en)}</div>${p.name_es ? `<div class="label-es">${esc(p.name_es)}</div>` : ''}${p.sku_8digit ? `<div class="label-es mono">SKU ${esc(p.sku_8digit)}</div>` : ''}`;
-    try {
-      JsBarcode('#bc', p.sku, { format: 'CODE128', height: 60, fontSize: 16, margin: 8, font: 'JetBrains Mono' });
-    } catch (err) {
-      $('label-area').insertAdjacentHTML('afterbegin', `<div class="msg bad">Could not generate the barcode${typeof JsBarcode === 'undefined' ? ' (no connection to cdnjs)' : ''}.</div>`);
-    }
+    labelPart = p;
+    $('label-area').innerHTML = `<div class="lbl-opts">
+        <label>Quantity in the bag<input id="lbl-qty" inputmode="numeric" value="1" autocomplete="off"></label>
+        <label>Copies to print<input id="lbl-copies" inputmode="numeric" value="1" autocomplete="off"></label></div>
+      <div id="label-preview" style="width:100%;display:flex;justify-content:center"></div>
+      <p class="lbl-note">Printed at 4 × 2.4 in. In the print window, choose your label printer, or any paper and scale it down.</p>`;
+    $('lbl-qty').addEventListener('input', renderLabelPreview);
+    renderLabelPreview();
     openSheet('sheet-label');
   }
-  $('btn-print').onclick = () => window.print();
+  $('btn-print').onclick = () => {
+    if (!labelPart) return;
+    const qty = countOf('lbl-qty'), copies = countOf('lbl-copies');
+    $('label-print').innerHTML = Array.from({ length: copies }, () => labelHtml(labelPart, qty)).join('');
+    drawBarcodes($('label-print'));
+    window.print();
+  };
 
   // ---------- export / import ----------
   $('btn-export').onclick = () => {
