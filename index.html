@@ -148,13 +148,13 @@
   .lbl-opts label { flex: 1; display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
   .lbl-note { font-size: 12.5px; color: var(--muted); max-width: 480px; text-align: center; margin: 0; }
   /* The label: same layout as the Thermoplan bag label (big article number, description, quantity, barcode), with the Octagon logo. */
-  .lbl { container-type: inline-size; width: min(100%, 480px); aspect-ratio: 5 / 3; background: #fff; color: #000; border: 1px solid #999; border-radius: 6px; display: grid; grid-template-columns: 13cqw 1fr; grid-template-rows: minmax(0, 1fr); overflow: hidden; font-family: Inter, Arial, sans-serif; text-align: left; box-sizing: border-box; }
+  .lbl { container-type: inline-size; width: min(100%, 480px); aspect-ratio: 5 / 3; background: #fff; color: #000; border: 1px solid #999; border-radius: 6px; display: grid; grid-template-columns: 15cqw 1fr; grid-template-rows: minmax(0, 1fr); overflow: hidden; font-family: Inter, Arial, sans-serif; text-align: left; box-sizing: border-box; }
   .lbl * { box-sizing: border-box; }
   .lbl-side { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3cqw 0 2.4cqw; border-right: .4cqw solid #000; }
   .lbl-brand { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; line-height: 1.15; }
   .lbl-brand b { display: block; font-size: 4.6cqw; letter-spacing: .02em; }
   .lbl-brand span { font-size: 2.6cqw; letter-spacing: .04em; }
-  .lbl-logo { width: 9.6cqw; height: 9.6cqw; flex: none; }
+  .lbl-logo { width: 12.4cqw; height: 12.4cqw; flex: none; }
   .lbl-main { display: flex; flex-direction: column; padding: 2.4cqw 4cqw 2cqw; min-width: 0; min-height: 0; }
   .lbl-sku { font-size: 10cqw; font-weight: 700; line-height: 1; letter-spacing: -.01em; font-family: "JetBrains Mono", monospace; }
   .lbl-rule { height: .45cqw; background: #000; margin: 1.4cqw 0 1.6cqw; }
@@ -1080,9 +1080,9 @@
   $('bulk-done').onclick = () => { selected.clear(); $('bulk-err').textContent = ''; render(); };
 
   // ---------- labels ----------
-  // Octagon logo: an octagon outline with a script wordmark. Replace the text, or swap the whole <svg>, to use the final artwork.
+  // Octagon logo: an octagon outline with the word Octagon in script. Replace the text, or swap the whole <svg>, to use the final artwork.
   const LOGO_SVG = '<svg class="lbl-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M31 5H69L95 31V69L69 95H31L5 69V31Z" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>' +
-    '<text x="50" y="62" text-anchor="middle" font-size="40" font-family="\'Kaushan Script\', cursive" fill="#000">Omg</text></svg>';
+    '<text x="50" y="57" text-anchor="middle" font-size="23" textLength="74" lengthAdjust="spacingAndGlyphs" font-family="\'Kaushan Script\', cursive" fill="#000">Octagon</text></svg>';
   let labelPart = null;
   const countOf = (id) => Math.max(1, Math.min(200, parseInt($(id).value, 10) || 1));
 
