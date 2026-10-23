@@ -93,7 +93,8 @@
   .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px 16px; align-items: start; margin: 6px 0 12px; }
   .detail-grid .facts { margin: 0; align-content: start; }
   .lbl-thumb { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none; cursor: zoom-in; text-align: center; font: inherit; color: var(--muted); }
-  .lbl-thumb .lbl { width: 100%; pointer-events: none; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); }
+  .lbl-thumb .lbl-box { width: 100%; }
+  .lbl-thumb .lbl { pointer-events: none; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); }
   .lbl-thumb:hover .lbl { box-shadow: 0 2px 10px rgba(0, 0, 0, .3); }
   .lbl-thumb-hint { display: block; margin-top: 5px; font-size: 11.5px; }
   .fact { margin: 0; min-width: 0; }
@@ -154,12 +155,13 @@
   .lbl-opts label { flex: 1; display: grid; gap: 4px; font-size: 12.5px; color: var(--muted); font-weight: 500; }
   .lbl-note { font-size: 12.5px; color: var(--muted); max-width: 480px; text-align: center; margin: 0; }
   /* The label: same layout as the Thermoplan bag label (big article number, description, quantity, barcode), with the Octagon logo. */
-  .lbl { container-type: inline-size; width: min(100%, 480px); aspect-ratio: 5 / 3; background: #fff; color: #000; border: 1px solid #999; border-radius: 6px; display: grid; grid-template-columns: 15cqw 1fr; grid-template-rows: minmax(0, 1fr); overflow: hidden; font-family: Inter, Arial, sans-serif; text-align: left; box-sizing: border-box; }
+  .lbl-box { container-type: inline-size; width: min(100%, 480px); }
+  .lbl { width: 100%; aspect-ratio: 5 / 3; background: #fff; color: #000; border: 1px solid #999; border-radius: 6px; display: grid; grid-template-columns: 15cqw 1fr; grid-template-rows: minmax(0, 1fr); overflow: hidden; font-family: Inter, Arial, sans-serif; text-align: left; box-sizing: border-box; }
   .lbl * { box-sizing: border-box; }
-  .lbl-side { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 3cqw 0 2.4cqw; border-right: .4cqw solid #000; }
-  .lbl-brand { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; line-height: 1.15; }
-  .lbl-brand b { display: block; font-size: 4.6cqw; letter-spacing: .02em; }
-  .lbl-brand span { font-size: 2.6cqw; letter-spacing: .04em; }
+  .lbl-side { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 2cqw; padding: 3.2cqw 0 3cqw; border-right: .4cqw solid #000; }
+  .lbl-brand { writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; line-height: 1.2; white-space: nowrap; min-height: 0; overflow: hidden; }
+  .lbl-brand b { display: block; font-size: 3.9cqw; letter-spacing: .01em; }
+  .lbl-brand span { font-size: 2.5cqw; letter-spacing: .04em; }
   .lbl-logo { width: 12.4cqw; height: 12.4cqw; flex: none; }
   .lbl-main { display: flex; flex-direction: column; padding: 2.4cqw 4cqw 2cqw; min-width: 0; min-height: 0; }
   .lbl-sku { font-size: 10cqw; font-weight: 700; line-height: 1; letter-spacing: -.01em; font-family: "JetBrains Mono", monospace; }
@@ -176,8 +178,9 @@
     body > *:not(#label-print) { display: none !important; }
     body { background: #fff; padding: 0; }
     #label-print { display: block; }
-    #label-print .lbl { width: 4in; border: 0; border-radius: 0; page-break-after: always; break-after: page; page-break-inside: avoid; }
-    #label-print .lbl:last-child { page-break-after: auto; break-after: auto; }
+    #label-print .lbl-box { width: 4in; page-break-after: always; break-after: page; page-break-inside: avoid; }
+    #label-print .lbl-box:last-child { page-break-after: auto; break-after: auto; }
+    #label-print .lbl { border: 0; border-radius: 0; }
   }
   @media (prefers-reduced-motion: no-preference) {
     .row-head, .tab, .chip, .btn { transition: background-color .12s, border-color .12s, color .12s; }
@@ -1092,15 +1095,15 @@
 
   // ---------- labels ----------
   // Octagon logo: an octagon outline with the word Octagon in script. Replace the text, or swap the whole <svg>, to use the final artwork.
-  const LOGO_SVG = '<svg class="lbl-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M31 5H69L95 31V69L69 95H31L5 69V31Z" fill="none" stroke="#000" stroke-width="6" stroke-linejoin="round"/>' +
-    '<text x="50" y="57" text-anchor="middle" font-size="23" textLength="74" lengthAdjust="spacingAndGlyphs" font-family="\'Kaushan Script\', cursive" fill="#000">Octagon</text></svg>';
+  const LOGO_SVG = '<svg class="lbl-logo" viewBox="0 0 100 100" aria-hidden="true"><path d="M31 5H69L95 31V69L69 95H31L5 69V31Z" fill="none" stroke="#000" stroke-width="7" stroke-linejoin="round"/>' +
+    '<text x="50" y="57" text-anchor="middle" font-size="25" textLength="72" lengthAdjust="spacingAndGlyphs" font-family="\'Kaushan Script\', cursive" fill="#000">Octagon</text></svg>';
   let labelPart = null;
   const countOf = (id) => Math.max(1, Math.min(200, parseInt($(id).value, 10) || 1));
 
   function labelHtml(p, qty) {
     const date = new Date().toLocaleDateString('en-CA');
-    return `<div class="lbl">
-      <div class="lbl-side"><div class="lbl-brand"><b>Octagon Services</b><span>Mastrena parts · Vancouver, BC</span></div>${LOGO_SVG}</div>
+    return `<div class="lbl-box"><div class="lbl">
+      <div class="lbl-side"><div class="lbl-brand"><b>Octagon Services</b><span>Mastrena parts</span></div>${LOGO_SVG}</div>
       <div class="lbl-main">
         <div class="lbl-sku">${esc(p.sku)}</div>
         <div class="lbl-rule"></div>
@@ -1108,9 +1111,9 @@
         ${p.name_es ? `<div class="lbl-es">${esc(p.name_es)}</div>` : ''}
         <div class="lbl-qty">Quantity: ${qty}</div>
         <div class="lbl-foot"><svg class="bc" data-code="${esc(p.sku)}"></svg>
-          <div class="lbl-meta">${p.sku_8digit ? `SKU ${esc(p.sku_8digit)}<br>` : ''}Mastrena II<br>${date}</div></div>
+          <div class="lbl-meta">${p.sku_8digit ? `SKU ${esc(p.sku_8digit)}<br>` : ''}Vancouver, BC<br>${date}</div></div>
       </div>
-    </div>`;
+    </div></div>`;
   }
   function drawBarcodes(root) {
     root.querySelectorAll('svg.bc').forEach(el => {
