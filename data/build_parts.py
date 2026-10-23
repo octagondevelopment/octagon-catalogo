@@ -21,7 +21,7 @@ if os.path.exists(_mv):
         if _line:
             _a, _, _note = _line.partition(" ")
             MANUAL[_a] = "Validated against the paper manual" + (f" ({_note.strip()})" if _note.strip() else "")
-COLS = ["sku", "sku_8digit", "name_en", "name_es", "module", "subassembly", "price_cad",
+COLS = ["sku", "sku_8digit", "page", "name_en", "name_es", "module", "subassembly", "price_cad",
         "source_image", "diagram_position", "confidence", "notes", "qty_per_machine", "on_hand", "validation", "evidence"]
 # Quantity per machine, only where the manual states it for the whole machine: the main table on page 3 of the
 # catalogue ("1 Mastrena II - 230V"). Other quantities in the manual are per subassembly, so they stay blank.
@@ -86,6 +86,14 @@ def norm_title(s):
     return re.sub(r"\s+", " ", s.lower().replace(" mastrena ii", "").replace("mastrena ii ", "")).strip(" .")
 CHAPTER = {norm_title(re.sub(r"^[\d.]+\s*", "", p["sec"])): p["sec"].split(" ")[0] for p in pages}
 
+# Printed page of each chapter's parts table. Every chapter of this manual takes two pages: the parts table on an even
+# page and its diagram on the next odd page, starting with the table on page 4. Checked against the page numbers
+# printed in the photos (31 of the 67 chapters, spread over the whole book): none disagreed.
+_chapters = []
+for _p in pages:
+    if _p["sec"] not in _chapters: _chapters.append(_p["sec"])
+PAGE_OF = {s: 4 + 2 * i for i, s in enumerate(_chapters)}
+
 rows = []
 for art, lst in occ.items():
     first = lst[0]; p = first["page"]
@@ -146,7 +154,7 @@ for art, lst in occ.items():
         verified, ev = True, f"Name matches chapter title {CHAPTER[norm_title(en)]}; SKU read once"
     if art in MANUAL:
         verified, ev, conf = True, MANUAL[art], "high"
-    rows.append(dict(sku=art, sku_8digit=sku8, name_en=en, name_es=tr_es(art, en), module=mod,
+    rows.append(dict(sku=art, sku_8digit=sku8, page=PAGE_OF[p["sec"]], name_en=en, name_es=tr_es(art, en), module=mod,
                      subassembly=sec, price_cad="", source_image=p["img"],
                      diagram_position=f"table row {first['row']}; diagram {diagram_for(p['n'])}",
                      confidence=conf, notes="; ".join(notes),

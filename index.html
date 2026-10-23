@@ -266,7 +266,7 @@
   const SEEDS = VALIDATE ? ['data/internal/parts_all.csv', 'data/parts.csv'] : ['data/parts.csv'];
   const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
-  const COLS = ['sku','sku_8digit','name_en','name_es','module','subassembly','price_cad',
+  const COLS = ['sku','sku_8digit','page','name_en','name_es','module','subassembly','price_cad',
                 'source_image','diagram_position','confidence','notes','qty_per_machine','on_hand','validation','evidence'];
   // The CSV people export has only the columns they use. The development columns (source image, diagram position,
   // confidence, validation, evidence) are exported only in team mode.
@@ -746,6 +746,7 @@
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8digit || '—')}</dd></div>
       ${VALIDATE ? `<div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>` : ''}
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subassembly || '—')}</dd></div>
+      ${VALIDATE && p.page ? `<div class="fact"><dt>Manual page</dt><dd>${esc(p.page)}</dd></div>` : ''}
       ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidence || '—')}</dd></div>` : ''}
       ${p.notes ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notes)}</dd></div>` : ''}
     </dl>`;
