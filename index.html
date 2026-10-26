@@ -741,7 +741,10 @@
       case 'price': a.sort((x, y) => priceNum(y.price_cad) - priceNum(x.price_cad)); break;
       case 'review': a.sort((x, y) => Number(needsReview(y)) - Number(needsReview(x))); break;
     }
-    return a;
+    // parts with their own photo or illustration first, then the ones with a shared tube image; the chosen sort holds inside each group
+    const rank = (p) => { const im = partImage(p); return !im ? 2 : im.kind === 'generic' ? 1 : 0; };
+    const r = new Map(a.map(p => [p, rank(p)]));
+    return a.sort((x, y) => r.get(x) - r.get(y));
   }
   const secKey = (s) => { const m = /^[\d.]+/.exec(s || ''); return m ? m[0].split('.').filter(Boolean).map(Number) : [9999]; };
   const cmpSec = (a, b) => {
