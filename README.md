@@ -97,6 +97,7 @@ Re-extracting overwrites any prices in `parts.csv`. Once prices are loaded, edit
 - `data/build_parts.py` and `data/translations_es.py`: build the CSV files and the report.
 - `data/manual_validations.txt`: Article numbers checked by hand against the paper manual.
 - `data/internal/`: local only, not committed (all parts, the report and the pilot).
+- `CLAUDE.md`: instructions for the development agent (scope, data rules, what stays internal). It is public, so it carries no names of people or of the client.
 - `IDEAS.md`: ideas outside the current scope.
 
 The manual images are not committed to the repository.
