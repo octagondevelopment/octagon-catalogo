@@ -1,6 +1,6 @@
 # Generated part images for review
 
-Ten reference-based product representations. The first three image appearances were approved; this does not confirm the provisional SKU matches. The remaining seven use descriptive filenames because their SKUs are unknown. These files are not connected to the published catalog.
+16 reference-based product representations. The first three image appearances were approved; this does not confirm provisional SKU matches. Images without confirmed SKUs use descriptive filenames. These files are not connected to the published catalog.
 
 | Part | Reference photo | Proposed SKU | Status |
 | --- | --- | --- | --- |
@@ -14,8 +14,14 @@ Ten reference-based product representations. The first three image appearances w
 | [Metal-faced solenoid coil](photo-309-metal-faced-solenoid-coil.jpg) | 309 | unknown | SKU unconfirmed; generated image for review |
 | [Beige valve block](photo-302-beige-valve-block.jpg) | 302 | unknown | SKU unconfirmed; generated image for review |
 | [White slotted tube](photo-319-white-slotted-tube.jpg) | 319 | unknown | SKU unconfirmed; generated image for review |
+| [Fixed burr with housing](photo-259-fixed-burr-housing.jpg) | 259 | unknown | SKU unconfirmed; generated image for review |
+| [Black grinder chute](photo-265-black-grinder-chute.jpg) | 265 | unknown | SKU unconfirmed; generated image for review |
+| [Black mounting plate](photo-271-black-mounting-plate.jpg) | 271 | unknown | SKU unconfirmed; generated image for review |
+| [Stepped shaft with seals](photo-314-stepped-shaft-with-seals.jpg) | 314 | unknown | SKU unconfirmed; generated image for review |
+| [Folded metal cover](photo-326-folded-metal-cover.jpg) | 326 | unknown | SKU unconfirmed; generated image for review |
+| [Capillary control unit](photo-329-capillary-control-unit.jpg) | 329 | unknown | SKU unconfirmed; generated image for review |
 
-Generated lettering and geometry can differ from the originals. Some capacitor label characters and burr tooth details are approximated. Do not infer electrical specifications, dimensions or fitment from these representations. Original workshop photos and the private identification table are not included.
+Generated lettering and geometry can differ from originals. Do not infer electrical specifications, dimensions or fitment from these representations. Original workshop photos and the private identification table are not included.
 
 ## Image gallery
 
@@ -58,3 +64,27 @@ Generated lettering and geometry can differ from the originals. Some capacitor l
 ### White slotted tube
 
 ![White slotted tube](photo-319-white-slotted-tube.jpg)
+
+### Fixed burr with housing
+
+![Fixed burr with housing](photo-259-fixed-burr-housing.jpg)
+
+### Black grinder chute
+
+![Black grinder chute](photo-265-black-grinder-chute.jpg)
+
+### Black mounting plate
+
+![Black mounting plate](photo-271-black-mounting-plate.jpg)
+
+### Stepped shaft with seals
+
+![Stepped shaft with seals](photo-314-stepped-shaft-with-seals.jpg)
+
+### Folded metal cover
+
+![Folded metal cover](photo-326-folded-metal-cover.jpg)
+
+### Capillary control unit
+
+![Capillary control unit](photo-329-capillary-control-unit.jpg)
