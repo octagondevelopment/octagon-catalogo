@@ -69,7 +69,8 @@ for line in open(os.path.join(HERE, "transcription_A.txt"), encoding="utf-8"):
     occ.setdefault(art, []).append(dict(page=cur, row=cur["row"], sku=sku, desc=desc))
 
 # Diagram image: the next photo that is not a table.
-libros = sorted(os.listdir(r"C:/Users/faleu/Mi unidad/Maestrena Tutorial/Libros"))
+_libros_dirs = [r"C:/Users/faleu/Mi unidad/Maestrena Tutorial/Libros", os.path.join(HERE, "internal", "Maestrena Tutorial", "Libros")]
+libros = sorted(os.listdir(next(d for d in _libros_dirs if os.path.isdir(d))))
 table_n = {p["n"] for p in pages}
 def diagram_for(n):
     k = n + 1
