@@ -4,3 +4,4 @@ Libros/
 *.dng
 __pycache__/
 data/internal/
+!img/*.jpg
