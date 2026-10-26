@@ -831,18 +831,28 @@
   }
 
   // SKUs that have an image in img/<sku>.jpg, and whether it is a real photo or a generated illustration
-  const PHOTOS = new Map([['140.763', 'photo'], ['140.741', 'illustration'], ['127.852', 'illustration'], ['123.366', 'illustration'], ['130.326', 'illustration'], ['115.894', 'illustration']]);
+  const PHOTOS = new Map([['140.763', 'photo'], ['140.741', 'illustration'], ['127.852', 'illustration'], ['123.366', 'illustration'], ['130.326', 'illustration'], ['115.894', 'illustration'], ['127.788', 'illustration'], ['130.332', 'illustration'], ['124.867', 'illustration']]);
+  // Shared illustrations for tubes: length, diameter and shape vary by SKU, and the dimensions in the name stay authoritative.
+  function partImage(p) {
+    const kind = PHOTOS.get(p.sku);
+    if (kind === 'photo') return { kind, src: `img/${encodeURIComponent(p.sku)}.jpg`, alt: `Photo of ${p.sku}` };
+    if (kind) return { kind, src: `img/${encodeURIComponent(p.sku)}.jpg`, alt: `Illustration of ${p.sku}`, note: 'Generated from a photo of the part; details such as lettering may differ from the real part' };
+    const generic = /^FEP pipe\s/i.test(p.name_en || '') ? 'fep' : /^Drain pipe PVC\s/i.test(p.name_en || '') ? 'pvc-drain' : '';
+    if (generic) return { kind: 'generic', src: `img/generic-${generic}-tube.jpg`, alt: 'Generic tube illustration', note: 'Length, diameter and shape vary by SKU; the dimensions in the name are the real ones' };
+    return null;
+  }
   function rowHtml(p) {
+    const image = partImage(p);
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
     const review = VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
-        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${PHOTOS.has(p.sku) ? `<img class="pimg" src="img/${encodeURIComponent(p.sku)}.jpg" alt="${PHOTOS.get(p.sku) === 'photo' ? 'Photo' : 'Illustration'} of ${esc(p.sku)}">` : ''}</div>
+        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${image ? `<img class="pimg" src="${image.src}" alt="${esc(image.alt)}">` : ''}</div>
         <div class="info">
           <div class="name">${esc(p.name_en)}</div>
-          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${PHOTOS.get(p.sku) === 'illustration' ? ' <span class="pill ill" title="Generated from a photo of the part; details such as lettering may differ from the real part">Illustration</span>' : ''}${review}</div>
+          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${image && image.kind !== 'photo' ? ` <span class="pill ill" title="${esc(image.note)}">${image.kind === 'generic' ? 'Generic image' : 'Illustration'}</span>` : ''}${review}</div>
         </div>
         <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>

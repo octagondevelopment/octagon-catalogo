@@ -15,6 +15,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Exports and imports the catalog as CSV. Import checks the columns and duplicate SKUs before it replaces anything.
 - Shows the bag label of each part as a picture in the opened row, to the right of the details. Click it to enlarge it, choose the quantity and copies, and print.
 - Prints bag labels in the style of the Thermoplan ones: the Article no. in large type, the English and Spanish names, the quantity in the bag, a CODE128 barcode of the SKU, and the Octagon logo down the left side. You choose the quantity and the number of copies. They print at 4 × 2.4 in. The logo is an octagon with the word "Octagon" in script, drawn in code (`LOGO_SVG` in `index.html`); replace it with the final artwork when you have the file.
+- Shows an image for some parts: a real photo (140.763) or an illustration generated from a photo of the part, marked **Illustration**, and a shared tube image marked **Generic image** for FEP pipes (length, diameter and shape vary by SKU; the dimensions in the name are the real ones). Add an image as `img/<sku>.jpg` and list the SKU in `PHOTOS` in `index.html`.
 - Draws a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
 - Works on phones (designed for 400px wide) and follows the device's light or dark mode.
 
