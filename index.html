@@ -87,6 +87,7 @@
   .sub2 { color: var(--muted); font-size: 12.5px; margin-top: 2px; overflow-wrap: anywhere; }
   .sub2 .mono { color: var(--ink2); font-size: 12px; }
   .pill { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 600; margin-left: 4px; vertical-align: 1px; }
+  .pill.ill { background: var(--soft); color: var(--ink2); }
   .pill.warn { background: var(--warn-soft); color: var(--warn); }
   .price { font-weight: 600; font-size: 14px; text-align: right; }
   .price.none { color: var(--muted); font-weight: 400; font-size: 12px; }
@@ -829,8 +830,8 @@
       </div>${confirmBox}</div>`;
   }
 
-  // SKUs that have a photo in img/<sku>.jpg (add the SKU here when the file is added)
-  const PHOTOS = new Set(['140.763']);
+  // SKUs that have an image in img/<sku>.jpg, and whether it is a real photo or a generated illustration
+  const PHOTOS = new Map([['140.763', 'photo'], ['140.741', 'illustration'], ['127.852', 'illustration']]);
   function rowHtml(p) {
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
@@ -838,10 +839,10 @@
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
-        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${PHOTOS.has(p.sku) ? `<img class="pimg" src="img/${encodeURIComponent(p.sku)}.jpg" alt="Photo of ${esc(p.sku)}">` : ''}</div>
+        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${PHOTOS.has(p.sku) ? `<img class="pimg" src="img/${encodeURIComponent(p.sku)}.jpg" alt="${PHOTOS.get(p.sku) === 'photo' ? 'Photo' : 'Illustration'} of ${esc(p.sku)}">` : ''}</div>
         <div class="info">
           <div class="name">${esc(p.name_en)}</div>
-          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${review}</div>
+          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${PHOTOS.get(p.sku) === 'illustration' ? ' <span class="pill ill" title="Generated from a photo of the part; details such as lettering may differ from the real part">Illustration</span>' : ''}${review}</div>
         </div>
         <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>
