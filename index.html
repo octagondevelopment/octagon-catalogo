@@ -95,6 +95,13 @@
   .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; margin: 6px 0 12px; }
   .detail-grid { display: grid; grid-template-columns: 1fr; gap: 10px 16px; align-items: start; margin: 6px 0 12px; }
   .detail-grid .facts { margin: 0; align-content: start; }
+  .part-pic { display: block; width: 100%; padding: 0; margin: 0 0 10px; border: 0; background: none; cursor: zoom-in; text-align: center; font: inherit; color: var(--muted); }
+  .part-pic img { display: block; width: 100%; max-height: 230px; object-fit: contain; background: #fff; border-radius: 12px; }
+  .part-pic .lbl-thumb-hint { display: block; margin-top: 5px; font-size: 11.5px; }
+  .thumb .pimg { cursor: zoom-in; }
+  #image-area { text-align: center; }
+  #image-area img { display: block; width: 100%; max-height: 70vh; object-fit: contain; background: #fff; border-radius: 12px; }
+  #image-area p { margin: 10px 0 0; font-size: 13px; color: var(--muted); }
   .lbl-thumb { display: block; width: 100%; padding: 0; margin: 0; border: 0; background: none; cursor: zoom-in; text-align: center; font: inherit; color: var(--muted); }
   .lbl-thumb .lbl-box { width: 100%; }
   .lbl-thumb .lbl { pointer-events: none; box-shadow: 0 1px 4px rgba(0, 0, 0, .18); }
@@ -278,6 +285,13 @@
       <button class="btn primary" id="btn-import-ok" type="button">Replace catalog</button>
       <button class="btn" id="btn-import-cancel" type="button">Cancel</button>
     </div>
+  </div>
+</div>
+
+<div class="sheet hidden" id="sheet-image" role="dialog" aria-modal="true" aria-label="Part image">
+  <div class="sheet-card">
+    <div class="sheet-top"><h2 id="image-title">Part image</h2><button class="btn ghost sm" data-act="close" type="button" aria-label="Close">Close</button></div>
+    <div id="image-area"></div>
   </div>
 </div>
 
@@ -821,9 +835,12 @@
       ${qtyHtml(p)}
       <div class="detail-grid">
         ${factsHtml(p)}
-        <button class="lbl-thumb" type="button" data-act="label" data-sku="${esc(p.sku)}" aria-label="Enlarge the bag label of ${esc(p.sku)}" title="Click to enlarge and print">
-          ${labelHtml(p, 1)}<span class="lbl-thumb-hint">Click to enlarge and print</span>
-        </button>
+        <div class="side">
+          ${partImage(p) ? `<button class="part-pic" type="button" data-act="zoom" data-sku="${esc(p.sku)}" aria-label="Enlarge the image of ${esc(p.sku)}"><img src="${partImage(p).src}" alt="${esc(partImage(p).alt)}"><span class="lbl-thumb-hint">Click to enlarge${partImage(p).kind === 'photo' ? '' : ' · ' + (partImage(p).kind === 'generic' ? 'Generic image' : 'Illustration')}</span></button>` : ''}
+          <button class="lbl-thumb" type="button" data-act="label" data-sku="${esc(p.sku)}" aria-label="Enlarge the bag label of ${esc(p.sku)}" title="Click to enlarge and print">
+            ${labelHtml(p, 1)}<span class="lbl-thumb-hint">Click to enlarge and print</span>
+          </button>
+        </div>
       </div>
       <div class="actions">
         ${isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
@@ -852,7 +869,7 @@
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
-        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${image ? `<img class="pimg" src="${image.src}" alt="${esc(image.alt)}">` : ''}</div>
+        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${image ? `<img class="pimg" src="${image.src}" alt="${esc(image.alt)}" data-act="zoom" data-sku="${esc(p.sku)}">` : ''}</div>
         <div class="info">
           <div class="name">${esc(p.name_en)}</div>
           <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${image && image.kind !== 'photo' ? ` <span class="pill ill" title="${esc(image.note)}">${image.kind === 'generic' ? 'Generic image' : 'Illustration'}</span>` : ''}${review}</div>
@@ -1038,6 +1055,7 @@
         parts = parts.filter(x => x.sku !== sku); selected.delete(sku);
         confirming = null; openSku = null; save(); render(); toast(`Part ${sku} removed`); break;
       case 'label': showLabel(sku); break;
+      case 'zoom': showImage(sku); break;
       case 'view':
         Object.assign(state, { view: b.dataset.view, q: '', mod: '', sub: '', noPrice: false, review: false, limit: PAGE });
         $('q').value = ''; selected.clear(); openSku = editing = confirming = null; render(); break;
@@ -1148,6 +1166,12 @@
     if (!labelPart) return;
     $('label-preview').innerHTML = labelHtml(labelPart, countOf('lbl-qty'));
     drawBarcodes($('label-preview'));
+  }
+  function showImage(sku) {
+    const p = parts.find(x => x.sku === sku), im = p && partImage(p); if (!im) return;
+    $('image-title').textContent = p.name_en;
+    $('image-area').innerHTML = `<img src="${im.src}" alt="${esc(im.alt)}"><p><span class="mono">${esc(p.sku)}</span>${im.kind === 'photo' ? ' · Photo of the part' : ' · ' + esc(im.note)}</p>`;
+    openSheet('sheet-image');
   }
   function showLabel(sku) {
     const p = parts.find(x => x.sku === sku); if (!p) return;
