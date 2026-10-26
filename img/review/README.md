@@ -1,6 +1,15 @@
 # Generated part images for review
 
-16 reference-based product representations. The first three image appearances were approved; this does not confirm provisional SKU matches. Images without confirmed SKUs use descriptive filenames. These files are not connected to the published catalog.
+26 generated images: reference-based product representations plus generic FEP and PVC tube category illustrations. The first three image appearances were approved; this does not confirm provisional SKU matches. Images without confirmed SKUs use descriptive filenames.
+
+Only the two generic tube category images are connected to catalog rows in this review branch. Individual reference-based images remain in the gallery. The published website has not been updated.
+
+## Shared tube defaults
+
+- FEP pipe rows share `generic-fep-tube.jpg` (20 rows in the current published CSV).
+- Plain Drain pipe PVC rows share `generic-pvc-drain-tube.jpg` when present; currently none are in the published CSV.
+- A dedicated SKU photo takes precedence. Other hoses, connectors, assembled drains and the black sleeve are excluded.
+- Rows retain each SKU's actual dimensions and display a visible "Generic image" label. The image does not establish length, diameter, curvature, material grade or fitment.
 
 | Part | Reference photo | Proposed SKU | Status |
 | --- | --- | --- | --- |
@@ -20,8 +29,18 @@
 | [Stepped shaft with seals](photo-314-stepped-shaft-with-seals.jpg) | 314 | unknown | SKU unconfirmed; generated image for review |
 | [Folded metal cover](photo-326-folded-metal-cover.jpg) | 326 | unknown | SKU unconfirmed; generated image for review |
 | [Capillary control unit](photo-329-capillary-control-unit.jpg) | 329 | unknown | SKU unconfirmed; generated image for review |
+| [Generic FEP tube](generic-fep-tube.jpg) | catalog category | not SKU-specific | Shared generic illustration; not actual SKU geometry |
+| [Generic PVC drain tube](generic-pvc-drain-tube.jpg) | catalog category | not SKU-specific | Shared generic illustration; not actual SKU geometry |
+| [Black tubular sleeve](photo-353-black-sleeve.jpg) | 353 | unknown | SKU unconfirmed; generated image for review |
+| [Yellow-collet elbow connector](photo-350-elbow-connector.jpg) | 350 | unknown | SKU unconfirmed; generated image for review |
+| [Three-port connector block](photo-354-three-port-block.jpg) | 354 | unknown | SKU unconfirmed; generated image for review |
+| [Double-seal connector](photo-361-double-seal-connector.jpg) | 361 | unknown | SKU unconfirmed; generated image for review |
+| [Spring and plunger](photo-346-spring-plunger.jpg) | 346 | unknown | SKU unconfirmed; generated image for review |
+| [Solenoid valve with push-fit ports](photo-340-solenoid-valve.jpg) | 340 | unknown | SKU unconfirmed; generated image for review |
+| [Three-solenoid valve block](photo-336-three-solenoid-block.jpg) | 336 | unknown | SKU unconfirmed; generated image for review |
+| [Brown O-ring](photo-323-brown-o-ring.jpg) | 323 | unknown | SKU unconfirmed; generated image for review |
 
-Generated lettering and geometry can differ from originals. Do not infer electrical specifications, dimensions or fitment from these representations. Original workshop photos and the private identification table are not included.
+Generated lettering and geometry can differ from originals, especially details obscured by hands or packaging. Do not infer specifications or dimensions from these images. Original workshop photos and the private identification table are not included.
 
 ## Image gallery
 
@@ -88,3 +107,43 @@ Generated lettering and geometry can differ from originals. Do not infer electri
 ### Capillary control unit
 
 ![Capillary control unit](photo-329-capillary-control-unit.jpg)
+
+### Generic FEP tube
+
+![Generic FEP tube](generic-fep-tube.jpg)
+
+### Generic PVC drain tube
+
+![Generic PVC drain tube](generic-pvc-drain-tube.jpg)
+
+### Black tubular sleeve
+
+![Black tubular sleeve](photo-353-black-sleeve.jpg)
+
+### Yellow-collet elbow connector
+
+![Yellow-collet elbow connector](photo-350-elbow-connector.jpg)
+
+### Three-port connector block
+
+![Three-port connector block](photo-354-three-port-block.jpg)
+
+### Double-seal connector
+
+![Double-seal connector](photo-361-double-seal-connector.jpg)
+
+### Spring and plunger
+
+![Spring and plunger](photo-346-spring-plunger.jpg)
+
+### Solenoid valve with push-fit ports
+
+![Solenoid valve with push-fit ports](photo-340-solenoid-valve.jpg)
+
+### Three-solenoid valve block
+
+![Three-solenoid valve block](photo-336-three-solenoid-block.jpg)
+
+### Brown O-ring
+
+![Brown O-ring](photo-323-brown-o-ring.jpg)

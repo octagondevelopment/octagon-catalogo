@@ -16,6 +16,7 @@ Internal catalog of Mastrena II spare parts for Octagon Services (Vancouver, BC)
 - Shows the bag label of each part as a picture in the opened row, to the right of the details. Click it to enlarge it, choose the quantity and copies, and print.
 - Prints bag labels in the style of the Thermoplan ones: the Article no. in large type, the English and Spanish names, the quantity in the bag, a CODE128 barcode of the SKU, and the Octagon logo down the left side. You choose the quantity and the number of copies. They print at 4 × 2.4 in. The logo is an octagon with the word "Octagon" in script, drawn in code (`LOGO_SVG` in `index.html`); replace it with the final artwork when you have the file.
 - Draws a hand-style sketch for each part. These are representative drawings by part type (screw, O-ring, valve, ...), chosen by keywords in the English name. They are not photos of the exact part.
+- Uses shared generated tube illustrations for FEP pipes and plain PVC drain pipes when there is no dedicated SKU photo. These rows show **Generic image**; length, diameter and shape vary by SKU, and the dimensions in the part name remain authoritative. Other hoses and connectors keep their existing images or sketches. Review images and the current tube mapping are in `img/review/`.
 - Works on phones (designed for 400px wide) and follows the device's light or dark mode.
 
 **Important:** changes are saved in this browser only (localStorage, key `octagon-inv-v1`). Each device keeps its own copy, so export the CSV after editing.

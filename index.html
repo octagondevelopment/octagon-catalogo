@@ -831,17 +831,26 @@
 
   // SKUs that have a photo in img/<sku>.jpg (add the SKU here when the file is added)
   const PHOTOS = new Set(['140.763']);
+  // Shared category illustrations; the part name retains its actual dimensions.
+  function partImage(p) {
+    if (PHOTOS.has(p.sku)) return { src: `img/${encodeURIComponent(p.sku)}.jpg`, generic: false };
+    if (/^FEP pipe\s/i.test(p.name_en || '')) return { src: 'img/review/generic-fep-tube.jpg', generic: true };
+    if (/^Drain pipe PVC\s/i.test(p.name_en || '')) return { src: 'img/review/generic-pvc-drain-tube.jpg', generic: true };
+    return null;
+  }
   function rowHtml(p) {
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
+    const image = partImage(p);
+    const imageDescription = image?.generic ? 'Generic tube illustration; length, diameter and shape vary by SKU' : image ? `Photo of ${p.sku}` : 'Representative sketch, not a photo of the exact part';
     const review = VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
-        <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${PHOTOS.has(p.sku) ? `<img class="pimg" src="img/${encodeURIComponent(p.sku)}.jpg" alt="Photo of ${esc(p.sku)}">` : ''}</div>
+        <div class="thumb" title="${esc(imageDescription)}">${sketch(p)}${image ? `<img class="pimg" src="${image.src}" alt="${esc(imageDescription)}">` : ''}</div>
         <div class="info">
           <div class="name">${esc(p.name_en)}</div>
-          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${review}</div>
+          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${review}${image?.generic ? ' <span class="pill" title="Length, diameter and shape vary by SKU">Generic image</span>' : ''}</div>
         </div>
         <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>
