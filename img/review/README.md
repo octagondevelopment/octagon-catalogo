@@ -1,6 +1,6 @@
 # Generated part images for review
 
-356 generated images: reference-based representations and generic illustrations based on catalog names, including shared FEP and PVC tube images. The first three image appearances were approved; this does not confirm provisional SKU matches. Images without confirmed SKUs use descriptive filenames.
+366 generated images: reference-based representations and generic illustrations based on catalog names, including shared FEP and PVC tube images. The first three image appearances were approved; this does not confirm provisional SKU matches. Images without confirmed SKUs use descriptive filenames.
 
 Only the two generic tube category images are connected to catalog rows in this review branch. Individual reference-based images remain in the gallery. The published website has not been updated.
 
@@ -190,3 +190,4 @@ Additional type-based illustrations, including broad concepts for complex assemb
 - [Batch 21](remaining-21.md)
 - [Batch 22](remaining-22.md)
 - [Batch 23](remaining-23.md)
+- [Batch 24](remaining-24.md)
