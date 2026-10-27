@@ -1,140 +1,140 @@
-﻿sku,sku_8digit,name_en,name_es,module,subassembly,price_cad,qty_per_machine,on_hand,notes
-110.533,11133893,Water pump Mastrena CE assy,Bomba de agua Mastrena CE (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-127.734,11086418,Hydraulic module Mastrena II assy.,Módulo hidráulico Mastrena II (conjunto),Hydraulic,1 Mastrena II - 230V (main assemblies),,1,,
-128.036,11086548,Chassis assy. Mastrena II,Chasis Mastrena II (conjunto),Chassis,1 Mastrena II - 230V (main assemblies),,1,,
-128.037,11086472,Hood assy. Mastrena II,Capota Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-128.047,11086446,Coffee outlet assy. Mastrena II,Salida de café Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-128.051,11086396,Drip tray assy. Mastrena II,Bandeja de goteo Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-128.386,11086421,Steam outlet assy. Mastrena II,Salida de vapor Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-129.562,11080979,Ground drawer assy. Mastrena II,Cajón de borra Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-130.702,11080977,Bean hopper small assy. Mastrena II,Tolva de grano pequeña Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,2,,
-130.704,11080978,Bean hopper big assy. Mastrena II,Tolva de grano grande Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-133.029,11086501,Steam casing assy. Mastrena II,Carcasa de vapor Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
-116.106,11097244,PT screw lens head KA40x10,Tornillo PT cabeza lenteja KA40x10,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.2.1, 1.3, 1.6, 1.11.3"
-121.464,11097249,PT screw KA30x10 philips,Tornillo PT KA30x10 Phillips,Other,1.1 Hood assy. Mastrena II,,,,Also in: 1.13.2
-122.913,11101490,Cable tie with clip 100mm,Amarra plástica con clip 100 mm,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.10.1.1, 1.10.2.5, 1.10.3.1, 1.11.3"
-129.371,11080968,2/2-way magnet valve ø6 DN3 NO,Electroválvula 2/2 vías ø6 DN3 NA,Other,1.2 Steam outlet assy. Mastrena II,,,,Only appears in a blurry photo
-129.979,11080893,Membrane ETV-200 EPDM,Membrana ETV-200 EPDM,Other,1.2 Steam outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.1.4, 1.10.2.4.1.4, 1.11.3"
-103.238,11086497,Cable tie 80...100 x 2.3/2.4/2.5,"Amarra plástica 80...100 x 2,3/2,4/2,5",Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.2, 1.10.2.4.2, 1.13"
-104.034,11097240,Oval head screw Phillips M4x12,Tornillo cabeza oval Phillips M4x12,Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.9, 1.10.1.1, 1.10.2, 1.10.2.1 +8 more"
-127.651,11097251,Oval-head screw M4x16 Phillips,Tornillo cabeza oval M4x16 Phillips,Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.2, 1.10.2.4.2"
-128.852,11080976,Drip tray inlay,Inserto bandeja de goteo,Other,1.6 Drip tray assy. Mastrena II,,,,
-129.162,11080975,Drip tray grill Mastrena II,Rejilla bandeja de goteo Mastrena II,Other,1.6 Drip tray assy. Mastrena II,,,,
-130.610,11081005,Bean hopper lid big,Tapa tolva de grano grande,Other,1.8 Bean hopper big assy. Mastrena II,,,,
-119.994,11080807,Elbow connector 6-4,Conector codo 6-4,Chassis,1.9 Chassis assy. Mastrena II,,,,Also in: 1.11.3
-128.484,11080927,Y-plug connector 6-6,Conector en Y 6-6,Chassis,1.9 Chassis assy. Mastrena II,,,,Also in: 1.12.3
-130.898,11086398,Drainsystem assy.,Sistema de desagüe (conjunto),Chassis,1.9 Chassis assy. Mastrena II,,,,
-127.595,11086423,Grinder module left Mastrena II,Módulo de molino izquierdo Mastrena II,Mechanical,1.10 Mechanic module Mastrena II,,,,
-127.846,11086422,Grinder module right Mastrena II,Módulo de molino derecho Mastrena II,Mechanical,1.10 Mechanic module Mastrena II,,,,
-127.392,11086486,Grinder unit with chassis,Unidad de molino con chasis,Mechanical,1.10.1 Grinder module left Mastrena II,,,,Also in: 1.10.3
-127.842,11086404,Powder pass ø50 closure,Cierre paso de polvo ø50,Mechanical,1.10.1 Grinder module left Mastrena II,,,,Also in: 1.10.3
-127.843,11080867,Powder diffusor ø50 assy.,Difusor de polvo ø50 (conjunto),Mechanical,1.10.1 Grinder module left Mastrena II,,,,"Also in: 1.10.2, 1.10.3"
-124.077,11080861,Toothed belt 305-5M-9,Correa dentada 305-5M-9,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
-126.543,11086445,Hexagonal head screw combi M6x16,Tornillo cabeza hexagonal combi M6x16,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.2.1.1.1, 1.10.2.4.1.1, 1.10.3.1"
-127.394,11086432,Auto adjustable grinder,Molino autoajustable,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
-129.612,11086512,Wiring harness Mastrena II grinder module set,Arnés de cables Mastrena II grinder module set,Mechanical,1.10.1.1 Grinder unit with chassis,,,,Also in: 1.10.3.1
-140.741,11135257,Grindermotor 230/400V set,Set motor de molino 230/400V,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
-140.763,11135258,Capacitor 20µF cpl,Condensador 20 µF completo,Mechanical,1.10.1.1.1 Grindermotor 230/400V set,,,,"Also in: 1.10.2.2, 1.10.3.1.1"
-100.934,11014453,Agitator ø64 grinder,Agitador ø64 molino,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-106.524,11086488,Lock nut M8 Serpress,Tuerca de seguridad M8 Serpress,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-115.894,153603,Burr set with screws,Set de muelas con tornillos,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"8-digit SKU '153603' has 6 digits (does not match 11xxxxxx); Also in: 1.10.2.3, 1.10.3.1.2"
-123.364,11080864,Cam support,Soporte de leva,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-123.366,11086536,Lower Grindingdischolder,Portamuela inferior,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-127.393,11086493,Upper grindingdischolder,Portamuela superior,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-127.415,11086491,Spacer for grinding disc,Separador para muela,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-127.852,11086399,Drive spindle grinder assy.,Husillo de accionamiento molino (conjunto),Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-127.853,11086489,Bearing kit,Kit de rodamientos,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-127.854,11080865,Stepper motor assy.,Motor paso a paso (conjunto),Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-129.324,11080866,Elastic clip washer ø6,Arandela clip elástica ø6,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-129.337,11086492,Spring pin ø 5x10,Pasador elástico ø5x10,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
-128.907,11086494,Brew unit ø50 with clip hydraulic right,Unidad de infusión ø50 con clip hidráulico derecho,Mechanical,1.10.2 Brew module Mastrena II,,,,
-128.908,11086495,Brew unit ø50 with clip hydraulic left,Unidad de infusión ø50 con clip hidráulico izquierdo,Mechanical,1.10.2 Brew module Mastrena II,,,,
-127.062,11086481,Brew unit ø50,Unidad de infusión ø50,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
-127.349,11080898,Toothed belt 265-5M-9,Correa dentada 265-5M-9,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
-129.501,11086623,Motor to brew chamber assy.,Motor a cámara de infusión (conjunto),Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
-129.584,11086434,Socket clip hydraulic left assy.,Clip hidráulico izquierdo de enchufe (conjunto),Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,
-131.303,11086499,Wire retainer Panduit TWR,Retenedor de cables Panduit TWR,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
-127.064,11086425,Guide- and bearing unit,Unidad de guía y rodamiento,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
-127.365,11086431,Brew chamber ø50 with mobile piston,Cámara de infusión ø50 con pistón móvil,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
-127.516,11080892,2/2-way magnet valve ø6 DN3,Electroválvula 2/2 vías ø6 DN3,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
-129.963,11080891,Adapter,Adaptador,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
-129.967,11086482,Front block assy.,Bloque frontal (conjunto),Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
-106.523,11101483,Prevailing torque hex nut M8 with flange,Tuerca hexagonal autoblocante M8 con brida,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-106.685,11086426,Snap ring for shaft ø10,Anillo de retención para eje ø10,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-127.375,11086484,Guide rail,Riel guía,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-127.569,11101492,Drive screw 14x4,Tornillo de accionamiento 14x4,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-132.619,11080872,Ringmagnet set,Set imán anular,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-139.587,11129443,Adjusting washer BN 1976,Arandela de ajuste BN 1976,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-139.859,11129445,Ball bearing kit rear block Mastrena II,Kit rodamiento bloque trasero Mastrena II,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
-127.054,11086400,Plate mobile piston,Placa pistón móvil,Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
-127.357,11086485,Chamber ø50 assy.,Cámara ø50 (conjunto),Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
-130.821,11097252,Oval head screw Phillips H M4x6,Tornillo cabeza oval Phillips H M4x6,Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,"Also in: 1.10.2.1.1.2.2, 1.10.2.4.1.2, 1.10.2.4.1.2.2"
-130.861,11086500,Mobile piston ø50 assy.,Pistón móvil ø50 (conjunto),Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
-127.371,11080878,Anti-twist device plate,Placa antirrotación,Mechanical,1.10.2.1.1.2.1 Chamber ø50 assy.,,,,Also in: 1.10.2.4.1.2.1
-129.200,11080875,Guide sleeve PAP 2510 P10,Casquillo guía PAP 2510 P10,Mechanical,1.10.2.1.1.2.1 Chamber ø50 assy.,,,,Also in: 1.10.2.4.1.2.1
-109.557,11080883,Straight connector 4-M5,Conector recto 4-M5,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
-127.106,11080880,Mobile piston head ø50,Cabeza pistón móvil ø50,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
-130.862,11080882,Clip for micro screen ø50,Clip para microfiltro ø50,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
-132.530,11080881,Micro-screen insert,Inserto microfiltro,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,"Also in: 1.10.2.1.1.3.1, 1.10.2.4.1.2.2, 1.10.2.4.1.3.1"
-133.046,11080879,O-Ring 23.39x3.53 FKM,O-ring 23.39x3.53 FKM,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
-106.229,11097241,Hex cap assembled screw M6x50,Tornillo hexagonal con arandela M6x50,Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
-130.790,11080886,Fix piston assy. head stepped,Pistón fijo con cabeza escalonada (conjunto),Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
-131.342,11086402,Front block pre-assy.,Bloque frontal premontado,Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
-130.531,11086403,O-Ring 18.00x2.00 EPDM 75.5/KW75F,O-ring 18.00x2.00 EPDM 75.5/KW75F,Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
-130.796,11080889,Fix piston seal stepped ø50 assy.,Sello pistón fijo escalonado ø50 (conjunto),Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
-132.508,11101539,O-Ring 6.07x1.78 FKM 75.5/VA75F,O-ring 6.07x1.78 FKM 75.5/VA75F,Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
-132.589,11086537,"Body assy. magnet valve 2/2, ø6","Cuerpo electroválvula 2/2, ø6 (conjunto)",Mechanical,1.10.2.1.1.4 2/2-way magnet valve ø6 DN3,,,,Also in: 1.10.2.4.1.4
-127.698,11080833,Elbow connector 4-4,Conector codo 4-4,Mechanical,1.10.2.1.2 Socket clip hydraulic left assy.,,,,"Also in: 1.10.2.4.2, 1.11.1"
-130.905,11080895,Hydr. male connector tilted ø4 assy.,Conector macho hidráulico inclinado ø4 (conjunto),Mechanical,1.10.2.1.2 Socket clip hydraulic left assy.,,,,Also in: 1.10.2.4.2
-128.897,11086433,Socket clip hydraulic right assy.,Clip hidráulico derecho de enchufe (conjunto),Mechanical,1.10.2.4 Brew unit ø50 with clip hydraulic right,,,,
-129.174,11101510,Valve assembly hydraulic,Conjunto de válvulas hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
-129.175,11097255,Boiler assembly hydraulic,Conjunto caldera hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
-130.938,,FEP pipe ø4/2 x 80mm,Tubo FEP ø4/2 x 80mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,Also in: 1.11.1
-130.943,,FEP pipe ø4/2 x 270mm,Tubo FEP ø4/2 x 270mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
-130.944,,FEP pipe ø4/2 x 155mm,Tubo FEP ø4/2 x 155mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
-124.867,11080859,Angle plug connection 6-4,Conexión enchufable en ángulo 6-4,Hydraulic,1.11.1 Boiler assembly hydraulic,,,,Also in: 1.11.2
-127.266,11086473,Boiler coffee horizontal assy.,Caldera de café horizontal (conjunto),Hydraulic,1.11.1 Boiler assembly hydraulic,,,,
-131.321,11080840,Hexagonal head screw combi M5x12 A4-80,Tornillo cabeza hexagonal combi M5x12 A4-80,Hydraulic,1.11.1.1.1 Cap boiler horizontal 2.5kW 230V set,,,,Also in: 1.12.2
-127.788,11080845,Valveblock brew and clean assy.,Bloque de válvulas infusión y limpieza (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
-128.062,11080848,Expansion chamber valve assy.,Válvula cámara de expansión (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
-130.939,,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
-130.940,,FEP pipe ø4/2 x 110mm,Tubo FEP ø4/2 x 110mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
-106.703,11086643,Coil for Lucifer valve,Bobina para válvula Lucifer,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.12.1.1
-129.762,11086554,Solenoid 22mm UL,Solenoide 22 mm UL,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
-130.361,11086552,Clip 22mm coil,Clip bobina 22 mm,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
-130.326,11086553,Expansion chamber,Cámara de expansión,Hydraulic,1.11.2.2 Expansion chamber valve assy.,,,,
-128.004,11080829,Flow meter assy. ø6/ø4,Flujómetro ø6/ø4 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-128.005,11086605,Wiring harness Mastrena II hyd. module,Arnés de cables Mastrena II hyd. module,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.332,11080827,Male connector tilted 4/4/6 assy.,Conector macho inclinado 4/4/6 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.930,,FEP pipe ø4/2 x 65mm,Tubo FEP ø4/2 x 65mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.932,,FEP pipe ø6/4 x 120mm,Tubo FEP ø6/4 x 120mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.934,,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.935,,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-130.937,,FEP pipe ø4/2 x 180mm,Tubo FEP ø4/2 x 180mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-131.655,,FEP pipe ø6/4 x 80mm,Tubo FEP ø6/4 x 80mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,Also in: 1.12.3
-135.239,11116104,Hydraulic set CL,Set hidráulico CL,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-135.241,11116105,Hydraulic set CR,Set hidráulico CR,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-136.901,11080831,Checkvalve pluggable ø4_EPDM,Válvula antirretorno enchufable ø4 EPDM,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
-128.013,11080935,Cap steam boiler 230V 5.4kW set,"Set tapa caldera de vapor 230V 5,4 kW",Steam,1.12 Steam module 230V-400V Mastrena II,,,,
-129.065,11101509,Base chassis steam module assy.,Chasis base módulo de vapor (conjunto),Steam,1.12 Steam module 230V-400V Mastrena II,,,,
-121.384,11086503,Coupling nut with anti-kink device ø6/4,Tuerca de acople con protección antiquiebre ø6/4,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Same 8-digit SKU as 119.109
-127.954,11086452,Elbow connector 8/6-1/4K,Conector codo 8/6-1/4K,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Also in: 1.12.2
-128.602,11080932,Safety valve 2.8bar,"Válvula de seguridad 2,8 bar",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-130.613,11080930,"Solenoid valve 2/2, ø4, G1/4""","Electroválvula 2/2, ø4, G1/4""",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-130.949,,FEP pipe ø6/4 x 440mm,Tubo FEP ø6/4 x 440mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-130.950,,FEP pipe ø8/6 x 410mm,Tubo FEP ø8/6 x 410mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-131.651,,FEP pipe ø6/4 x 550mm,Tubo FEP ø6/4 x 550mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-133.318,11086502,Pin,Pasador,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
-128.463,11080920,Check valve plugable ø6,Válvula antirretorno enchufable ø6,Steam,1.12.3 Component support steam module assy.,,,,
-129.080,11080914,Male connector double ø6/ø8 assy.,Conector macho doble ø6/ø8 (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
-129.972,11086627,"Solenoid valve 2/2, ø2.06N, 7.5W UL assy.","Electroválvula 2/2, ø2,06N, 7,5 W UL (conjunto)",Steam,1.12.3 Component support steam module assy.,,,,
-130.674,11080921,T-connector 8-6-8,Conector en T 8-6-8,Steam,1.12.3 Component support steam module assy.,,,,
-130.952,11080902,Emptying valve assy.,Válvula de vaciado (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
-130.953,11080904,Bypass valve assy.,Válvula bypass (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
-131.652,,FEP pipe ø6/4 x 540mm,Tubo FEP ø6/4 x 540mm,Steam,1.12.3 Component support steam module assy.,,,,
-131.653,,FEP pipe ø6/4 x 155mm,Tubo FEP ø6/4 x 155mm,Steam,1.12.3 Component support steam module assy.,,,,
-131.654,,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Steam,1.12.3 Component support steam module assy.,,,,
-131.656,,FEP pipe ø6/4 x 50mm,Tubo FEP ø6/4 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
-131.657,,FEP pipe ø8/6 x 50mm,Tubo FEP ø8/6 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
-131.658,,FEP pipe ø6/4 x 170mm,Tubo FEP ø6/4 x 170mm,Steam,1.12.3 Component support steam module assy.,,,,
-129.676,11101530,Coffee cleaning system assy.,Sistema de limpieza de café (conjunto),Other,1.13.2 Coffee cleaning system black set,,,,
+﻿sku,sku_8digit,page,name_en,name_es,module,subassembly,price_cad,qty_per_machine,on_hand,notes
+110.533,11133893,4,Water pump Mastrena CE assy,Bomba de agua Mastrena CE (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+127.734,11086418,4,Hydraulic module Mastrena II assy.,Módulo hidráulico Mastrena II (conjunto),Hydraulic,1 Mastrena II - 230V (main assemblies),,1,,
+128.036,11086548,4,Chassis assy. Mastrena II,Chasis Mastrena II (conjunto),Chassis,1 Mastrena II - 230V (main assemblies),,1,,
+128.037,11086472,4,Hood assy. Mastrena II,Capota Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+128.047,11086446,4,Coffee outlet assy. Mastrena II,Salida de café Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+128.051,11086396,4,Drip tray assy. Mastrena II,Bandeja de goteo Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+128.386,11086421,4,Steam outlet assy. Mastrena II,Salida de vapor Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+129.562,11080979,4,Ground drawer assy. Mastrena II,Cajón de borra Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+130.702,11080977,4,Bean hopper small assy. Mastrena II,Tolva de grano pequeña Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,2,,
+130.704,11080978,4,Bean hopper big assy. Mastrena II,Tolva de grano grande Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+133.029,11086501,4,Steam casing assy. Mastrena II,Carcasa de vapor Mastrena II (conjunto),Other,1 Mastrena II - 230V (main assemblies),,1,,
+116.106,11097244,6,PT screw lens head KA40x10,Tornillo PT cabeza lenteja KA40x10,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.2.1, 1.3, 1.6, 1.11.3"
+121.464,11097249,6,PT screw KA30x10 philips,Tornillo PT KA30x10 Phillips,Other,1.1 Hood assy. Mastrena II,,,,Also in: 1.13.2
+122.913,11101490,6,Cable tie with clip 100mm,Amarra plástica con clip 100 mm,Other,1.1 Hood assy. Mastrena II,,,,"Also in: 1.10.1.1, 1.10.2.5, 1.10.3.1, 1.11.3"
+129.371,11080968,8,2/2-way magnet valve ø6 DN3 NO,Electroválvula 2/2 vías ø6 DN3 NA,Other,1.2 Steam outlet assy. Mastrena II,,,,Only appears in a blurry photo
+129.979,11080893,8,Membrane ETV-200 EPDM,Membrana ETV-200 EPDM,Other,1.2 Steam outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.1.4, 1.10.2.4.1.4, 1.11.3"
+103.238,11086497,12,Cable tie 80...100 x 2.3/2.4/2.5,"Amarra plástica 80...100 x 2,3/2,4/2,5",Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.2, 1.10.2.4.2, 1.13"
+104.034,11097240,12,Oval head screw Phillips M4x12,Tornillo cabeza oval Phillips M4x12,Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.9, 1.10.1.1, 1.10.2, 1.10.2.1 +8 more"
+127.651,11097251,12,Oval-head screw M4x16 Phillips,Tornillo cabeza oval M4x16 Phillips,Other,1.3 Coffee outlet assy. Mastrena II,,,,"Also in: 1.10.2.1.2, 1.10.2.4.2"
+128.852,11080976,18,Drip tray inlay,Inserto bandeja de goteo,Other,1.6 Drip tray assy. Mastrena II,,,,
+129.162,11080975,18,Drip tray grill Mastrena II,Rejilla bandeja de goteo Mastrena II,Other,1.6 Drip tray assy. Mastrena II,,,,
+130.610,11081005,22,Bean hopper lid big,Tapa tolva de grano grande,Other,1.8 Bean hopper big assy. Mastrena II,,,,
+119.994,11080807,24,Elbow connector 6-4,Conector codo 6-4,Chassis,1.9 Chassis assy. Mastrena II,,,,Also in: 1.11.3
+128.484,11080927,24,Y-plug connector 6-6,Conector en Y 6-6,Chassis,1.9 Chassis assy. Mastrena II,,,,Also in: 1.12.3
+130.898,11086398,24,Drainsystem assy.,Sistema de desagüe (conjunto),Chassis,1.9 Chassis assy. Mastrena II,,,,
+127.595,11086423,28,Grinder module left Mastrena II,Módulo de molino izquierdo Mastrena II,Mechanical,1.10 Mechanic module Mastrena II,,,,
+127.846,11086422,28,Grinder module right Mastrena II,Módulo de molino derecho Mastrena II,Mechanical,1.10 Mechanic module Mastrena II,,,,
+127.392,11086486,30,Grinder unit with chassis,Unidad de molino con chasis,Mechanical,1.10.1 Grinder module left Mastrena II,,,,Also in: 1.10.3
+127.842,11086404,30,Powder pass ø50 closure,Cierre paso de polvo ø50,Mechanical,1.10.1 Grinder module left Mastrena II,,,,Also in: 1.10.3
+127.843,11080867,30,Powder diffusor ø50 assy.,Difusor de polvo ø50 (conjunto),Mechanical,1.10.1 Grinder module left Mastrena II,,,,"Also in: 1.10.2, 1.10.3"
+124.077,11080861,32,Toothed belt 305-5M-9,Correa dentada 305-5M-9,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
+126.543,11086445,32,Hexagonal head screw combi M6x16,Tornillo cabeza hexagonal combi M6x16,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.2.1.1.1, 1.10.2.4.1.1, 1.10.3.1"
+127.394,11086432,32,Auto adjustable grinder,Molino autoajustable,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
+129.612,11086512,32,Wiring harness Mastrena II grinder module set,Arnés de cables Mastrena II grinder module set,Mechanical,1.10.1.1 Grinder unit with chassis,,,,Also in: 1.10.3.1
+140.741,11135257,32,Grindermotor 230/400V set,Set motor de molino 230/400V,Mechanical,1.10.1.1 Grinder unit with chassis,,,,"Also in: 1.10.2, 1.10.3.1"
+140.763,11135258,34,Capacitor 20µF cpl,Condensador 20 µF completo,Mechanical,1.10.1.1.1 Grindermotor 230/400V set,,,,"Also in: 1.10.2.2, 1.10.3.1.1"
+100.934,11014453,36,Agitator ø64 grinder,Agitador ø64 molino,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+106.524,11086488,36,Lock nut M8 Serpress,Tuerca de seguridad M8 Serpress,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+115.894,153603,36,Burr set with screws,Set de muelas con tornillos,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"8-digit SKU '153603' has 6 digits (does not match 11xxxxxx); Also in: 1.10.2.3, 1.10.3.1.2"
+123.364,11080864,36,Cam support,Soporte de leva,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+123.366,11086536,36,Lower Grindingdischolder,Portamuela inferior,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+127.393,11086493,36,Upper grindingdischolder,Portamuela superior,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+127.415,11086491,36,Spacer for grinding disc,Separador para muela,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+127.852,11086399,36,Drive spindle grinder assy.,Husillo de accionamiento molino (conjunto),Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+127.853,11086489,36,Bearing kit,Kit de rodamientos,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+127.854,11080865,36,Stepper motor assy.,Motor paso a paso (conjunto),Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+129.324,11080866,36,Elastic clip washer ø6,Arandela clip elástica ø6,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+129.337,11086492,36,Spring pin ø 5x10,Pasador elástico ø5x10,Mechanical,1.10.1.1.2 Auto adjustable grinder,,,,"Also in: 1.10.2.3, 1.10.3.1.2"
+128.907,11086494,38,Brew unit ø50 with clip hydraulic right,Unidad de infusión ø50 con clip hidráulico derecho,Mechanical,1.10.2 Brew module Mastrena II,,,,
+128.908,11086495,38,Brew unit ø50 with clip hydraulic left,Unidad de infusión ø50 con clip hidráulico izquierdo,Mechanical,1.10.2 Brew module Mastrena II,,,,
+127.062,11086481,40,Brew unit ø50,Unidad de infusión ø50,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
+127.349,11080898,40,Toothed belt 265-5M-9,Correa dentada 265-5M-9,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
+129.501,11086623,40,Motor to brew chamber assy.,Motor a cámara de infusión (conjunto),Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
+129.584,11086434,40,Socket clip hydraulic left assy.,Clip hidráulico izquierdo de enchufe (conjunto),Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,
+131.303,11086499,40,Wire retainer Panduit TWR,Retenedor de cables Panduit TWR,Mechanical,1.10.2.1 Brew unit ø50 with clip hydraulic left,,,,Also in: 1.10.2.4
+127.064,11086425,42,Guide- and bearing unit,Unidad de guía y rodamiento,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
+127.365,11086431,42,Brew chamber ø50 with mobile piston,Cámara de infusión ø50 con pistón móvil,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
+127.516,11080892,42,2/2-way magnet valve ø6 DN3,Electroválvula 2/2 vías ø6 DN3,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
+129.963,11080891,42,Adapter,Adaptador,Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
+129.967,11086482,42,Front block assy.,Bloque frontal (conjunto),Mechanical,1.10.2.1.1 Brew unit ø50,,,,Also in: 1.10.2.4.1
+106.523,11101483,44,Prevailing torque hex nut M8 with flange,Tuerca hexagonal autoblocante M8 con brida,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+106.685,11086426,44,Snap ring for shaft ø10,Anillo de retención para eje ø10,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+127.375,11086484,44,Guide rail,Riel guía,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+127.569,11101492,44,Drive screw 14x4,Tornillo de accionamiento 14x4,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+132.619,11080872,44,Ringmagnet set,Set imán anular,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+139.587,11129443,44,Adjusting washer BN 1976,Arandela de ajuste BN 1976,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+139.859,11129445,44,Ball bearing kit rear block Mastrena II,Kit rodamiento bloque trasero Mastrena II,Mechanical,1.10.2.1.1.1 Guide- and bearing unit,,,,Also in: 1.10.2.4.1.1
+127.054,11086400,46,Plate mobile piston,Placa pistón móvil,Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
+127.357,11086485,46,Chamber ø50 assy.,Cámara ø50 (conjunto),Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
+130.821,11097252,46,Oval head screw Phillips H M4x6,Tornillo cabeza oval Phillips H M4x6,Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,"Also in: 1.10.2.1.1.2.2, 1.10.2.4.1.2, 1.10.2.4.1.2.2"
+130.861,11086500,46,Mobile piston ø50 assy.,Pistón móvil ø50 (conjunto),Mechanical,1.10.2.1.1.2 Brew chamber ø50 with mobile piston,,,,Also in: 1.10.2.4.1.2
+127.371,11080878,48,Anti-twist device plate,Placa antirrotación,Mechanical,1.10.2.1.1.2.1 Chamber ø50 assy.,,,,Also in: 1.10.2.4.1.2.1
+129.200,11080875,48,Guide sleeve PAP 2510 P10,Casquillo guía PAP 2510 P10,Mechanical,1.10.2.1.1.2.1 Chamber ø50 assy.,,,,Also in: 1.10.2.4.1.2.1
+109.557,11080883,50,Straight connector 4-M5,Conector recto 4-M5,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
+127.106,11080880,50,Mobile piston head ø50,Cabeza pistón móvil ø50,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
+130.862,11080882,50,Clip for micro screen ø50,Clip para microfiltro ø50,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
+132.530,11080881,50,Micro-screen insert,Inserto microfiltro,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,"Also in: 1.10.2.1.1.3.1, 1.10.2.4.1.2.2, 1.10.2.4.1.3.1"
+133.046,11080879,50,O-Ring 23.39x3.53 FKM,O-ring 23.39x3.53 FKM,Mechanical,1.10.2.1.1.2.2 Mobile piston ø50 assy.,,,,Also in: 1.10.2.4.1.2.2
+106.229,11097241,52,Hex cap assembled screw M6x50,Tornillo hexagonal con arandela M6x50,Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
+130.790,11080886,52,Fix piston assy. head stepped,Pistón fijo con cabeza escalonada (conjunto),Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
+131.342,11086402,52,Front block pre-assy.,Bloque frontal premontado,Mechanical,1.10.2.1.1.3 Front block assy.,,,,Also in: 1.10.2.4.1.3
+130.531,11086403,54,O-Ring 18.00x2.00 EPDM 75.5/KW75F,O-ring 18.00x2.00 EPDM 75.5/KW75F,Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
+130.796,11080889,54,Fix piston seal stepped ø50 assy.,Sello pistón fijo escalonado ø50 (conjunto),Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
+132.508,11101539,54,O-Ring 6.07x1.78 FKM 75.5/VA75F,O-ring 6.07x1.78 FKM 75.5/VA75F,Mechanical,1.10.2.1.1.3.1 Fix piston assy. head stepped,,,,Also in: 1.10.2.4.1.3.1
+132.589,11086537,56,"Body assy. magnet valve 2/2, ø6","Cuerpo electroválvula 2/2, ø6 (conjunto)",Mechanical,1.10.2.1.1.4 2/2-way magnet valve ø6 DN3,,,,Also in: 1.10.2.4.1.4
+127.698,11080833,58,Elbow connector 4-4,Conector codo 4-4,Mechanical,1.10.2.1.2 Socket clip hydraulic left assy.,,,,"Also in: 1.10.2.4.2, 1.11.1"
+130.905,11080895,58,Hydr. male connector tilted ø4 assy.,Conector macho hidráulico inclinado ø4 (conjunto),Mechanical,1.10.2.1.2 Socket clip hydraulic left assy.,,,,Also in: 1.10.2.4.2
+128.897,11086433,64,Socket clip hydraulic right assy.,Clip hidráulico derecho de enchufe (conjunto),Mechanical,1.10.2.4 Brew unit ø50 with clip hydraulic right,,,,
+129.174,11101510,94,Valve assembly hydraulic,Conjunto de válvulas hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+129.175,11097255,94,Boiler assembly hydraulic,Conjunto caldera hidráulico,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+130.938,,94,FEP pipe ø4/2 x 80mm,Tubo FEP ø4/2 x 80mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,Also in: 1.11.1
+130.943,,94,FEP pipe ø4/2 x 270mm,Tubo FEP ø4/2 x 270mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+130.944,,94,FEP pipe ø4/2 x 155mm,Tubo FEP ø4/2 x 155mm,Hydraulic,1.11 Hydraulic module Mastrena II assy.,,,,
+124.867,11080859,96,Angle plug connection 6-4,Conexión enchufable en ángulo 6-4,Hydraulic,1.11.1 Boiler assembly hydraulic,,,,Also in: 1.11.2
+127.266,11086473,96,Boiler coffee horizontal assy.,Caldera de café horizontal (conjunto),Hydraulic,1.11.1 Boiler assembly hydraulic,,,,
+131.321,11080840,100,Hexagonal head screw combi M5x12 A4-80,Tornillo cabeza hexagonal combi M5x12 A4-80,Hydraulic,1.11.1.1.1 Cap boiler horizontal 2.5kW 230V set,,,,Also in: 1.12.2
+127.788,11080845,102,Valveblock brew and clean assy.,Bloque de válvulas infusión y limpieza (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+128.062,11080848,102,Expansion chamber valve assy.,Válvula cámara de expansión (conjunto),Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+130.939,,102,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+130.940,,102,FEP pipe ø4/2 x 110mm,Tubo FEP ø4/2 x 110mm,Hydraulic,1.11.2 Valve assembly hydraulic,,,,
+106.703,11086643,104,Coil for Lucifer valve,Bobina para válvula Lucifer,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.12.1.1
+129.762,11086554,104,Solenoid 22mm UL,Solenoide 22 mm UL,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
+130.361,11086552,104,Clip 22mm coil,Clip bobina 22 mm,Hydraulic,1.11.2.1 Valveblock brew and clean assy.,,,,Also in: 1.11.2.2
+130.326,11086553,106,Expansion chamber,Cámara de expansión,Hydraulic,1.11.2.2 Expansion chamber valve assy.,,,,
+128.004,11080829,108,Flow meter assy. ø6/ø4,Flujómetro ø6/ø4 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+128.005,11086605,108,Wiring harness Mastrena II hyd. module,Arnés de cables Mastrena II hyd. module,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.332,11080827,108,Male connector tilted 4/4/6 assy.,Conector macho inclinado 4/4/6 (conjunto),Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.930,,108,FEP pipe ø4/2 x 65mm,Tubo FEP ø4/2 x 65mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.932,,108,FEP pipe ø6/4 x 120mm,Tubo FEP ø6/4 x 120mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.934,,108,FEP pipe ø4/2 x 130mm,Tubo FEP ø4/2 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.935,,108,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+130.937,,108,FEP pipe ø4/2 x 180mm,Tubo FEP ø4/2 x 180mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+131.655,,108,FEP pipe ø6/4 x 80mm,Tubo FEP ø6/4 x 80mm,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,Also in: 1.12.3
+135.239,11116104,108,Hydraulic set CL,Set hidráulico CL,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+135.241,11116105,108,Hydraulic set CR,Set hidráulico CR,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+136.901,11080831,108,Checkvalve pluggable ø4_EPDM,Válvula antirretorno enchufable ø4 EPDM,Hydraulic,1.11.3 Chassis hydraulic assy.,,,,
+128.013,11080935,110,Cap steam boiler 230V 5.4kW set,"Set tapa caldera de vapor 230V 5,4 kW",Steam,1.12 Steam module 230V-400V Mastrena II,,,,
+129.065,11101509,110,Base chassis steam module assy.,Chasis base módulo de vapor (conjunto),Steam,1.12 Steam module 230V-400V Mastrena II,,,,
+121.384,11086503,112,Coupling nut with anti-kink device ø6/4,Tuerca de acople con protección antiquiebre ø6/4,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Same 8-digit SKU as 119.109
+127.954,11086452,112,Elbow connector 8/6-1/4K,Conector codo 8/6-1/4K,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,Also in: 1.12.2
+128.602,11080932,112,Safety valve 2.8bar,"Válvula de seguridad 2,8 bar",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+130.613,11080930,112,"Solenoid valve 2/2, ø4, G1/4""","Electroválvula 2/2, ø4, G1/4""",Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+130.949,,112,FEP pipe ø6/4 x 440mm,Tubo FEP ø6/4 x 440mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+130.950,,112,FEP pipe ø8/6 x 410mm,Tubo FEP ø8/6 x 410mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+131.651,,112,FEP pipe ø6/4 x 550mm,Tubo FEP ø6/4 x 550mm,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+133.318,11086502,112,Pin,Pasador,Steam,1.12.1 Vesses steam boiler vertical assy.,,,,
+128.463,11080920,120,Check valve plugable ø6,Válvula antirretorno enchufable ø6,Steam,1.12.3 Component support steam module assy.,,,,
+129.080,11080914,120,Male connector double ø6/ø8 assy.,Conector macho doble ø6/ø8 (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
+129.972,11086627,120,"Solenoid valve 2/2, ø2.06N, 7.5W UL assy.","Electroválvula 2/2, ø2,06N, 7,5 W UL (conjunto)",Steam,1.12.3 Component support steam module assy.,,,,
+130.674,11080921,120,T-connector 8-6-8,Conector en T 8-6-8,Steam,1.12.3 Component support steam module assy.,,,,
+130.952,11080902,120,Emptying valve assy.,Válvula de vaciado (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
+130.953,11080904,120,Bypass valve assy.,Válvula bypass (conjunto),Steam,1.12.3 Component support steam module assy.,,,,
+131.652,,120,FEP pipe ø6/4 x 540mm,Tubo FEP ø6/4 x 540mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.653,,120,FEP pipe ø6/4 x 155mm,Tubo FEP ø6/4 x 155mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.654,,120,FEP pipe ø6/4 x 130mm,Tubo FEP ø6/4 x 130mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.656,,120,FEP pipe ø6/4 x 50mm,Tubo FEP ø6/4 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.657,,120,FEP pipe ø8/6 x 50mm,Tubo FEP ø8/6 x 50mm,Steam,1.12.3 Component support steam module assy.,,,,
+131.658,,120,FEP pipe ø6/4 x 170mm,Tubo FEP ø6/4 x 170mm,Steam,1.12.3 Component support steam module assy.,,,,
+129.676,11101530,132,Coffee cleaning system assy.,Sistema de limpieza de café (conjunto),Other,1.13.2 Coffee cleaning system black set,,,,

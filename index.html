@@ -316,7 +316,7 @@
                 'source_image','diagram_position','confidence','notes','qty_per_machine','on_hand','validation','evidence'];
   // The CSV people export has only the columns they use. The development columns (source image, diagram position,
   // confidence, validation, evidence) are exported only in team mode.
-  const PUBLIC_COLS = ['sku','sku_8digit','name_en','name_es','module','subassembly','price_cad','qty_per_machine','on_hand','notes'];
+  const PUBLIC_COLS = ['sku','sku_8digit','page','name_en','name_es','module','subassembly','price_cad','qty_per_machine','on_hand','notes'];
   const REQUIRED = ['sku','name_en','module'];
   const CONF = ['high','medium','low','illegible'];
   // Older copies stored Spanish confidence values.
@@ -800,7 +800,7 @@
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8digit || '—')}</dd></div>
       ${VALIDATE ? `<div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>` : ''}
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subassembly || '—')}</dd></div>
-      ${VALIDATE && p.page ? `<div class="fact"><dt>Manual page</dt><dd>${esc(p.page)}</dd></div>` : ''}
+      ${p.page ? `<div class="fact"><dt>Manual page</dt><dd>${esc(p.page)}</dd></div>` : ''}
       ${VALIDATE ? `<div class="fact wide"><dt>Evidence</dt><dd>${esc(p.evidence || '—')}</dd></div>` : ''}
       ${p.notes ? `<div class="fact wide"><dt>Notes</dt><dd>${esc(p.notes)}</dd></div>` : ''}
     </dl>`;
@@ -868,7 +868,7 @@
     const image = partImage(p);
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
-    const pageTag = VALIDATE && p.page ? ` <span class="pill" title="Page of the paper manual">Manual p. ${esc(p.page)}</span>` : '';
+    const pageTag = p.page ? ` <span class="pill" title="Page of the paper manual">Manual p. ${esc(p.page)}</span>` : '';
     const review = pageTag + (VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '');
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
@@ -1274,8 +1274,8 @@
         if (seeded && seeded.has(m.sku)) continue;          // it was in the catalog before and was removed on purpose
         if (!VALIDATE && isPending(m)) continue;
         parts.push(m); added++;
-      } else if (VALIDATE) {
-        if (isPending(mine) && !isPending(m)) { mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++; }
+      } else {
+        if (VALIDATE && isPending(mine) && !isPending(m)) { mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++; }
         if (!mine.page && m.page) { mine.page = m.page; changed++; }   // older saved copies get the manual page too
       }
     }

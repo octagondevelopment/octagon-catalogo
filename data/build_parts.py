@@ -29,9 +29,10 @@ PER_MACHINE = {"110.533": "1", "116.093": "1", "127.028": "1", "127.734": "1", "
                "128.037": "1", "128.047": "1", "128.051": "1", "128.065": "1", "128.386": "1", "128.653": "1",
                "129.562": "1", "130.702": "2", "130.704": "1", "131.365": "1", "133.029": "1", "133.661": "1",
                "133.690": "1"}
-# Columns people see in the published catalog and in the CSV they export. The rest (source image, diagram position,
+# Columns people see in the published catalog and in the CSV they export (the manual page is there so anyone can check a part
+# against the paper manual). The rest (source image, diagram position,
 # confidence, validation status, evidence) is for development only and stays in data/internal/parts_all.csv.
-PUBLIC_COLS = ["sku", "sku_8digit", "name_en", "name_es", "module", "subassembly", "price_cad",
+PUBLIC_COLS = ["sku", "sku_8digit", "page", "name_en", "name_es", "module", "subassembly", "price_cad",
                "qty_per_machine", "on_hand", "notes"]
 ART = re.compile(r"^\d{3}\.\d{3}$")
 SKU8 = re.compile(r"^11\d{6}$")
