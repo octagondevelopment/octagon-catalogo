@@ -86,6 +86,8 @@
   .name { font-weight: 600; line-height: 1.3; overflow-wrap: anywhere; }
   .sub2 { color: var(--muted); font-size: 12.5px; margin-top: 2px; overflow-wrap: anywhere; }
   .sub2 .mono { color: var(--ink2); font-size: 12px; }
+  .mono.copy { text-decoration: underline dotted; text-underline-offset: 3px; cursor: copy; }
+  .copies { display: flex; flex-wrap: wrap; gap: 8px; }
   .pill { display: inline-block; border-radius: 999px; padding: 1px 8px; font-size: 11px; font-weight: 600; margin-left: 4px; vertical-align: 1px; }
   .pill.ill { background: var(--soft); color: var(--ink2); }
   .pill.warn { background: var(--warn-soft); color: var(--warn); }
@@ -798,6 +800,7 @@
     return `<dl class="facts">
       <div class="fact"><dt>Module</dt><dd>${esc(p.module || '—')}</dd></div>
       <div class="fact"><dt>8-digit SKU</dt><dd class="mono">${esc(p.sku_8digit || '—')}</dd></div>
+      <div class="fact wide"><dt>Copy</dt><dd class="copies"><button class="btn sm" type="button" data-act="copy" data-code="${esc(p.sku)}">Copy ${esc(p.sku)}</button>${p.sku_8digit ? `<button class="btn sm" type="button" data-act="copy" data-code="${esc(p.sku_8digit)}">Copy ${esc(p.sku_8digit)}</button>` : ''}</dd></div>
       ${VALIDATE ? `<div class="fact"><dt>Confidence</dt><dd>${esc(conf)}</dd></div>` : ''}
       <div class="fact wide"><dt>Subassembly</dt><dd>${esc(p.subassembly || '—')}</dd></div>
       ${p.page ? `<div class="fact"><dt>Manual page</dt><dd>${esc(p.page)}</dd></div>` : ''}
@@ -876,7 +879,7 @@
         <div class="thumb" title="Representative sketch, not a photo of the exact part">${sketch(p)}${image ? `<img class="pimg" src="${image.src}" alt="${esc(image.alt)}" data-act="zoom" data-sku="${esc(p.sku)}">` : ''}</div>
         <div class="info">
           <div class="name">${esc(p.name_en)}</div>
-          <div class="sub2"><span class="mono">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${image && image.kind !== 'photo' ? ` <span class="pill ill" title="${esc(image.note)}">${image.kind === 'generic' ? 'Generic image' : 'Illustration'}</span>` : ''}${review}</div>
+          <div class="sub2"><span class="mono copy" data-act="copy" data-code="${esc(p.sku)}" title="Tap to copy the SKU">${esc(p.sku)}</span>${p.name_es ? ' · ' + esc(p.name_es) : ''}${image && image.kind !== 'photo' ? ` <span class="pill ill" title="${esc(image.note)}">${image.kind === 'generic' ? 'Generic image' : 'Illustration'}</span>` : ''}${review}</div>
         </div>
         <div class="price ${price ? '' : 'none'}">${price ?? 'No price'}</div>
       </div>
@@ -1043,6 +1046,15 @@
   }
 
   // ---------- list interactions ----------
+  async function copyText(code) {
+    let ok = false;
+    try {   // synchronous copy first, while the tap still counts as a user gesture
+      const ta = document.createElement('textarea'); ta.value = code; ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta); ta.focus(); ta.select(); ok = document.execCommand('copy'); ta.remove();
+    } catch (e) { /* try the clipboard API below */ }
+    if (!ok) { try { await navigator.clipboard.writeText(code); ok = true; } catch (e) { /* ignore */ } }
+    toast(ok ? `Copied ${code}` : `Could not copy ${code}: select it and copy by hand`, ok ? undefined : 'error');
+  }
   const toggleRow = (sku) => { openSku = openSku === sku ? null : sku; editing = null; confirming = null; render(); };
   document.addEventListener('click', (e) => {
     if (e.target.closest('.sel')) return;
@@ -1060,6 +1072,7 @@
         confirming = null; openSku = null; save(); render(); toast(`Part ${sku} removed`); break;
       case 'label': showLabel(sku); break;
       case 'zoom': showImage(sku); break;
+      case 'copy': copyText(b.dataset.code); break;
       case 'view':
         Object.assign(state, { view: b.dataset.view, q: '', mod: '', sub: '', noPrice: false, review: false, limit: PAGE });
         $('q').value = ''; selected.clear(); openSku = editing = confirming = null; render(); break;
