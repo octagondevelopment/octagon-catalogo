@@ -868,7 +868,8 @@
     const image = partImage(p);
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
-    const review = VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '';
+    const pageTag = VALIDATE && p.page ? ` <span class="pill" title="Page of the paper manual">Manual p. ${esc(p.page)}</span>` : '';
+    const review = pageTag + (VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '');
     return `<li class="row${open ? ' open' : ''}" data-sku="${esc(p.sku)}">
       <div class="row-head" role="button" tabindex="0" aria-expanded="${open}" data-act="toggle" data-sku="${esc(p.sku)}">
         <input class="sel" type="checkbox" data-sku="${esc(p.sku)}" ${selected.has(p.sku) ? 'checked' : ''} aria-label="Select ${esc(p.sku)}">
@@ -1273,8 +1274,9 @@
         if (seeded && seeded.has(m.sku)) continue;          // it was in the catalog before and was removed on purpose
         if (!VALIDATE && isPending(m)) continue;
         parts.push(m); added++;
-      } else if (VALIDATE && isPending(mine) && !isPending(m)) {
-        mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++;
+      } else if (VALIDATE) {
+        if (isPending(mine) && !isPending(m)) { mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++; }
+        if (!mine.page && m.page) { mine.page = m.page; changed++; }   // older saved copies get the manual page too
       }
     }
     const idx = new Map(list.map((m, i) => [m.sku, i]));
