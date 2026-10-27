@@ -15,7 +15,7 @@ Generic type-based representations for review. Manufacturer-specific shape, inte
 | 128.602 | Safety valve 2.8bar | [Open image](generic-128.602.jpg) |
 | 129.293 | Generic fluid-control component | [Open image](generic-129.293.jpg) |
 | 130.613 | Solenoid valve 2/2, ø4, G1/4" | [Open image](generic-130.613.jpg) |
-| 131.362 | Generic boiler or steam component | [Open image](generic-131.362.jpg) |
+| 131.362 | Generic label | [Open image](generic-131.362.jpg) |
 
 ## 128.013 — Cap steam boiler 230V 5.4kW set
 
@@ -53,6 +53,6 @@ Generic type-based representations for review. Manufacturer-specific shape, inte
 
 ![Unverified generic representation for 130.613](generic-130.613.jpg)
 
-## 131.362 — Generic boiler or steam component
+## 131.362 — Generic label
 
 ![Unverified generic representation for 131.362](generic-131.362.jpg)
