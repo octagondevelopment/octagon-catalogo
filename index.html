@@ -317,14 +317,14 @@
   // Everyone else sees only the verified catalog.
   const VALIDATE = new URLSearchParams(location.search).has('validate');
   const STORAGE_KEY = VALIDATE ? 'octagon-inv-v1-validate' : 'octagon-inv-v1';
-  const SEEDS = VALIDATE ? ['data/internal/parts_all.csv', 'data/parts.csv'] : ['data/parts.csv'];
+  const SEEDS = VALIDATE ? ['data/internal/parts_all.csv', 'data/parts_review.csv', 'data/parts.csv'] : ['data/parts_review.csv', 'data/parts.csv'];
   const PAGE = 40;
   const MODULES = ['Mechanical', 'Steam', 'Hydraulic', 'Chassis', 'Other'];
   const COLS = ['sku','sku_8digit','page','name_en','name_es','module','subassembly','price_cad',
                 'source_image','diagram_position','confidence','notes','qty_per_machine','on_hand','validation','evidence'];
   // The CSV people export has only the columns they use. The development columns (source image, diagram position,
   // confidence, validation, evidence) are exported only in team mode.
-  const PUBLIC_COLS = ['sku','sku_8digit','page','name_en','name_es','module','subassembly','price_cad','qty_per_machine','on_hand','notes'];
+  const PUBLIC_COLS = ['sku','sku_8digit','page','name_en','name_es','module','subassembly','price_cad','qty_per_machine','on_hand','notes','validation','evidence'];
   const REQUIRED = ['sku','name_en','module'];
   const CONF = ['high','medium','low','illegible'];
   // Older copies stored Spanish confidence values.
@@ -351,7 +351,7 @@
   const isPending = (p) => p.validation === 'pending';
   // Team mode: three states for the double check. 'hand' = checked by hand against the paper manual, 'auto' = published by the automatic cross-reading only, 'pending' = not verified yet.
   const checkState = (p) => isPending(p) ? 'pending' : /^Validated against the paper manual/.test(p.evidence || '') ? 'hand' : 'auto';
-  const inView = (p) => VALIDATE && state.view === 'all' ? true : (VALIDATE && state.view === 'validate') === isPending(p);
+  const inView = (p) => state.view === 'all' ? true : (state.view === 'validate') === isPending(p);
   const today = () => new Date().toLocaleDateString('en-CA');
 
   let parts = [];
@@ -360,7 +360,7 @@
   let confirming = null;   // sku with the delete confirmation open
   let pendingImport = null;
   const selected = new Set();
-  const state = { view: VALIDATE ? 'all' : 'catalog', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE };
+  const state = { view: 'all', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE };
 
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -780,14 +780,13 @@
   // ---------- render ----------
   function renderControls() {
     const nPend = parts.filter(isPending).length, nOk = parts.length - nPend;
-    $('views').classList.toggle('hidden', !VALIDATE);
-    if (VALIDATE) {
+    $('views').classList.remove('hidden');
+    {
       $('views').innerHTML = `<button type="button" role="tab" data-act="view" data-view="all" aria-selected="${state.view === 'all'}">All<span class="n">${parts.length}</span></button>` +
-        `<button type="button" role="tab" data-act="view" data-view="catalog" aria-selected="${state.view === 'catalog'}">Catalog<span class="n">${nOk}</span></button>` +
-        `<button type="button" role="tab" data-act="view" data-view="validate" aria-selected="${state.view === 'validate'}">To validate<span class="n">${nPend}</span></button>`;
+        `<button type="button" role="tab" data-act="view" data-view="catalog" aria-selected="${state.view === 'catalog'}">Verified<span class="n">${nOk}</span></button>` +
+        `<button type="button" role="tab" data-act="view" data-view="validate" aria-selected="${state.view === 'validate'}">Pending<span class="n">${nPend}</span></button>`;
     }
-    $('tagline').innerHTML = VALIDATE ? `<span class="pill cs-hand">${parts.filter(p => checkState(p) === 'hand').length} hand-checked</span><span class="pill cs-auto">${parts.filter(p => checkState(p) === 'auto').length} need hand check</span><span class="pill cs-pending">${nPend} pending</span>`
-      : `<b>${nOk}</b> ${nOk === 1 ? 'part' : 'parts'} · Mastrena II`;
+    $('tagline').innerHTML = `<span class="pill cs-hand">${parts.filter(p => checkState(p) === 'hand').length} hand-checked</span><span class="pill cs-auto">${parts.filter(p => checkState(p) === 'auto').length} need hand check</span><span class="pill cs-pending">${nPend} pending</span>`;
     const counts = { '': 0 };
     MODULES.forEach(m => counts[m] = 0);
     parts.forEach(p => { if (matches(p, true)) { counts['']++; if (counts[p.module] !== undefined) counts[p.module]++; } });
@@ -855,7 +854,7 @@
         </div>
       </div>
       <div class="actions">
-        ${isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
+        ${VALIDATE && isPending(p) ? `<button class="btn sm primary" type="button" data-act="verify" data-sku="${esc(p.sku)}">Mark verified</button>` : ''}
         <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
         ${isPending(p) || !VALIDATE ? '' : `<button class="btn sm" type="button" data-act="unverify" data-sku="${esc(p.sku)}">Send back to validation</button>`}
         <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
@@ -881,7 +880,7 @@
     const price = fmtPrice(p.price_cad);
     const open = openSku === p.sku;
     const pageTag = p.page ? ` <span class="pill" title="Page of the paper manual">Manual p. ${esc(p.page)}</span>` : '';
-    const cs = VALIDATE ? checkState(p) : '';
+    const cs = checkState(p);
     const csTag = cs ? ` <span class="pill cs-${cs}" title="${cs === 'hand' ? 'Checked by hand against the paper manual' : cs === 'auto' ? 'Published by the automatic reading only: still needs your hand check' : 'Not verified yet'}">${cs === 'hand' ? 'Hand-checked' : cs === 'auto' ? 'Needs hand check' : 'Pending'}</span>` : '';
     const review = csTag + pageTag + (VALIDATE && needsReview(p) ? `<span class="pill warn" title="Check this part against the paper manual">Review</span>` : '');
     return `<li class="row${open ? ' open' : ''}${cs ? ' cs-' + cs : ''}" data-sku="${esc(p.sku)}">
@@ -933,7 +932,7 @@
     $('bulk').classList.toggle('hidden', !n);
     document.body.classList.toggle('has-bulk', n > 0);
     $('bulk-n').textContent = `${n} selected`;
-    $('bulk-verify').classList.toggle('hidden', state.view !== 'validate');
+    $('bulk-verify').classList.toggle('hidden', !VALIDATE || state.view !== 'validate');
   }
 
   function formFields(p, idp) {
@@ -1039,7 +1038,7 @@
       if (err) { $('add-err').textContent = err; return; }
       p.validation = 'verified'; p.evidence = 'Added manually';
       parts.unshift(p); save(); closeSheets();
-      Object.assign(state, { view: VALIDATE ? 'all' : 'catalog', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
+      Object.assign(state, { view: 'all', q: '', mod: '', sub: '', noPrice: false, review: false, sort: 'manual', limit: PAGE });
       $('q').value = ''; openSku = p.sku; editing = null; confirming = null;
       render(); scrollToRow(p.sku); toast(`Part ${p.sku} added`);
     } else if (form.dataset.form === 'edit') {
@@ -1296,10 +1295,9 @@
       const mine = have.get(m.sku);
       if (!mine) {
         if (seeded && seeded.has(m.sku)) continue;          // it was in the catalog before and was removed on purpose
-        if (!VALIDATE && isPending(m)) continue;
         parts.push(m); added++;
       } else {
-        if (VALIDATE && isPending(mine) && !isPending(m)) { mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++; }
+        if (isPending(mine) !== isPending(m) || (!mine.evidence && m.evidence)) { mine.validation = m.validation; mine.confidence = m.confidence; mine.evidence = m.evidence; changed++; }
         if (!mine.page && m.page) { mine.page = m.page; changed++; }   // older saved copies get the manual page too
       }
     }
@@ -1316,7 +1314,7 @@
     else $('sort').querySelector('option[value="review"]').remove();
     const stored = load();
     if (stored !== null) {
-      parts = VALIDATE ? stored : stored.filter(p => !isPending(p));
+      parts = stored;
       render(); await mergeSeedFlags(); await mergeNewFromSeed(); return;
     }
     // First visit: load the catalog published next to the page.

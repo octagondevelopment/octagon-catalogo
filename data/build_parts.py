@@ -168,6 +168,11 @@ def write_csv(path, subset, cols):
         w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader(); w.writerows(subset)
 write_csv(os.path.join(HERE, "parts.csv"), [r for r in rows if r["validation"] == "verified"], PUBLIC_COLS)
 write_csv(os.path.join(INTERNAL, "parts_all.csv"), rows, COLS)
+# Review catalog: every part with its check state, for the "All" view everyone sees. The evidence is reduced to one generic label
+# (hand-checked against the paper manual or not); the real evidence, source images and confidence stay in parts_all.csv.
+REVIEW_COLS = PUBLIC_COLS + ["validation", "evidence"]
+review_rows = [dict(r, evidence="Validated against the paper manual" if r["evidence"].startswith("Validated against the paper manual") else "") for r in rows]
+write_csv(os.path.join(HERE, "parts_review.csv"), review_rows, REVIEW_COLS)
 
 # ---- report ----
 by_mod = collections.Counter(r["module"] for r in rows)

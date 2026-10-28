@@ -32,12 +32,12 @@ Out of scope until stage 2: users, login, roles, truck stock and replenishment a
 - Never invent a SKU or complete characters that cannot be read. Watch OCR confusions: 0/O, 1/I/l, 5/S, 8/B, 2/Z.
 - A part is published only when verified. Automatic rule (`data/build_parts.py`): same article, SKU and name read identically on 2+ clear pages, or the name equals its own chapter title; and the article is `NNN.NNN`, the SKU is `11xxxxxx` and unique, with no typo flagged. Parts Francisco checks by hand against the paper manual are listed in `data/manual_validations.txt`.
 - The paper manual is the final authority. The automatic check is a cross-reading, not a guarantee.
-- Published columns: `sku, sku_8digit, page, name_en, name_es, module, subassembly, price_cad, qty_per_machine, on_hand, notes`. Module is Mechanical, Steam, Hydraulic, Chassis or Other. Price is optional and a part without price shows "No price", never $0.
+- Published columns: `sku, sku_8digit, page, name_en, name_es, module, subassembly, price_cad, qty_per_machine, on_hand, notes, validation, evidence`. `data/parts.csv` has only verified parts; `data/parts_review.csv` has all 403 with their check state (owner's decision: everyone sees every part, colored by state: green hand-checked, amber auto-verified only, gray pending). `evidence` there is only the generic label "Validated against the paper manual" or empty. Module is Mechanical, Steam, Hydraulic, Chassis or Other. Price is optional and a part without price shows "No price", never $0.
 - `name_es` is a translation, not manual text.
 
 ## Public versus internal
-The repository is public. Never commit: `data/internal/` (all 403 parts, the pending list, the extraction report, the pilot, private copies of instructions), the manual photos, or names of people or of the client.
-The page of the manual is public (owner's decision) so anyone can check a part quickly. Development-only fields (source image, diagram position, confidence, validation status, evidence, the "To validate" queue) are never shown to regular users and never exported in their CSV. They appear only in team mode, by opening a local copy with `?validate`.
+The repository is public. Never commit: `data/internal/` (the full extraction with source images and real evidence, the extraction report, the pilot, private copies of instructions), the manual photos, or names of people or of the client.
+The page of the manual is public (owner's decision) so anyone can check a part quickly. Development-only fields (source image, diagram position, confidence, the real evidence text, the verify/unverify controls) are never shown to regular users and never exported in their CSV. They appear only in team mode, by opening a local copy with `?validate`.
 
 ## App rules
 - One file, `index.html`, no build step. Scripts only from cdnjs (JsBarcode 3.11.6) and Google Fonts.
