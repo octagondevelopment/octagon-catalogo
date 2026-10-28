@@ -759,7 +759,9 @@
     if (state.review && !needsReview(p)) return false;
     const q = norm(state.q.trim());
     if (!q) return true;
-    return [p.sku, p.sku_8digit, p.name_en, p.name_es].some(v => norm(v).includes(q));
+    if ([p.sku, p.sku_8digit, p.name_en, p.name_es].some(v => norm(v).includes(q))) return true;
+    const digits = q.replace(/[\s.\-]/g, '');   // "129766" or "129-766" also finds 129.766
+    return /^\d{3,}$/.test(digits) && [p.sku, p.sku_8digit].some(v => norm(v).replace(/[\s.\-]/g, '').includes(digits));
   };
   const priceNum = (v) => { const n = Number(String(v || '').replace(',', '.')); return v === '' || v == null || isNaN(n) ? -1 : n; };
   function filtered() {
