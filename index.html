@@ -856,6 +856,7 @@
       <div class="actions">
         ${['hand', 'auto'].map(s => `<button class="btn sm cs-btn cs-${s}" type="button" data-act="setcheck" data-state="${s}" data-sku="${esc(p.sku)}" aria-pressed="${checkState(p) === s}">${s === 'hand' ? 'Hand-checked' : 'Needs hand check'}</button>`).join('')}
         <button class="btn sm" type="button" data-act="edit" data-sku="${esc(p.sku)}">Edit</button>
+        ${partImageRaw(p) ? `<button class="btn sm" type="button" data-act="${p.noImage ? 'restore-image' : 'discard-image'}" data-sku="${esc(p.sku)}">${p.noImage ? 'Restore image' : 'Discard image'}</button>` : ''}
         <button class="btn sm warnlink" type="button" data-act="del" data-sku="${esc(p.sku)}">Remove</button>
       </div>${confirmBox}</div>`;
   }
@@ -867,7 +868,9 @@
   // Name-based generic images for standard hardware and assemblies: they show the type of part, not its exact size.
   const GENERIC_SKUS = new Set(['100.418', '100.421', '100.708', '101.044', '101.384', '101.456', '101.910', '101.957', '102.486', '102.744', '103.236', '103.238', '103.239', '103.253', '103.661', '104.024', '104.028', '104.029', '104.034', '104.043', '104.049', '104.063', '104.556', '104.797', '104.809', '104.837', '104.857', '104.884', '104.945', '106.086', '106.229', '106.401', '106.516', '106.523', '106.524', '106.685', '106.882', '107.286', '107.944', '108.046', '108.359', '108.366', '108.629', '109.557', '112.002', '115.666', '115.827', '115.830', '115.843', '115.891', '115.892', '115.918', '116.007', '116.012', '116.093', '116.106', '116.117', '116.166', '116.256', '116.470', '117.473', '117.802', '119.109', '119.896', '120.257', '120.431', '120.564', '120.595', '120.692', '120.791', '120.792', '120.859', '121.359', '121.384', '121.464', '122.636', '122.913', '123.560', '123.561', '123.562', '123.742', '123.980', '124.077', '124.829', '125.393', '125.556', '125.690', '125.870', '126.219', '126.398', '126.543', '127.028', '127.032', '127.038', '127.054', '127.064', '127.106', '127.260', '127.263', '127.265', '127.357', '127.371', '127.375', '127.442', '127.544', '127.569', '127.596', '127.651', '127.684', '127.685', '127.687', '127.698', '127.784', '127.799', '127.814', '127.950', '127.954', '127.996', '127.998', '128.005', '128.009', '128.033', '128.036', '128.040', '128.049', '128.065', '128.247', '128.250', '128.251', '128.269', '128.276', '128.287', '128.289', '128.454', '128.462', '128.463', '128.495', '128.498', '128.499', '128.653', '128.749', '128.798', '128.815', '128.841', '128.948', '129.041', '129.051', '129.063', '129.065', '129.078', '129.095', '129.165', '129.174', '129.185', '129.187', '129.189', '129.200', '129.210', '129.288', '129.293', '129.299', '129.300', '129.341', '129.354', '129.355', '129.387', '129.388', '129.389', '129.390', '129.391', '129.392', '129.393', '129.413', '129.419', '129.468', '129.469', '129.583', '129.612', '129.644', '129.675', '129.677', '129.694', '129.762', '129.766', '129.771', '129.788', '129.907', '129.965', '129.972', '130.042', '130.055', '130.256', '130.262', '130.263', '130.278', '130.286', '130.287', '130.288', '130.290', '130.292', '130.293', '130.298', '130.310', '130.312', '130.333', '130.361', '130.362', '130.380', '130.419', '130.441', '130.474', '130.483', '130.531', '130.563', '130.609', '130.610', '130.613', '130.679', '130.734', '130.772', '130.790', '130.791', '130.796', '130.818', '130.821', '130.835', '130.861', '130.862', '130.871', '130.873', '130.874', '130.875', '130.894', '130.895', '130.899', '130.905', '130.954', '130.972', '130.973', '130.981', '131.080', '131.082', '131.170', '131.201', '131.209', '131.228', '131.321', '131.334', '131.342', '131.362', '131.365', '131.370', '131.547', '131.572', '131.618', '132.167', '132.326', '132.327', '132.494', '132.508', '132.530', '132.565', '132.580', '132.594', '132.595', '132.619', '133.019', '133.046', '133.281', '133.414', '133.454', '133.557', '133.661', '133.662', '133.664', '133.690', '133.691', '133.707', '133.917', '134.088', '134.166', '134.403', '134.638', '135.200', '136.900', '139.587', '139.859', '139.898', '140.927', '142.122', '142.471', '142.611']);
   // Shared illustrations for tubes: length, diameter and shape vary by SKU, and the dimensions in the name stay authoritative.
-  function partImage(p) {
+  // An image the team discarded is hidden only in this browser (p.noImage); partImageRaw ignores that so it can be restored.
+  const partImage = (p) => p.noImage ? null : partImageRaw(p);
+  function partImageRaw(p) {
     const kind = PHOTOS.get(p.sku);
     if (kind === 'photo') return { kind, src: `img/${encodeURIComponent(p.sku)}.jpg`, alt: `Photo of ${p.sku}` };
     if (kind) return { kind, src: `img/${encodeURIComponent(p.sku)}.jpg`, alt: `Illustration of ${p.sku}`, note: 'Generated from a photo of the part; details such as lettering may differ from the real part' };
@@ -1083,6 +1086,12 @@
         confirming = null; openSku = null; save(); render(); toast(`Part ${sku} removed`); break;
       case 'label': showLabel(sku); break;
       case 'zoom': showImage(sku, b.dataset.view); break;
+      case 'discard-image': case 'restore-image': {
+        const p = parts.find(x => x.sku === sku); if (!p) break;
+        if (b.dataset.act === 'discard-image') p.noImage = true; else delete p.noImage;
+        save(); closeSheets(); render();
+        toast(p.noImage ? `Image of ${sku} discarded. Open the part and press Restore image to bring it back` : `Image of ${sku} restored`); break;
+      }
       case 'copy': copyText(b.dataset.code); break;
       case 'view':
         Object.assign(state, { view: b.dataset.view, q: '', mod: '', sub: '', noPrice: false, review: false, limit: PAGE });
@@ -1209,7 +1218,7 @@
     if (extra) im = { kind: 'illustration', src: `img/${encodeURIComponent(sku)}-${view}.jpg`, alt: `${extra[1]} of ${sku}`, note: extra[1] + '. Generated from a photo of the part; details may differ from the real part' };
     if (!im) return;
     $('image-title').textContent = p.name_en;
-    $('image-area').innerHTML = `<img src="${im.src}" alt="${esc(im.alt)}"><p><span class="mono">${esc(p.sku)}</span>${im.kind === 'photo' ? ' · Photo of the part' : ' · ' + esc(im.note)}</p>`;
+    $('image-area').innerHTML = `<img src="${im.src}" alt="${esc(im.alt)}"><p><span class="mono">${esc(p.sku)}</span>${im.kind === 'photo' ? ' · Photo of the part' : ' · ' + esc(im.note)}</p>${extra ? '' : `<button class="btn sm" type="button" data-act="discard-image" data-sku="${esc(p.sku)}">Discard this image</button>`}`;
     openSheet('sheet-image');
   }
   function showLabel(sku) {
